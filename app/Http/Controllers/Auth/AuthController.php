@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\CheckUserService;
+use App\Traits\JsonResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -10,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    use JsonResponseTrait;
     public function login(Request $request)
     {
         $request->validate([
@@ -53,20 +56,32 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        // Создание пользователя
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $email = $request->email;
 
-        // Создание API-токена
-        $token = $user->createToken('auth-token')->plainTextToken;
+        $check = CheckUserService::iafsCheck($email);
 
-        return response()->json([
-            'user' => $user,
-            'token' => $token,
-        ], 201);
+        if ($check === false)
+        {
+            // Создание пользователя
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
+            // Создание API-токена
+            $token = $user->createToken('auth-token')->plainTextToken;
+
+            return response()->json([
+                'user' => $user,
+                'token' => $token,
+            ], 201);
+        }
+        else
+            return $this->errorJsonAnswer403('Sorry but we can\'t register you, try again later!');
+
+
+
     }
 }
 
