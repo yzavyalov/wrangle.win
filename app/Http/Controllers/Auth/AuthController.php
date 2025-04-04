@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AuthResource;
 use App\Services\CheckUserService;
 use App\Traits\JsonResponseTrait;
 use Illuminate\Http\Request;
@@ -69,19 +70,10 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-            // Создание API-токена
-            $token = $user->createToken('auth-token')->plainTextToken;
-
-            return response()->json([
-                'user' => $user,
-                'token' => $token,
-            ], 201);
+            return $this->successJsonAnswer200('User',AuthResource::make($user));
         }
         else
             return $this->errorJsonAnswer403('Sorry but we can\'t register you, try again later!');
-
-
-
     }
 }
 

@@ -34,7 +34,7 @@ class Bet extends Model
 
     public function categories()
     {
-        return $this->belongsToMany(BetCategories::class,'bet_bet_categories','bet_id','bet_category_id');
+        return $this->belongsToMany(BetCategory::class,'bet_bet_categories','bet_id','bet_category_id');
     }
 
     public function answers()

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AuthResource;
 use App\Models\Auth\SocialAccount;
 use App\Models\User;
+use App\Services\CheckUserService;
 use App\Traits\JsonResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +32,7 @@ class SocialController extends Controller
         {
             $user = $socialAccount->user;
 
-            Auth::login($user);
+            return $this->successJsonAnswer200('User',AuthResource::make($user));
         }
         else
         {
@@ -39,23 +41,32 @@ class SocialController extends Controller
             if (!$user)
             {
                 if ($provider == 'telegram')
-                    $email = $socialUser->getName().'@telegram.com' ?? $socialUser->getNickname().'@telegram.com';
+                    $email = ($socialUser->getName() ?: $socialUser->getNickname()) . '@telegram.com';
                 else
                     $email = $socialUser->getEmail();
 
-                $user = User::create([
-                    'name' => $socialUser->getName() ?? $socialUser->getNickname(),
-                    'email' => $email,
-                    'password' => bcrypt(Str::random(8)),
-                ]);
+                $check = CheckUserService::iafsCheck($email);
 
-                $user->socialAccounts()->create([
-                    'provider_name' => $provider,
-                    'provider_id' => $socialUser->getId(),
-                ]);
+                if ($check === true )
+                {
+                    return $this->errorJsonAnswer403('Sorry but we can\'t register you, try again later!');
+                }
+                else
+                {
+                    $user = User::create([
+                        'name' => $socialUser->getName() ?? $socialUser->getNickname(),
+                        'email' => $email,
+                        'password' => bcrypt(Str::random(8)),
+                    ]);
+
+                    $user->socialAccounts()->create([
+                        'provider_name' => $provider,
+                        'provider_id' => $socialUser->getId(),
+                    ]);
+
+                    return $this->successJsonAnswer200('User',AuthResource::make($user));
+                }
             }
-            Auth::login($user);
-
         }
 
         return $this->successJsonAnswer204('You are logged in!');

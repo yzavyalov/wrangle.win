@@ -7,10 +7,11 @@ use App\Traits\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BetCategories extends Model
+class BetCategory extends Model
 {
     use HasFactory, Filterable;
 
+    protected $table = 'bet_categories';
     public $fillable = [
         'id',
         'name',

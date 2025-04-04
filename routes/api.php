@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\BetController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialController;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/auth/{provider}/redirect',[SocialController::class,'redirect'])->name('social.redirect');
 Route::get('/auth/{provider}/callback',[SocialController::class,'callback'])->name('social.callback');
+Route::apiResource('/bets', BetController::class);
 
 
 
