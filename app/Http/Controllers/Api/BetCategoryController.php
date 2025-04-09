@@ -16,7 +16,7 @@ class BetCategoryController extends Controller
      */
     public function index()
     {
-        $categories = BetCategory::all();
+        $categories = BetCategory::orderBy('name')->get();
 
         return $this->successJsonAnswer200('bets\' categories',BetCategoryResource::collection($categories));
     }
