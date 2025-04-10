@@ -3,5 +3,9 @@ import './assets/scss/styles.scss';
 
 import { createApp } from 'vue'
 import App from './App.vue'
+import pinia from "./store";
 
-createApp(App).mount('#app')
+
+createApp(App)
+  .use(pinia)
+  .mount('#app')
