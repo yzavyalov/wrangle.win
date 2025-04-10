@@ -20,11 +20,16 @@ import { demoCards } from '@/utils/dummyData';
     <ButtonBase class="active_events__btn">
       <p class="active_events__btn--text text-light">Create own Event</p>
     </ButtonBase>
+
+    <div class="background-decorator"></div>
   </div>
 </template>
 
 <style scoped lang='scss'>
 .active_events {
+  position: relative;
+  padding-bottom: 20px;
+
   &__header {
     position: relative;
 
@@ -45,7 +50,7 @@ import { demoCards } from '@/utils/dummyData';
   &__btn {
     width: 400px;
     max-width: 100%;
-    margin: 30px auto 20px;
+    margin: 30px auto 0;
     min-height: 50px;
 
     &--text{
@@ -54,5 +59,15 @@ import { demoCards } from '@/utils/dummyData';
     }
   }
 
+  .background-decorator {
+    position: absolute;
+    width: 100vw;
+    height: 300px;
+    bottom: -100px;
+    z-index: -1;
+    background: linear-gradient(180deg,#ffffff00 0%, #ffffff 100%), url('/images/sky.svg') no-repeat;
+    right: 50%;
+    transform: translateX(50%);
+  }
 }
 </style>
