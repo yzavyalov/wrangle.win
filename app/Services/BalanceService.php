@@ -21,6 +21,11 @@ class BalanceService
 
     public static function checkSum($sum)
     {
+        if (!isset(Auth::user()->balance))
+        {
+            BalanceService::createBalance();
+        }
+
         $balance = Auth::user()->balance->balance;
 
         if ($balance >= $sum)

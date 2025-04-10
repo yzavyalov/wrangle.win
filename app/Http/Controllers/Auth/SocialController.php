@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AuthResource;
 use App\Models\Auth\SocialAccount;
 use App\Models\User;
+use App\Services\BalanceService;
 use App\Services\CheckUserService;
 use App\Traits\JsonResponseTrait;
 use Illuminate\Http\Request;
@@ -63,6 +64,8 @@ class SocialController extends Controller
                         'provider_name' => $provider,
                         'provider_id' => $socialUser->getId(),
                     ]);
+
+                    BalanceService::createBalance();
 
                     return $this->successJsonAnswer200('User',AuthResource::make($user));
                 }

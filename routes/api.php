@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\BetCategoryController;
 use App\Http\Controllers\Api\BetCategorySearchController;
 use App\Http\Controllers\Api\BetController;
 use App\Http\Controllers\Api\BetSortController;
+use App\Http\Controllers\Api\BitController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialController;
@@ -45,6 +46,8 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::post('/favorites/{betId}', [FavoriteController::class, 'toggleFavorite'])->name('favorites.toggle');
     Route::get('/own-bets',[BetSortController::class,'myBets']);
     Route::get('/favorite-bets',[BetSortController::class,'favoriteBets']);
+
+    Route::post('bit/{answerId}',[BitController::class,'createBit']);
 });
 
 
