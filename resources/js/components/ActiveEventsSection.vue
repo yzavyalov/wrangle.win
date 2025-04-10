@@ -1,5 +1,6 @@
 <script setup>
 import EventCard from '@/components/EventCard.vue';
+import ButtonBase from '@/components/details/ButtonBase.vue';
 import { demoCards } from '@/utils/dummyData';
 
 </script>
@@ -15,6 +16,10 @@ import { demoCards } from '@/utils/dummyData';
         <EventCard :item="card" :is-hot="card.isHot" />
       </li>
     </ul>
+
+    <ButtonBase class="active_events__btn">
+      <p class="active_events__btn--text text-light">Create own Event</p>
+    </ButtonBase>
   </div>
 </template>
 
@@ -38,10 +43,15 @@ import { demoCards } from '@/utils/dummyData';
   }
 
   &__btn {
-    position: absolute;
-    border-radius: var(--border-radius-main);
-    background-color: var(--btn-bg-color);
-    padding: 5px;
+    width: 400px;
+    max-width: 100%;
+    margin: 30px auto 20px;
+    min-height: 50px;
+
+    &--text{
+      font-size: 32px;
+      line-height: 32px;
+    }
   }
 
 }

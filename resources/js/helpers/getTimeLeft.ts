@@ -3,7 +3,7 @@ export const getTimeLeft = (time: Date): string => {
   const end = new Date(time);
   const diff = end.getTime() - now.getTime();
 
-  if (diff <= 0) return 'Expired';
+  if (diff <= 0) return '--:--';
 
   const minutes = Math.floor((diff / 1000 / 60) % 60);
   const hours = Math.floor((diff / 1000 / 60 / 60) % 24);
@@ -18,5 +18,5 @@ export const getTimeLeft = (time: Date): string => {
     return `${h}:${m}`;
   }
 
-  return 'Expired';
+  return '--:--';
 };

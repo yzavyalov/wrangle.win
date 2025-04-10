@@ -5,7 +5,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=1',
     bet: '$150',
     tags: ['AI', 'Jobs'],
-    date: new Date('2025-04-01T14:00:00'),
+    date: new Date('2025-04-11T14:00:00'),
   },
   {
     id: 2,
@@ -13,7 +13,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=2',
     bet: '$200',
     tags: ['Finance', 'Economy'],
-    date: new Date('2025-04-02T14:00:00'),
+    date: new Date('2025-04-12T14:00:00'),
   },
   {
     id: 3,
@@ -21,7 +21,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=3',
     bet: '$100',
     tags: ['Environment', 'Energy'],
-    date: new Date('2025-04-03T14:00:00'),
+    date: new Date('2025-04-13T14:00:00'),
   },
   {
     id: 4,
@@ -29,7 +29,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=4',
     bet: '$250',
     tags: ['Sports', 'Events'],
-    date: new Date('2025-04-04T14:00:00'),
+    date: new Date('2025-04-14T14:00:00'),
   },
   {
     id: 5,
@@ -37,7 +37,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=5',
     bet: '$150',
     tags: ['Health', 'Politics'],
-    date: new Date('2025-04-05T14:00:00'),
+    date: new Date('2025-04-15T14:00:00'),
   },
   {
     id: 6,
@@ -45,7 +45,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=6',
     bet: '$200',
     tags: ['Technology', 'Automotive'],
-    date: new Date('2025-04-06T14:00:00'),
+    date: new Date('2025-04-16T14:00:00'),
   },
   {
     id: 7,
@@ -53,7 +53,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=7',
     bet: '$250',
     tags: ['Environment', 'Politics'],
-    date: new Date('2025-04-07T14:00:00'),
+    date: new Date('2025-04-17T14:00:00'),
   },
   {
     id: 8,
@@ -61,7 +61,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=8',
     bet: '$100',
     tags: ['Technology', 'Telecommunications'],
-    date: new Date('2025-04-08T14:00:00'),
+    date: new Date('2025-04-18T14:00:00'),
   },
   {
     id: 9,
@@ -69,7 +69,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=9',
     bet: '$150',
     tags: ['Finance', 'Cryptocurrency'],
-    date: new Date('2025-04-09T14:00:00'),
+    date: new Date('2025-04-19T14:00:00'),
   },
   {
     id: 10,
@@ -77,7 +77,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=10',
     bet: '$200',
     tags: ['Real Estate', 'Finance'],
-    date: new Date('2025-04-10T14:00:00'),
+    date: new Date('2025-04-20T14:00:00'),
   },
   {
     id: 11,
@@ -85,7 +85,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=11',
     bet: '$150',
     tags: ['Education', 'AI'],
-    date: new Date('2025-04-11T14:00:00'),
+    date: new Date('2025-04-21T14:00:00'),
   },
   {
     id: 12,
@@ -93,7 +93,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=12',
     bet: '$100',
     tags: ['Politics', 'Social Media'],
-    date: new Date('2025-04-12T14:00:00'),
+    date: new Date('2025-04-22T14:00:00'),
   },
   {
     id: 13,
@@ -101,7 +101,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=13',
     bet: '$250',
     tags: ['Space', 'Tourism'],
-    date: new Date('2025-04-13T14:00:00'),
+    date: new Date('2025-04-23T14:00:00'),
   },
   {
     id: 14,
@@ -109,7 +109,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=14',
     bet: '$200',
     tags: ['Health', 'Awareness'],
-    date: new Date('2025-04-14T14:00:00'),
+    date: new Date('2025-04-24T14:00:00'),
   },
   {
     id: 15,
@@ -117,7 +117,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=15',
     bet: '$150',
     tags: ['Gaming', 'Technology'],
-    date: new Date('2025-04-15T14:00:00'),
+    date: new Date('2025-04-25T14:00:00'),
   },
   {
     id: 16,
@@ -125,7 +125,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=16',
     bet: '$100',
     tags: ['Economy', 'Global Issues'],
-    date: new Date('2025-04-16T14:00:00'),
+    date: new Date('2025-04-26T14:00:00'),
   },
   {
     id: 17,
@@ -133,7 +133,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=17',
     bet: '$200',
     tags: ['Arts', 'Culture'],
-    date: new Date('2025-04-17T14:00:00'),
+    date: new Date('2025-04-27T14:00:00'),
   },
   {
     id: 18,
@@ -141,7 +141,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=18',
     bet: '$250',
     tags: ['Politics', 'International'],
-    date: new Date('2025-04-18T14:00:00'),
+    date: new Date('2025-04-28T14:00:00'),
   },
   {
     id: 19,
@@ -149,7 +149,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=19',
     bet: '$150',
     tags: ['Economy', 'Jobs'],
-    date: new Date('2025-04-19T14:00:00'),
+    date: new Date('2025-04-29T14:00:00'),
   },
   {
     id: 20,
@@ -157,7 +157,7 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=20',
     bet: '$100',
     tags: ['Transport', 'Urban'],
-    date: new Date('2025-04-20T14:00:00'),
+    date: new Date('2025-04-30T14:00:00'),
   },
   {
     id: 21,
@@ -165,6 +165,6 @@ export const demoCards = [
     img: 'https://picsum.photos/300/200?random=21',
     bet: '$100',
     tags: ['Transport', 'Urban'],
-    date: new Date('2025-04-20T14:00:00'),
+    date: new Date('2025-05-01T14:00:00'),
   },
 ]

@@ -1,10 +1,19 @@
 <script setup>
+import { computed } from 'vue';
 import { getTimeLeft } from '@/helpers/getTimeLeft';
 
 const props = defineProps({
   item: { type: Object, default: () => ({}) },
   isHot: { type: Boolean, default: false },
 })
+
+const maxTextLength = 50;
+
+const shortTitle = computed(() => {
+  return props.item.title?.length > maxTextLength
+    ? props.item.title.slice(0, maxTextLength) + '...'
+    : props.item.title;
+});
 </script>
 
 <template>
@@ -23,7 +32,7 @@ const props = defineProps({
 
     <div class="event-card__body text-light">
       <div class="event-card__body--left">
-        <p>{{ item.title }}</p>
+        <p>{{ shortTitle }}</p>
       </div>
 
       <div class="event-card__body--right">
@@ -43,7 +52,7 @@ const props = defineProps({
 
 <style scoped lang='scss'>
 .event-card {
-  --indent-card-right: 5px;
+  --card-indent: 5px;
 
   background: #FFE492;
   box-shadow: var(--box-shadow-main);
@@ -89,26 +98,27 @@ const props = defineProps({
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      height: 100%;
+      // height: calc(100% - var(--card-indent));
       width: 100%;
-      padding: var(--indent-card-right);
+      padding: var(--card-indent);
       font-size: 32px;
+      line-height: 32px;
     }
 
     &--right {
       text-align: right;
-      padding: 36px var(--indent-card-right) 10px 5px;
+      padding: 36px var(--card-indent) 10px var(--card-indent);
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: var(--card-indent);
       height: 100%;
     }
   }
 
   &__time {
     position: absolute;
-    right: var(--indent-card-right);
-    top: var(--indent-card-right);
+    right: var(--card-indent);
+    top: var(--card-indent);
   }
 
   // &__bet {}
@@ -119,7 +129,7 @@ const props = defineProps({
     background-color: var(--btn-bg-color);
     box-shadow: var(--box-shadow-main);
     border-radius: var(--border-radius-main);
-    padding: 5px 10px;
+    padding: var(--card-indent) 10px;
     // margin-top: auto auto 0 auto;
     margin-top: auto;
     margin-left: auto;
@@ -132,7 +142,7 @@ const props = defineProps({
     background-color: var(--btn-bg-color);
     top: 0;
     right: 0;
-    padding: var(--indent-card-right) var(--indent-card-right) 3px var(--indent-card-right);
+    padding: var(--card-indent) var(--card-indent) 3px var(--card-indent);
     color: red;
     display: flex;
     justify-content: center;

@@ -4,7 +4,7 @@
 
 <template>
   <button class="button">
-    <img :src="'/images/settings_arrows.svg'" alt="">
+    <slot></slot>
   </button>
 </template>
 
@@ -12,17 +12,12 @@
   .button {
     border-radius: var(--border-radius-main);
     background-color: var(--btn-bg-color);
+    box-shadow: var(--box-shadow-main);
     padding: 5px;
-    width: 50px;
-    height: 40px;
+    min-width: 50px;
+    min-height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
-
-    img {
-      width: 100%;
-      max-width: 30px;
-      max-height: 30px;
-    }
   }
 </style>

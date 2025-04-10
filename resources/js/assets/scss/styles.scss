@@ -1,6 +1,7 @@
 @use './reset';
 @use './variables';
 @use './fonts';
+@use './utils';
 
 
 html {
@@ -14,6 +15,8 @@ body {
   font-style: normal;
   font-variation-settings: "wdth" 100;
   font-weight: normal;
+
+  min-width: 350px;
 
 }
 
