@@ -1,0 +1,37 @@
+@use './reset';
+@use './variables';
+@use './fonts';
+
+
+html {
+  background: var(--bg-color-main);
+}
+
+body {
+  // fonts
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+  font-weight: normal;
+
+}
+
+.container {
+  max-width: 1375px;
+  margin: 0 auto;
+}
+
+.text {
+  &-light {
+    font-weight: 300;
+  }
+
+  &-bold {
+    font-weight: 600;
+  }
+
+  &-black {
+    font-weight: 900;
+  }
+}
