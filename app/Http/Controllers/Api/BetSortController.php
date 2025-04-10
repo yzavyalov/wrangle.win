@@ -6,6 +6,7 @@ use App\Enum\BetStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\BetFilter;
 use App\Http\Requests\BetSearchRequest;
+use App\Http\Resources\BetFinishedResource;
 use App\Http\Resources\BetResource;
 use App\Models\Bet;
 use Illuminate\Http\Request;
@@ -44,5 +45,13 @@ class BetSortController extends Controller
             ->get();
 
         return $this->successJsonAnswer200('Bets',BetResource::collection($bets));
+    }
+
+
+    public function finishBet()
+    {
+        $bets = Bet::query()->where('status',2)->get();
+
+        return $this->successJsonAnswer200('Ended bets.',BetFinishedResource::collection($bets));
     }
 }
