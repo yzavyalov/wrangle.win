@@ -26,6 +26,7 @@ class BetResource extends JsonResource
             'description' => $this->description,
             'finish' => $this->finish,
             'budget' => $this->bits()->pluck('sum')->sum(),
+            'answers' => AnswerResource::collection($this->answers),
             'winner' => AnswerResource::make($this->winnerAnswer),
         ];
     }

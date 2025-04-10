@@ -52,6 +52,6 @@ class BetSortController extends Controller
     {
         $bets = Bet::query()->where('status',2)->get();
 
-        return $this->successJsonAnswer200('Ended bets.',BetFinishedResource::collection($bets));
+        return $this->successJsonAnswer200('Ended bets.',BetResource::collection($bets));
     }
 }
