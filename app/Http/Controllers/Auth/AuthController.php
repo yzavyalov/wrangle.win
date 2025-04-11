@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AuthResource;
+use App\Http\Resources\UserResource;
 use App\Services\BalanceService;
 use App\Services\CheckUserService;
 use App\Traits\JsonResponseTrait;
@@ -41,7 +42,7 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
-        return response()->json($request->user());
+        return $this->successJsonAnswer200('You data', UserResource::make($request->user()));
     }
 
 
@@ -70,8 +71,6 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
-
-            BalanceService::createBalance();
 
             return $this->successJsonAnswer200('User',AuthResource::make($user));
         }

@@ -6,7 +6,9 @@ use App\Http\Controllers\Api\BetController;
 use App\Http\Controllers\Api\BetSortController;
 use App\Http\Controllers\Api\BitController;
 use App\Http\Controllers\Api\FavoriteController;
+use App\Http\Controllers\Api\UserDataController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\SocialController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +27,11 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/auth/{provider}/redirect',[SocialController::class,'redirect'])->name('social.redirect');
 Route::get('/auth/{provider}/callback',[SocialController::class,'callback'])->name('social.callback');
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
+Route::post('/reset-password', [PasswordResetController::class, 'reset']);
+
+
+
 
 Route::get('/bets', [BetController::class,'index']);
 Route::get('/bets/{id}', [BetController::class,'show']);
@@ -48,6 +55,7 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::get('/favorite-bets',[BetSortController::class,'favoriteBets']);
 
     Route::post('bit/{answerId}',[BitController::class,'createBit']);
+    Route::get('user-data',[UserDataController::class,'getUser']);
 });
 
 

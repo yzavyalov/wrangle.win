@@ -65,8 +65,6 @@ class SocialController extends Controller
                         'provider_id' => $socialUser->getId(),
                     ]);
 
-                    BalanceService::createBalance();
-
                     return $this->successJsonAnswer200('User',AuthResource::make($user));
                 }
             }
