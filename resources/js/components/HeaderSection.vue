@@ -1,11 +1,16 @@
 <script setup>
 import SideBar from '@/components/details/SideBar.vue';
 import ButtonBurger from "@/components/details/ButtonBurger.vue"
-import { useSideBar } from "@/composables/useSideBar";
+import { useShowComponent } from "@/composables";
 
 defineOptions({ name: "TopEventsSection" });
 
-const { isSideBatActive, openSideBar, closeSideBar, positions } = useSideBar();
+const {
+  position,
+  isVisible: isSideBatActive,
+  showComponent: openSideBar,
+  closeComponent: closeSideBar,
+} = useShowComponent({ variant: 'sideBar' });
 
 </script>
 
@@ -14,9 +19,10 @@ const { isSideBatActive, openSideBar, closeSideBar, positions } = useSideBar();
     <div class="header__left">
 
       <ButtonBurger @click="openSideBar"  />
+
       <Teleport to="body">
         <transition name="fade">
-          <SideBar v-if="isSideBatActive" @close="closeSideBar" :style="positions" v-click-outside="closeSideBar" />
+          <SideBar v-if="isSideBatActive" @close="closeSideBar" :style="position" v-click-outside="closeSideBar" />
         </transition>
       </Teleport>
 
@@ -45,6 +51,9 @@ const { isSideBatActive, openSideBar, closeSideBar, positions } = useSideBar();
 <style scoped lang='scss'>
 
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   display: flex;
   justify-content: space-between;
   align-items: center;

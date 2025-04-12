@@ -38,8 +38,8 @@ onUnmounted(() => {
 .sidebar {
   position: absolute;
   border-radius: var(--border-radius-main);
-  box-shadow: var(--box-shadow-main);
   z-index: 2;
+  box-shadow: var(--box-shadow-main);
   background: linear-gradient(0deg, #EADCDC 0%, #EADCDC 60%, #ffec6d83 100%), linear-gradient(0deg, #EADCDC 0%, #EADCDC 100%),;
   padding: 15px;
   min-width: 260px;

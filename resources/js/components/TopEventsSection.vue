@@ -2,8 +2,18 @@
 import EventCard from '@/components/EventCard.vue';
 import ButtonWithIcon from '@/components/details/ButtonWithIcon.vue';
 import { demoCardsV1 } from '@/utils/dummyData';
+import SortOptions from '@/components/details/SortOptions.vue';
+import { useShowComponent } from "@/composables";
 
 defineOptions({ name: "TopEventsSection" });
+
+const {
+  position,
+  isVisible: isSortOptionsActive,
+  showComponent: showSortOption,
+  closeComponent: closeSortOption,
+} = useShowComponent({ variant: 'sortOptions' });
+
 
 </script>
 
@@ -12,7 +22,7 @@ defineOptions({ name: "TopEventsSection" });
     <div class="active_events__header">
 
       <div class="active_events__filters">
-        <ButtonWithIcon :icon="'/images/settings.svg'" />
+        <ButtonWithIcon :icon="'/images/settings.svg'" @submit="closeSortOption" @click="showSortOption" />
         <ButtonWithIcon :icon="'/images/settings_arrows.svg'" />
       </div>
 
@@ -20,6 +30,12 @@ defineOptions({ name: "TopEventsSection" });
 
       <p></p>
     </div>
+
+    <Teleport to="body">
+      <transition name="fade">
+        <SortOptions v-if="isSortOptionsActive" @close="closeSortOption" :style="position" v-click-outside="closeSortOption" />
+      </transition>
+    </Teleport>
 
     <ul class="active_events__list">
       <li v-for="card in demoCardsV1" :key="card.id">

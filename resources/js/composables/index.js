@@ -1,1 +1,1 @@
-export * from "./useSideBar";
+export * from "./useShowComponent";
