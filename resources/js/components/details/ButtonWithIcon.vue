@@ -23,6 +23,10 @@ const props = defineProps({
     justify-content: center;
     align-items: center;
 
+    &:hover {
+      background: var(--btn-bg-color-active);
+    }
+
     img {
       width: 100%;
       max-width: 30px;

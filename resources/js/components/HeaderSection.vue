@@ -1,15 +1,24 @@
 <script setup>
+import SideBar from '@/components/details/SideBar.vue';
+import ButtonBurger from "@/components/details/ButtonBurger.vue"
+import { useSideBar } from "@/composables/useSideBar";
+
+defineOptions({ name: "TopEventsSection" });
+
+const { isSideBatActive, openSideBar, closeSideBar, positions } = useSideBar();
 
 </script>
 
 <template>
   <header class="header">
     <div class="header__left">
-      <button class="burger">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+
+      <ButtonBurger @click="openSideBar"  />
+      <Teleport to="body">
+        <transition name="fade">
+          <SideBar v-if="isSideBatActive" @close="closeSideBar" :style="positions" v-click-outside="closeSideBar" />
+        </transition>
+      </Teleport>
 
       <div class="logo">
         <img :src="'/images/logo.svg'" alt="WRANGLER.WIN Logo" />
@@ -49,27 +58,6 @@
     align-items: center;
     gap: 20px;
     height: 45px;
-  }
-
-  .burger {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    width: 48px;
-    height: 32px;
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-
-    span {
-      display: block;
-      height: 6px;
-      background: var(--btn-bg-color);
-      border-radius: 30px;
-      box-shadow: var(--box-shadow-main);
-    }
   }
 
   .logo {

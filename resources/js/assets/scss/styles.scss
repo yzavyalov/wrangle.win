@@ -2,6 +2,7 @@
 @use './variables';
 @use './fonts';
 @use './utils';
+@use './animation';
 
 
 html {
@@ -39,4 +40,8 @@ body {
   &-black {
     font-weight: 900;
   }
+}
+
+.no-scroll {
+  overflow: hidden;
 }

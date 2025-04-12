@@ -19,5 +19,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    &:hover {
+      background: var(--btn-bg-color-active);
+    }
   }
 </style>
