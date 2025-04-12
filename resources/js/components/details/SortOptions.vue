@@ -65,33 +65,35 @@ onUnmounted(() => {
     </div>
 
     <table>
-      <tr>
-        <td>
-          <p>Bet Amount</p>
-        </td>
-        <td><input type="number" v-model="betAmount" min="0" max="1000"></td>
-      </tr>
+      <tbody>
+        <tr>
+          <td>
+            <p>Bet Amount</p>
+          </td>
+          <td><input type="number" v-model="betAmount" min="0" max="1000"></td>
+        </tr>
 
-      <tr>
-        <td>
-          <p>Thema</p>
-        </td>
-        <td><input type="text" v-model="thema"></td>
-      </tr>
+        <tr>
+          <td>
+            <p>Thema</p>
+          </td>
+          <td><input type="text" v-model="thema"></td>
+        </tr>
 
-      <tr>
-        <td>
-          <p>Tags</p>
-        </td>
-        <td><input type="text" v-model="tags"></td>
-      </tr>
+        <tr>
+          <td>
+            <p>Tags</p>
+          </td>
+          <td><input type="text" v-model="tags"></td>
+        </tr>
 
-      <tr>
-        <td>
-          <p>End date</p>
-        </td>
-        <td><input type="datetime-local" v-model="endDate"></td>
-      </tr>
+        <tr>
+          <td>
+            <p>End date</p>
+          </td>
+          <td><input type="datetime-local" v-model="endDate"></td>
+        </tr>
+      </tbody>
     </table>
 
     <div class="sort_options__footer">
