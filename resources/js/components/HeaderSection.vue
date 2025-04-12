@@ -2,6 +2,7 @@
 import SideBar from '@/components/details/SideBar.vue';
 import ButtonBurger from "@/components/details/ButtonBurger.vue"
 import { useShowComponent } from "@/composables";
+import { router } from "@inertiajs/vue3";
 
 defineOptions({ name: "TopEventsSection" });
 
@@ -11,6 +12,13 @@ const {
   showComponent: openSideBar,
   closeComponent: closeSideBar,
 } = useShowComponent({ variant: 'sideBar' });
+
+const navigateTo = (url) => {
+  console.log(url, "url - goToPage");
+  if (!url) return console.warn("No url provided");
+
+  router.visit(url);
+}
 
 </script>
 
@@ -26,7 +34,7 @@ const {
         </transition>
       </Teleport>
 
-      <div class="logo">
+      <div class="logo" @click="navigateTo('/')">
         <img :src="'/images/logo.svg'" alt="WRANGLER.WIN Logo" />
       </div>
 
@@ -42,8 +50,8 @@ const {
     </div>
 
     <div class="auth">
-      <button class="auth__btn">Nickname Name</button>
-      <button class="auth__btn">Your Profile</button>
+      <button class="auth__btn" @click="navigateTo('/login')">Nickname Name</button>
+      <button class="auth__btn" @click="navigateTo('/register')">Your Profile</button>
     </div>
   </header>
 </template>
