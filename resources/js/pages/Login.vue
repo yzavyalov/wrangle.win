@@ -10,15 +10,22 @@ export default {
 
 
 <script setup>
-
+import { Head } from "@inertiajs/vue3";
+import LoginSection from "@/components/LoginSection.vue";
 </script>
 
 <template>
-  <div>
-    login page
+  <Head title="Login" />
+
+  <div class="login-page">
+
   </div>
 </template>
 
 <style scoped lang='scss'>
+  .login-page {
+    &__wrapper {
 
+    }
+  }
 </style>
