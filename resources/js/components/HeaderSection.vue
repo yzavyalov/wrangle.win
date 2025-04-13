@@ -2,9 +2,7 @@
 import SideBar from '@/components/details/SideBar.vue';
 import ButtonBurger from "@/components/details/ButtonBurger.vue"
 import { useShowComponent } from "@/composables";
-import { router } from "@inertiajs/vue3";
-
-defineOptions({ name: "TopEventsSection" });
+import { navigateTo } from '@/helpers/navigate';
 
 const {
   position,
@@ -12,13 +10,6 @@ const {
   showComponent: openSideBar,
   closeComponent: closeSideBar,
 } = useShowComponent({ variant: 'sideBar' });
-
-const navigateTo = (url) => {
-  console.log(url, "url - goToPage");
-  if (!url) return console.warn("No url provided");
-
-  router.visit(url);
-}
 
 </script>
 

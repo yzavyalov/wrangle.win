@@ -57,7 +57,7 @@
   --footer-gb-color: #C0C0C0;
 
   font-family: "Cabin", sans-serif;
-  font-weight: black;
+  font-weight: var(--font-weight-bold);
   font-size: 20px;
   font-style: italic;
 
@@ -100,6 +100,16 @@
     justify-content: center;
     gap: 100px;
     width: 100%;
+
+    @media screen and (max-width: 1299px) {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 60px;
+    }
+
+    @media screen and (max-width: 929px) {
+      grid-template-columns: repeat(1, 1fr);
+      gap: 40px;
+    }
   }
 
   &__description {
@@ -127,6 +137,20 @@
   &__bottom {
     text-align: center;
     padding: 20px 0 5px;
+  }
+
+  @media screen and (max-width: 1299px) {
+    &__section {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 60px;
+    }
+  }
+
+  @media screen and (max-width: 929px) {
+    &__section {
+      grid-template-columns: repeat(1, 1fr);
+      gap: 40px;
+    }
   }
 }
 </style>

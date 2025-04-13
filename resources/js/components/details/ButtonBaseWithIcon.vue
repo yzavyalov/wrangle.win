@@ -1,14 +1,20 @@
 <script setup>
 const props = defineProps({
-  icon: { type: String, default: "/images/settings_arrows.svg" },
-  alt: { type: String, default: "button" }
+  text: { type: String, default: "" },
+  icon: { type: String, default: "" },
+  alt: { type: String, default: "button" },
 })
 </script>
 
 <template>
   <button class="button">
-    <img :src="icon" :alt="alt">
-    <slot></slot>
+    <slot name="icon">
+      <img v-if="icon" :src="icon" :alt="alt">
+    </slot>
+
+    <slot name="text">
+      <p>{{ text }}</p>
+    </slot>
   </button>
 </template>
 
@@ -18,20 +24,23 @@ const props = defineProps({
     background-color: var(--btn-bg-color);
     box-shadow: var(--box-shadow-main);
     padding: 5px;
-    width: 50px;
-    height: 40px;
+    min-width: 50px;
+    min-height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 0 45px;
+    position: relative;
 
     &:hover {
       background: var(--btn-bg-color-active);
     }
 
     img {
-      width: 100%;
-      max-width: 30px;
-      max-height: 30px;
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      left: 10px;
     }
   }
 </style>

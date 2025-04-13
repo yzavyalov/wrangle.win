@@ -6,14 +6,17 @@ import FooterSection from '@/components/FooterSection.vue';
 
 <template>
   <div class="base-layout">
-    <div class="container">
-      <HeaderSection />
 
-      <slot></slot>
+    <div class="base-layout__content">
+      <div class="container">
+        <HeaderSection />
 
+        <slot></slot>
+
+      </div>
     </div>
 
-    <FooterSection class="mt-auto" />
+    <FooterSection />
   </div>
 </template>
 
@@ -22,6 +25,7 @@ import FooterSection from '@/components/FooterSection.vue';
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 
   .container {
     width: 100%;
@@ -29,8 +33,10 @@ import FooterSection from '@/components/FooterSection.vue';
     margin: 0 auto;
   }
 
-  .mt-auto {
-    margin-top: auto;
+  &__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 }
 </style>
