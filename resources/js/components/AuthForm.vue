@@ -1,9 +1,11 @@
 <script setup>
-import { reactive } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import InputBase from '@/components/details/InputBase.vue';
 import CheckboxBase from '@/components/details/CheckboxBase.vue';
 import ButtonBaseWithIcon from '@/components/details/ButtonBaseWithIcon.vue';
 import { navigateTo } from '@/helpers/navigate';
+import useVuelidate from '@vuelidate/core';
+import { required, sameAs, email, minLength } from '@vuelidate/validators';
 
 const props = defineProps({
   isLoginVariant: { type: Boolean, default: true, },
@@ -19,23 +21,65 @@ const formData = reactive({
   isShowPassword: false,
 });
 
-const actionHandler = (action) => {
-  console.log(action,  'action - actionHandler');
+const rules = computed(() => {
+  return props.isLoginVariant
+    ? {
+        email: { required, email },
+        password: { required, minLength: minLength(6) },
+      }
+    : {
+        email: { required, email },
+        emailRepeat: { required, sameAsEmail: sameAs(formData.email) },
+        password: { required, minLength: minLength(6) },
+        passwordRepeat: { required, sameAsPassword: sameAs(formData.password) },
+      };
+});
+
+const v$ = useVuelidate(rules, formData);
+
+const loginInHandle = async () => {
+  console.log('loginInHandle');
+
+  await v$.value.$validate();
+  if (!v$.value.$valid) return;
+
+  console.log('logic for login');
+}
+
+const registerHandle = async () => {
+  console.log('registerHandle');
+
+  await v$.value.$validate();
+  if (!v$.value.$valid) return;
+
+  console.log('logic for register');
+}
+
+const formActionHandler = (action) => {
+  console.log(action,  'action - formActionHandler');
 
   switch (action) {
-    case 'sign_in':
+    case 'to_sign_in':
       navigateTo('/login')
       break;
 
-    case 'sign_up':
+    case 'to_sign_up':
       navigateTo('/register')
       break;
 
+      case 'login':
+      loginInHandle();
+      break;
+
+    case 'register':
+      registerHandle();
+      break;
+
     default:
+      console.warn(`No handle for such action - ${action}`);
       break;
   }
 }
-
 
 </script>
 
@@ -49,47 +93,74 @@ const actionHandler = (action) => {
 
       <div class="auth-form__form">
         <InputBase v-model="formData.email" :placeholder="'Email address'" type="email" class="form__input" />
+        <span v-if="v$.email?.$error" class="error">
+          <span v-if="v$.email?.required?.$invalid">Email is required</span>
+          <span v-else-if="v$.email?.email?.$invalid">Email is invalid</span>
+        </span>
         <InputBase v-if="!isLoginVariant" v-model="formData.emailRepeat" :placeholder="'Email address (Repeat)'" type="email" class="form__input mb-20" />
+        <span v-if="v$.emailRepeat?.$error" class="error">
+          <span v-if="v$.emailRepeat?.required?.$invalid">Email is required</span>
+          <span v-else-if="v$.emailRepeat?.sameAsEmail?.$invalid">Emails do not match</span>
+        </span>
 
         <InputBase v-model="formData.password" placeholder="Password" :type="formData.isShowPassword ? 'text' : 'password'" class="form__input" />
+        <span v-if="v$.password?.$error" class="error">
+          <span v-if="v$.password?.required?.$invalid">Password is required</span>
+          <span v-else-if="v$.password?.minLength?.$invalid">Password must be at least 6 characters</span>
+        </span>
         <InputBase v-if="!isLoginVariant" v-model="formData.passwordRepeat" placeholder="Password (Repeat)" :type="formData.isShowPassword ? 'text' : 'password'" class="form__input" />
+        <span v-if="v$.passwordRepeat?.$error" class="error">
+          <span v-if="v$.passwordRepeat?.required?.$invalid">Password (repeat) is required</span>
+          <span v-else-if="v$.passwordRepeat?.sameAsPassword?.$invalid">Passwords do not match</span>
+        </span>
 
         <CheckboxBase v-model="formData.isShowPassword" label="Show Password" />
+
+        <ButtonBaseWithIcon v-if="isLoginVariant"
+          text="Login"
+          class="btn__google"
+          @click="formActionHandler('login')"
+        />
+        <ButtonBaseWithIcon v-else
+          text="Register"
+          class="btn__google"
+          @click="formActionHandler('register')"
+        />
 
         <ButtonBaseWithIcon
           icon="/images/google.svg"
           text="Continue with Google"
           class="btn__google mt-20"
-          @click="actionHandler('google')"
+          @click="formActionHandler('google')"
         />
         <ButtonBaseWithIcon
           icon="/images/facebook.svg"
           text="Continue with Facebook"
           class="btn__facebook"
-          @click="actionHandler('facebook')"
+          @click="formActionHandler('facebook')"
         />
         <ButtonBaseWithIcon
           icon="/images/telegram.svg"
           text="Continue with Telegram"
           class="btn__telegram"
-          @click="actionHandler('telegram')"
+          @click="formActionHandler('telegram')"
         />
       </div>
 
       <div class="auth-form__footer">
         <ul v-if="isLoginVariant">
-          <li @click="actionHandler('forgot_password')">Forgot password?</li>
-          <li @click="actionHandler('sign_up')">Want to sign up?</li>
+          <li @click="formActionHandler('forgot_password')">Forgot password?</li>
+          <li @click="formActionHandler('to_sign_up')">Want to sign up?</li>
         </ul>
         <ul v-else>
-          <li @click="actionHandler('contact_us')">Need help? Contact us</li>
-          <li @click="actionHandler('sign_in')">Want to sign login?</li>
+          <li @click="formActionHandler('contact_us')">Need help? Contact us</li>
+          <li @click="formActionHandler('to_sign_in')">Want to sign login?</li>
         </ul>
       </div>
 
       <p v-if="isLoginVariant"
         class="auth-form__bottom--text text-center mt-30"
-        @click="actionHandler('contact_us')"
+        @click="formActionHandler('contact_us')"
       >
         Need help? Contact us
       </p>
@@ -200,6 +271,13 @@ const actionHandler = (action) => {
       background: #26A4E2;
       color: #fff;
       border: 1px solid #26A4E2;
+    }
+
+    .error {
+      font-size: 12px;
+      color: red;
+      margin-top: -6px;
+      margin-bottom: 6px;
     }
   }
 </style>
