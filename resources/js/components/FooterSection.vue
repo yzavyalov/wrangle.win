@@ -101,15 +101,15 @@
     gap: 100px;
     width: 100%;
 
-    @media screen and (max-width: 1299px) {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 60px;
-    }
+    // @media screen and (max-width: 1299px) {
+    //   grid-template-columns: repeat(3, 1fr);
+    //   gap: 60px;
+    // }
 
-    @media screen and (max-width: 929px) {
-      grid-template-columns: repeat(1, 1fr);
-      gap: 40px;
-    }
+    // @media screen and (max-width: 929px) {
+    //   grid-template-columns: repeat(1, 1fr);
+    //   gap: 40px;
+    // }
   }
 
   &__description {
@@ -140,6 +140,10 @@
   }
 
   @media screen and (max-width: 1299px) {
+    &__container {
+      padding: 45px 20px 20px 20px;
+    }
+
     &__section {
       grid-template-columns: repeat(3, 1fr);
       gap: 60px;
@@ -150,6 +154,18 @@
     &__section {
       grid-template-columns: repeat(1, 1fr);
       gap: 40px;
+    }
+
+    &__links {
+      justify-content: space-around;
+    }
+
+    &__contact {
+      text-align: center;
+    }
+
+    &__bottom {
+      padding: 5px;
     }
   }
 }

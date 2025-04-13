@@ -15,29 +15,26 @@ const {
 
 <template>
   <header class="header">
-    <div class="header__left">
+    <ButtonBurger @click="openSideBar"  />
 
-      <ButtonBurger @click="openSideBar"  />
+    <Teleport to="body">
+      <transition name="fade">
+        <SideBar v-if="isSideBatActive" @close="closeSideBar" :style="position" v-click-outside="closeSideBar" />
+      </transition>
+    </Teleport>
 
-      <Teleport to="body">
-        <transition name="fade">
-          <SideBar v-if="isSideBatActive" @close="closeSideBar" :style="position" v-click-outside="closeSideBar" />
-        </transition>
-      </Teleport>
+    <div class="logo" @click="navigateTo('/')">
+      <img :src="'/images/logo.svg'" alt="WRANGLER.WIN Logo" />
+    </div>
 
-      <div class="logo" @click="navigateTo('/')">
-        <img :src="'/images/logo.svg'" alt="WRANGLER.WIN Logo" />
-      </div>
+    <nav class="nav">
+      <button class="nav__btn">All Categories</button>
+      <button class="nav__btn">Popular</button>
+      <button class="nav__btn">New Bet</button>
+    </nav>
 
-      <nav class="nav">
-        <button class="nav__btn">All Categories</button>
-        <button class="nav__btn">Popular</button>
-        <button class="nav__btn">New Bet</button>
-      </nav>
-
-      <div class="search">
-        <input type="text" placeholder="Search Markets" />
-      </div>
+    <div class="search">
+      <input type="text" placeholder="Search Markets" />
     </div>
 
     <div class="auth">
@@ -54,19 +51,13 @@ const {
   top: 0;
   z-index: 2;
   display: flex;
-  justify-content: space-between;
+  gap: 10px;
+  justify-content: start;
+  flex-wrap: wrap;
   align-items: center;
   padding: 10px 20px;
+  font-weight: var(--font-weight-light);
 
-  font-weight: light;
-
-
-  .header__left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    height: 45px;
-  }
 
   .logo {
     background-color: var(--btn-bg-color);
@@ -91,10 +82,10 @@ const {
     box-shadow: var(--box-shadow-main);
     transition: background 0.3s;
     overflow: hidden;
+    min-height: 45px;
 
     .nav__btn {
       padding: 8px 16px;
-      height: 45px;
       border: none;
       cursor: pointer;
 
@@ -128,9 +119,9 @@ const {
     display: grid;
     grid-template-columns: 1fr 1fr;
     box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
-    height: 45px;
+    min-height: 45px;
     border-radius: var(--border-radius-main);
-    // width: 250px;
+    margin-left: auto;
     font-style: italic;
     box-shadow: var(--box-shadow-main);
 

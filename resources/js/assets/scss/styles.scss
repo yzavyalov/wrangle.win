@@ -7,6 +7,7 @@
 
 html {
   background: var(--bg-color-main);
+  min-width: 350px;
 }
 
 body {
@@ -17,16 +18,9 @@ body {
   font-variation-settings: "wdth" 100;
   font-weight: normal;
 
-  min-width: 350px;
-
   background: url('/images/sky.svg') no-repeat center -100px fixed;
 
 }
-
-// .container {
-//   max-width: 1375px;
-//   margin: 0 auto;
-// }
 
 .container {
   width: 100%;
