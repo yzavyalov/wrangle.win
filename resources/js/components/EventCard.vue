@@ -81,7 +81,7 @@ const shortTitle = computed(() => {
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(180deg, #ffe49239 0%, #FFE492 100%);
+      background: linear-gradient(180deg, #ffe49239 0%,#FFE492 70%, #FFE492 100%);
     }
   }
 
@@ -98,7 +98,6 @@ const shortTitle = computed(() => {
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      // height: calc(100% - var(--card-indent));
       width: 100%;
       padding: var(--card-indent);
       font-size: 32px;
@@ -130,7 +129,6 @@ const shortTitle = computed(() => {
     box-shadow: var(--box-shadow-main);
     border-radius: var(--border-radius-main);
     padding: var(--card-indent) 10px;
-    // margin-top: auto auto 0 auto;
     margin-top: auto;
     margin-left: auto;
     margin-right: auto;

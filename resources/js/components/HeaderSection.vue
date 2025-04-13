@@ -38,8 +38,8 @@ const {
     </div>
 
     <div class="auth">
-      <button class="auth__btn" @click="navigateTo('/login')">Nickname Name</button>
-      <button class="auth__btn" @click="navigateTo('/register')">Your Profile</button>
+      <button class="auth__btn" @click="navigateTo('/register')">Signup</button>
+      <button class="auth__btn" @click="navigateTo('/login')">Login</button>
     </div>
   </header>
 </template>
