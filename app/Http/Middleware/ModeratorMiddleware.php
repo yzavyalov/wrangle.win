@@ -11,11 +11,11 @@ class ModeratorMiddleware
     public function handle(Request $request, Closure $next)
     {
 
-        if (Auth::user()->hasRole('admin')) {
+        if (Auth::check() && Auth::user()->hasRole('admin')) {
             return $next($request);
         }
 
-        return redirect()->route('/');
+        return redirect()->route('index');
     }
 }
 

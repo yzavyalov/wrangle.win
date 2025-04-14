@@ -17,16 +17,27 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         $userData = [
-            'name' => 'Admin',
+           [
+            'name' => 'Horban',
             'email' => 'andriihorban74@gmail.com',
             'email_verified_at' => now(),
             'password' => bcrypt('Horban1#'),
+           ],
+           [
+               'name' => 'Yaroslav',
+               'email' => '8540462@gmail.com',
+               'email_verified_at' => now(),
+               'password' => bcrypt('Admin1#'),
+           ],
         ];
 
-        $admin = User::firstOrCreate(['email' => $userData['email']],$userData);
+        foreach ($userData as $user)
+        {
+            $admin = User::firstOrCreate(['email' => $user['email']], $user);
 
-        $admin->assignRole(['admin','finance manager']);
+            $admin->assignRole(['admin', 'finance manager']);
 
-        $this->command->info('Администратор создан и роль назначена.');
+            $this->command->info('Администратор создан и роль назначена.');
+        }
     }
 }
