@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminPanel\AdminAuthController;
 use App\Http\Controllers\AdminPanel\AdminTwoFactorAuthController;
+use App\Http\Controllers\AdminPanel\BetController;
 use App\Http\Controllers\AdminPanel\PageController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,4 +30,9 @@ Route::middleware('moderator')->prefix('/admin-panel')->group(function (){
     Route::post('/check-code',[AdminTwoFactorAuthController::class, 'checkCode'])->name('check-code');
     Route::get('/', [AdminTwoFactorAuthController::class, 'showInputForm'])->name('showInputForm');
     Route::get('/index', [PageController::class, 'mainPage'])->name('admin-panel');
+
+    Route::get('/bets-all',[BetController::class,'allBets'])->name('bets-all');
+    Route::get('/bet-show/{id}',[BetController::class,'show'])->name('bet-show');
+    Route::put('/bet-edit/{id}',[BetController::class,'update'])->name('bet-edit');
+    Route::get('/bet-del/{id}',[BetController::class,'del'])->name('bet-del');
 });

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use SocialiteProviders\Manager\SocialiteWasCalled;
@@ -25,5 +26,7 @@ class AppServiceProvider extends ServiceProvider
             $event->extendSocialite('facebook', \SocialiteProviders\Facebook\Provider::class);
             $event->extendSocialite('telegram', \SocialiteProviders\Telegram\Provider::class);
         });
+
+        Paginator::useBootstrap();
     }
 }

@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{asset('admin-layout/dist/css/adminlte.min.css')}}">
+    @livewireStyles
+    @yield('style')
 </head>
 <!--
 `body` tag options:
@@ -91,19 +93,6 @@
         <!-- Sidebar -->
         <div class="sidebar">
 
-
-            <!-- SidebarSearch Form -->
-            <div class="form-inline">
-                <div class="input-group" data-widget="sidebar-search">
-                    <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn btn-sidebar">
-                            <i class="fas fa-search fa-fw"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
             <!-- Sidebar Menu -->
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -111,28 +100,18 @@
                          with font-awesome or any other icon font library -->
 
                     <li class="nav-item">
-                        <a href="{{asset('admin-layout/pages/widgets.html')}}" class="nav-link">
-                            <i class="nav-icon fas fa-th"></i>
-                            <p>
-                                Widgets
-                                <span class="right badge badge-danger">New</span>
-                            </p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{{ route('bets-all') }}" class="nav-link">
                             <i class="nav-icon fas fa-copy"></i>
                             <p>
-                                Layout Options
+                                BETS
                                 <i class="fas fa-angle-left right"></i>
-                                <span class="badge badge-info right">6</span>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{{asset('admin-layout/pages/layout/top-nav.html')}}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Top Navigation</p>
+                                    <p>Create bet</p>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -789,17 +768,19 @@
 <!-- REQUIRED SCRIPTS -->
 
 <!-- jQuery -->
-<script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
+<script src="{{asset('admin-layout/plugins/jquery/jquery.min.js')}}"></script>
 <!-- Bootstrap -->
-<script src="{{asset('plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<script src="{{asset('admin-layout/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- AdminLTE -->
-<script src="{{asset('dist/js/adminlte.js')}}"></script>
+<script src="{{asset('admin-layout/dist/js/adminlte.js')}}"></script>
 
 <!-- OPTIONAL SCRIPTS -->
-<script src="{{asset('plugins/chart.js/Chart.min.js')}}"></script>
+<script src="{{asset('admin-layout/plugins/chart.js/Chart.min.js')}}"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="{{asset('dist/js/demo.js')}}"></script>
+<script src="{{asset('admin-layout/dist/js/demo.js')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{asset('dist/js/pages/dashboard3.js')}}"></script>
+<script src="{{asset('admin-layout/dist/js/pages/dashboard3.js')}}"></script>
+@livewireScripts
+@yield('scripts')
 </body>
 </html>
