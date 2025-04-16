@@ -27,57 +27,59 @@ import { predictionDemoData } from '@/utils/dummyData';
   <PageWrapperMain class="prediction">
     <div class="prediction__wrapper">
       <div class="prediction__details">
-        <div class="prediction__details--header">
-          <div class="prediction__details--hot">#HOT!</div>
-        </div>
-
-        <div class="prediction__details--main">
-          <h2 class="prediction__details--title">{{ predictionDemoData.title }}</h2>
-          <p class="prediction__details--text" v-for="(desc, index) in predictionDemoData.description" :key="index">{{ desc }}</p>
-
-          <div class="prediction__details--body">
-            <ul class="prediction__details--info">
-              <p class="color-red"><b>Time left: {{ getTimeLeft(predictionDemoData.date) }}</b></p>
-              <li><p>Bet amount: <b>{{ predictionDemoData.betAmount }}</b></p></li>
-              <li><p>Total bets: <b>{{ predictionDemoData.totalBets }}</b></p></li>
-              <li><p>Max. profit from 1€: <b>{{ predictionDemoData.maxProfitPer1Euro }}</b></p></li>
-            </ul>
-
-            <ul class="prediction__details--info">
-              <p><b>Tags:</b></p>
-              <li v-for="(tag, index) in predictionDemoData.tags" :key="index">{{ tag }}</li>
-            </ul>
+        <div class="prediction__content">
+          <div class="prediction__details--header">
+            <div class="prediction__details--hot">#HOT!</div>
           </div>
 
-          <ButtonBase class="prediction__details--btn">Sources:</ButtonBase>
-        </div>
+          <div class="prediction__details--main">
+            <h2 class="prediction__details--title">{{ predictionDemoData.title }}</h2>
+            <p class="prediction__details--text" v-for="(desc, index) in predictionDemoData.description" :key="index">{{ desc }}</p>
 
+            <div class="prediction__details--body">
+              <ul class="prediction__details--info">
+                <p class="color-red"><b>Time left: {{ getTimeLeft(predictionDemoData.date) }}</b></p>
+                <li><p>Bet amount: <b>{{ predictionDemoData.betAmount }}</b></p></li>
+                <li><p>Total bets: <b>{{ predictionDemoData.totalBets }}</b></p></li>
+                <li><p>Max. profit from 1€: <b>{{ predictionDemoData.maxProfitPer1Euro }}</b></p></li>
+              </ul>
+
+              <ul class="prediction__details--info">
+                <p><b>Tags:</b></p>
+                <li v-for="(tag, index) in predictionDemoData.tags" :key="index">{{ tag }}</li>
+              </ul>
+            </div>
+
+            <ButtonBase class="prediction__details--btn">Sources:</ButtonBase>
+          </div>
+        </div>
       </div>
 
       <div class="prediction__options">
-        <h4 class="prediction__options--title">Make a prediction</h4>
-        <div class="prediction__options--wallet">
-          <p class="coin-decorator">
-            Your Wallet: <b>{{ predictionDemoData.wallet }}</b>
-          </p>
-          <div class="prediction__options--input">
-            <span class="text-right font-italic">Amount:</span>
-            <input class="text-right" type="text">
+        <div class="prediction__content">
+          <h4 class="prediction__options--title">Make a prediction</h4>
+          <div class="prediction__options--wallet">
+            <p class="coin-decorator">
+              Your Wallet: <b>{{ predictionDemoData.wallet }}</b>
+            </p>
+            <div class="prediction__options--input">
+              <span class="text-right font-italic">Amount:</span>
+              <input class="text-right" type="number" min="0" step="1">
+            </div>
+          </div>
+          <h4 class="prediction__options--title">Сhoose option</h4>
+
+          <div v-for="(option, index) in predictionDemoData.options"
+            :key="index"
+            class="prediction__option"
+          >
+            <p>
+              <span><b>{{ option.percent }}</b> thinks so:</span>
+              <span>Possible profit from 1€: <b>{{ option.profit }}</b></span>
+            </p>
+            <ButtonBase>{{ option.text }}</ButtonBase>
           </div>
         </div>
-        <h4 class="prediction__options--title">Сhoose option</h4>
-
-        <div v-for="(option, index) in predictionDemoData.options"
-          :key="index"
-          class="prediction__option"
-        >
-          <p>
-            <span><b>{{ option.percent }}</b> thinks so:</span>
-            <span>Possible profit from 1€: <b>{{ option.profit }}</b></span>
-          </p>
-          <ButtonBase>{{ option.text }}</ButtonBase>
-        </div>
-
       </div>
     </div>
 
@@ -107,9 +109,12 @@ import { predictionDemoData } from '@/utils/dummyData';
       border-radius: var(--border-radius-main);
     }
 
-    &__details {
+    &__content {
       position: relative;
       z-index: 1;
+    }
+
+    &__details {
       padding-bottom: 80px;
 
       &--header {
@@ -180,6 +185,7 @@ import { predictionDemoData } from '@/utils/dummyData';
         font-size: 32px;
         font-weight: var(--font-weight-light);
         margin: 15px 0;
+        text-align: center;
       }
 
       &--wallet {
