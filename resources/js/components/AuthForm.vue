@@ -6,7 +6,7 @@ import ButtonBaseWithIcon from '@/components/details/ButtonBaseWithIcon.vue';
 import { navigateTo } from '@/helpers/navigate';
 import useVuelidate from '@vuelidate/core';
 import { required, sameAs, email, minLength } from '@vuelidate/validators';
-import { register, login } from '@/services/user';
+import { register, login, loginWithSocial } from '@/services/user';
 
 const props = defineProps({
   isLoginVariant: { type: Boolean, default: true, },
@@ -101,6 +101,12 @@ const formActionHandler = (action) => {
 
     case 'register':
       registerHandle();
+      break;
+
+    case 'google':
+    case 'facebook':
+    case 'telegram':
+      loginWithSocial(action);
       break;
 
     default:

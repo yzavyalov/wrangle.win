@@ -1,6 +1,5 @@
 import { http } from "@/api/http";
 import { AUTH } from "@/api/enpoints";
-import { LoginPayload, RegisterPayload } from "@/types/user";
 import { useUserStore } from "@/store/user";
 
 export const register = async (payload: RegisterPayload) => {
@@ -27,6 +26,19 @@ export const login = async (payload: LoginPayload) => {
     token && localStorage.setItem("access_token", token);
 
     user && useUserStore().updateUser(user);
+
+    return res.data;
+  })
+  .catch(e => console.error(e.message));
+};
+
+export const loginWithSocial = async (social: SocialLoginType) => {
+
+  const baseUrl = `/api/auth/${social}/redirect`;
+
+  return await http.get(baseUrl)
+  .then(res => {
+    console.log(res, "res - loginWithSocial");
 
     return res.data;
   })
