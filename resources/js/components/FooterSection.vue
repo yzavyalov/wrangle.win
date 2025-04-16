@@ -55,6 +55,7 @@
 <style scoped lang='scss'>
 .footer {
   --footer-gb-color: #C0C0C0;
+  --footer-testvar: #fff;
 
   font-family: "Cabin", sans-serif;
   font-weight: var(--font-weight-bold);

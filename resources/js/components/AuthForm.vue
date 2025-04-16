@@ -1,17 +1,20 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
+import { computed, nextTick, reactive, ref } from 'vue';
 import InputBase from '@/components/details/InputBase.vue';
 import CheckboxBase from '@/components/details/CheckboxBase.vue';
 import ButtonBaseWithIcon from '@/components/details/ButtonBaseWithIcon.vue';
 import { navigateTo } from '@/helpers/navigate';
 import useVuelidate from '@vuelidate/core';
 import { required, sameAs, email, minLength } from '@vuelidate/validators';
+import { register, login } from '@/services/user';
 
 const props = defineProps({
   isLoginVariant: { type: Boolean, default: true, },
 });
 
 const formData = reactive({
+  name: '',
+
   email: '',
   emailRepeat: '',
 
@@ -28,6 +31,7 @@ const rules = computed(() => {
         password: { required, minLength: minLength(6) },
       }
     : {
+        name: { required, minLength: minLength(3) },
         email: { required, email },
         emailRepeat: { required, sameAsEmail: sameAs(formData.email) },
         password: { required, minLength: minLength(6) },
@@ -41,18 +45,42 @@ const loginInHandle = async () => {
   console.log('loginInHandle');
 
   await v$.value.$validate();
-  if (!v$.value.$valid) return;
+  if (v$.value.$invalid) return;
 
-  console.log('logic for login');
+  const paylaod = {
+    email: formData.email,
+    password: formData.password,
+  };
+
+  const result = await login(paylaod);
+
+  if (!result) return console.warn('Login error');
+
+  navigateTo('/profile');
+
+  console.log(result, 'result - login');
 }
 
 const registerHandle = async () => {
   console.log('registerHandle');
 
   await v$.value.$validate();
-  if (!v$.value.$valid) return;
+  if (v$.value.$invalid) return;
 
-  console.log('logic for register');
+  const paylaod = {
+    name: formData.name,
+    email: formData.email,
+    password: formData.password,
+    password_confirmation: formData.passwordRepeat
+  };
+
+  const result = await register(paylaod);
+  console.log(result, 'result - registerHandle');
+
+  if (!result) return console.warn('Register error');
+
+  navigateTo('/login');
+
 }
 
 const formActionHandler = (action) => {
@@ -67,7 +95,7 @@ const formActionHandler = (action) => {
       navigateTo('/register')
       break;
 
-      case 'login':
+    case 'login':
       loginInHandle();
       break;
 
@@ -92,6 +120,11 @@ const formActionHandler = (action) => {
       </div>
 
       <div class="auth-form__form">
+        <InputBase v-if="!isLoginVariant" v-model="formData.name" :placeholder="'User name'" type="text" class="form__input" />
+        <span v-if="v$.name?.$error" class="error">
+          <span v-if="v$.name?.required?.$invalid">Name is required</span>
+        </span>
+
         <InputBase v-model="formData.email" :placeholder="'Email address'" type="email" class="form__input" />
         <span v-if="v$.email?.$error" class="error">
           <span v-if="v$.email?.required?.$invalid">Email is required</span>

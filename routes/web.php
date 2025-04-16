@@ -25,3 +25,12 @@ Route::get('/login', function () {
 Route::get('/register', function () {
     return Inertia::render('Register');
 });
+
+Route::get('/new_bet', function () {
+    return Inertia::render('NewBet');
+});
+
+Route::get('/profile', function () {
+    return Inertia::render('Profile');
+});
+

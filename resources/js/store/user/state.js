@@ -1,5 +1,3 @@
 export default () => ({
-  user: {
-    id: null,
-  },
+  user: null,
 });

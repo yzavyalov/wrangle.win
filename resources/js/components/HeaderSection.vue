@@ -3,6 +3,9 @@ import SideBar from '@/components/details/SideBar.vue';
 import ButtonBurger from "@/components/details/ButtonBurger.vue"
 import { useShowComponent } from "@/composables";
 import { navigateTo } from '@/helpers/navigate';
+import { useUserStore } from "@/store/user";
+import { computed, nextTick } from 'vue';
+import { logout } from '@/services/user';
 
 const {
   position,
@@ -10,6 +13,15 @@ const {
   showComponent: openSideBar,
   closeComponent: closeSideBar,
 } = useShowComponent({ variant: 'sideBar' });
+
+const currentUser = computed(() => useUserStore().getUser);
+
+const logOutHandler = async () => {
+  const result = await logout()
+  useUserStore().logout();
+  await nextTick();
+  navigateTo('/login');
+}
 
 </script>
 
@@ -30,7 +42,7 @@ const {
     <nav class="nav">
       <button class="nav__btn">All Categories</button>
       <button class="nav__btn">Popular</button>
-      <button class="nav__btn">New Bet</button>
+      <button class="nav__btn" @click="navigateTo('/new_bet')">New Bet</button>
     </nav>
 
     <div class="search">
@@ -38,8 +50,11 @@ const {
     </div>
 
     <div class="auth">
-      <button class="auth__btn" @click="navigateTo('/register')">Signup</button>
-      <button class="auth__btn" @click="navigateTo('/login')">Login</button>
+      <button v-if="currentUser" class="auth__btn" @click="navigateTo('/profile')">{{ currentUser?.name }}</button>
+      <button  v-if="currentUser" class="auth__btn" @click="logOutHandler">Logout</button>
+
+      <button  v-if="!currentUser" class="auth__btn" @click="navigateTo('/register')">Signup</button>
+      <button  v-if="!currentUser" class="auth__btn" @click="navigateTo('/login')">Login</button>
     </div>
   </header>
 </template>

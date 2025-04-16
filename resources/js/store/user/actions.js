@@ -4,9 +4,18 @@ export default {
   },
 
   updateUser(updatedUser) {
+    if (!this.user) {
+      this.user = {};
+    }
+
     this.user = {
       ...this.user,
       ...updatedUser,
     };
+  },
+
+
+  logout() {
+    this.user = null;
   },
 };

@@ -6,8 +6,6 @@ export const useShowComponent = ({ variant = 'default' }: UseShowComponentOption
   const position = ref({});
 
   const { offsetX, offsetY } = componentOffsetsByVariant[variant] || componentOffsetsByVariant.default;
-  console.log(offsetX, offsetY, 'offsetX, offsetY - useShowComponent - variant', variant);
-
 
   const showComponent = (target) => {
     const el = target instanceof HTMLElement ? target : target?.currentTarget;
