@@ -16,7 +16,7 @@ import AuthForm from "@/components/AuthForm.vue";
 </script>
 
 <template>
-  <Head title="Sign up" />
+  <Head title="Register" />
 
   <div class="login-page">
     <div class="login-page__wrapper">

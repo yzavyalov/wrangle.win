@@ -21,7 +21,7 @@ const currentUser = computed(() => useUserStore().getUser);
 </script>
 
 <template>
-  <Head title="Sign up" />
+  <Head title="Profile" />
 
   <PageWrapperMain class="profile">
     <div class="profile__header">
@@ -33,8 +33,7 @@ const currentUser = computed(() => useUserStore().getUser);
       <div class="profile__header--user">
         <p class="profile__header--top">{{ currentUser?.name || 'Nickname Name' }}</p>
         <ButtonBase class="min-width-80">Edit Profile</ButtonBase>
-        <p class="profile__header--bottom">
-          <span><img :src="'/images/coin.svg'" alt="coin icon"></span>
+        <p class="profile__header--bottom coin-decorator">
           Balance: <b>100$</b>
         </p>
       </div>
@@ -118,19 +117,7 @@ const currentUser = computed(() => useUserStore().getUser);
       line-height: 32px;
     }
 
-    &--bottom {
-      position: relative;
-      padding: 0 30px;
-
-      img {
-        position: absolute;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        max-width: 20px;
-        max-height: 20px;
-      }
-    }
+    // &--bottom {}
 
     &--avatar {
       padding: var(--profile-padding-main) calc(var(--profile-padding-main) * 2);

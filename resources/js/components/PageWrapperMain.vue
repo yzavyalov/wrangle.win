@@ -1,5 +1,10 @@
 <script setup>
 import PageCloudDecorator from '@/components/details/PageCloudDecorator.vue';
+
+const props = defineProps({
+  showDecorator: { type: Boolean, default: true }
+})
+
 </script>
 
 <template>
@@ -10,8 +15,7 @@ import PageCloudDecorator from '@/components/details/PageCloudDecorator.vue';
 
     </div>
 
-    <!-- <div class="page__decorator"></div> -->
-    <PageCloudDecorator />
+    <PageCloudDecorator v-if="showDecorator" />
   </div>
 </template>
 
@@ -29,19 +33,6 @@ import PageCloudDecorator from '@/components/details/PageCloudDecorator.vue';
       height: 100%;
       min-height: 700px;
       padding: 20px;
-    }
-
-    &__decorator {
-      position: absolute;
-      width: 100vw;
-      height: 100%;
-      z-index: 0;
-      background: url('/images/sky.svg') no-repeat;
-      background-position: top;
-      background-size: cover;
-      bottom: -500px;
-      right: 50%;
-      transform: translateX(50%);
     }
   }
 </style>

@@ -71,6 +71,9 @@ const logOutHandler = async () => {
 <style scoped lang='scss'>
 
 .header {
+
+  --header-height: 45px;
+
   position: sticky;
   top: 0;
   z-index: 2;
@@ -106,11 +109,12 @@ const logOutHandler = async () => {
     box-shadow: var(--box-shadow-main);
     transition: background 0.3s;
     overflow: hidden;
-    min-height: 45px;
+    min-height: var(--header-height);
 
     .nav__btn {
       padding: 8px 16px;
       border: none;
+      min-height: var(--header-height);
       cursor: pointer;
 
       &:hover {
@@ -143,7 +147,7 @@ const logOutHandler = async () => {
     display: grid;
     grid-template-columns: 1fr 1fr;
     box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
-    min-height: 45px;
+    min-height: var(--header-height);
     border-radius: var(--border-radius-main);
     margin-left: auto;
     font-style: italic;
@@ -154,6 +158,7 @@ const logOutHandler = async () => {
       border: none;
       transition: background ease 0.3s;
       background: var(--btn-bg-color);
+      border: 1px solid var(--btn-bg-color);
       cursor: pointer;
       font-weight: normal;
 

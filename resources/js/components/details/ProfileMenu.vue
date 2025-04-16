@@ -1,9 +1,11 @@
 <script setup>
-import { onMounted, onUnmounted } from "vue";
+import { nextTick, onMounted, onUnmounted } from "vue";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import ButtonBurger from "@/components/details/ButtonBurger.vue"
-import { profileMenuLinks } from "@/utils/datasets.js";
+import { profileMenuLinks } from "@/utils/datasets";
 import { toggleBodyScroll } from "@/helpers/toggleBodyScroll";
+import { navigateTo } from '@/helpers/navigate';
+import { logout } from '@/services/user';
 
 defineOptions({
   name: "ProfileMenu"
@@ -12,6 +14,28 @@ defineOptions({
 const emit = defineEmits(["close"]);
 
 const emitClose = () => emit("close");
+
+const logOutHandle = () => {
+  logout();
+
+  navigateTo('/login');
+}
+
+const linkActionHandle = (link) => {
+  console.log(link, "link - linkActionHandle");
+
+  switch (link.action) {
+    case 'logout':
+      logOutHandle();
+      break;
+
+    default:
+      console.warn(`No handle for this action - '${link.action}'`);
+      break;
+  }
+
+  nextTick(() => emitClose());
+};
 
 onMounted(() => {
   toggleBodyScroll(true);
@@ -27,7 +51,7 @@ onUnmounted(() => {
   <div class="profile-menu" v-click-outside="() => emitClose" >
     <ul class="profile-menu__list">
       <li v-for="link in profileMenuLinks" :key="link.id" class="profile-menu__listitem">
-        <ButtonBase class="profile-menu__item">
+        <ButtonBase class="profile-menu__item" @click="linkActionHandle(link)">
           {{ link.name }}
         </ButtonBase>
       </li>

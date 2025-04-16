@@ -201,5 +201,25 @@ export const demoCardsV1 = [
     descriptions: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     showMore: false,
   },
-]
+];
 
+
+export const predictionDemoData = {
+  title: "Ukraine agrees to Trump mineral deal before April?",
+  description: [
+    "Description",
+    "TextTextTextText TextTextTextTextT extTextTextTextTextTextTextText TextextTextTextTextTe xtTextTextTe xtText"
+  ],
+  date: new Date('2025-05-01T14:00:00'),
+  betAmount: "99 USD",
+  totalBets: 20,
+  maxProfitPer1Euro: "3€",
+  tags: ["#Politic", "#Popular", "#Other"],
+  wallet: "99 USD",
+  options: [
+    { text: "Answer 111", percent: "10%", profit: "2€" },
+    { text: "Answer 222", percent: "20%", profit: "2€" },
+    { text: "Answer 333", percent: "50%", profit: "2€" },
+    { text: "Answer 444", percent: "55%", profit: "2€" }
+  ]
+};

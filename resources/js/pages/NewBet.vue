@@ -16,11 +16,11 @@ import PageWrapperMain from "@/components/PageWrapperMain.vue";
 </script>
 
 <template>
-  <Head title="Sign up" />
+  <Head title="New bet" />
 
   <PageWrapperMain>
 
-    <p>NewBet - dommy data</p>
+    <p>NewBet - dummy data</p>
   </PageWrapperMain>
 
 </template>

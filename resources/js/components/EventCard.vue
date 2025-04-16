@@ -141,7 +141,7 @@ const shortTitle = computed(() => {
     top: 0;
     right: 0;
     padding: var(--card-indent) var(--card-indent) 3px var(--card-indent);
-    color: red;
+    color:  var(--text-color-red);
     display: flex;
     justify-content: center;
     align-items: center;

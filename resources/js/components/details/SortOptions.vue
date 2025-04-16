@@ -167,7 +167,7 @@ onUnmounted(() => {
             width: 25px;
             height: 25px;
             margin-left: 10px;
-            background: url('/images/arrow.svg');
+            background: url('/images/arrow-right.svg');
             background-size: cover;
           }
         }
