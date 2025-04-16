@@ -178,6 +178,8 @@ export const demoCardsV1 = [
     bet: '$100',
     tags: ['Tag 1', 'Tag 2'],
     date: new Date('2025-04-15T20:18:00'),
+    descriptions: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    showMore: false,
   },
   {
     id: 2,
@@ -186,6 +188,8 @@ export const demoCardsV1 = [
     bet: '$200',
     tags: ['Tag 3', 'Tag 4'],
     date: new Date('2025-04-10T20:18:00'),
+    descriptions: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    showMore: false,
   },
   {
     id: 3,
@@ -194,5 +198,8 @@ export const demoCardsV1 = [
     bet: '$300',
     tags: ['Tag 5', 'Tag 6'],
     date: new Date('2025-04-11T20:18:00'),
+    descriptions: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    showMore: false,
   },
 ]
+
