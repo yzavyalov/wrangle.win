@@ -2,11 +2,11 @@
 import { onMounted, onUnmounted } from "vue";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import ButtonBurger from "@/components/details/ButtonBurger.vue"
-import { sideBarLinks } from "@/utils/datasets.js";
+import { profileMenuLinks } from "@/utils/datasets.js";
 import { toggleBodyScroll } from "@/helpers/toggleBodyScroll";
 
 defineOptions({
-  name: "SideBar"
+  name: "ProfileMenu"
 })
 
 const emit = defineEmits(["close"]);
@@ -24,12 +24,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="sidebar" v-click-outside="() => emitClose" >
-    <ButtonBurger @click="emitClose" />
-
-    <ul class="sidebar__list">
-      <li v-for="link in sideBarLinks" :key="link.id" class="sidebar__listitem">
-        <ButtonBase class="sidebar__item">
+  <div class="profile-menu" v-click-outside="() => emitClose" >
+    <ul class="profile-menu__list">
+      <li v-for="link in profileMenuLinks" :key="link.id" class="profile-menu__listitem">
+        <ButtonBase class="profile-menu__item">
           {{ link.name }}
         </ButtonBase>
       </li>
@@ -39,14 +37,15 @@ onUnmounted(() => {
 
 <style scoped lang='scss'>
 
-.sidebar {
+.profile-menu {
   position: absolute;
   border-radius: var(--border-radius-main);
   z-index: 2;
   box-shadow: var(--box-shadow-main);
-  background: linear-gradient(0deg, #EADCDC 0%, #EADCDC 60%, #ffec6d83 100%), linear-gradient(0deg, #EADCDC 0%, #EADCDC 100%),;
+  // background: linear-gradient(0deg, #EADCDC 0%, #EADCDC 60%, #ffec6d83 100%), linear-gradient(0deg, #EADCDC 0%, #EADCDC 100%);
+  background: var(--bg-color-main);
   padding: 15px;
-  min-width: 260px;
+  width: 260px;
 
   top: 0;
   left: 0;
@@ -55,7 +54,7 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-top: 30px;
+    // margin-top: 30px;
   }
 
   &__listitem:last-child {

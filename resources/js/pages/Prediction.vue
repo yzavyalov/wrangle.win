@@ -20,7 +20,7 @@ import PageWrapperMain from "@/components/PageWrapperMain.vue";
 
   <PageWrapperMain>
 
-    <p>NewBet - dommy data</p>
+    <p>Prediction - dommy data</p>
   </PageWrapperMain>
 
 </template>

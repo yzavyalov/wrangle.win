@@ -1,5 +1,6 @@
 <script setup>
 import SideBar from '@/components/details/SideBar.vue';
+import ProfileMenu from '@/components/details/ProfileMenu.vue';
 import ButtonBurger from "@/components/details/ButtonBurger.vue"
 import { useShowComponent } from "@/composables";
 import { navigateTo } from '@/helpers/navigate';
@@ -8,11 +9,18 @@ import { computed, nextTick } from 'vue';
 import { logout } from '@/services/user';
 
 const {
-  position,
-  isVisible: isSideBatActive,
+  position: sideBarPosition,
+  isVisible: isSideBarActive,
   showComponent: openSideBar,
   closeComponent: closeSideBar,
 } = useShowComponent({ variant: 'sideBar' });
+const {
+  position: profileMenuPosition,
+  isVisible: isProfileMenuActive,
+  showComponent: openProfileMenu,
+  closeComponent: closeProfileMenur,
+} = useShowComponent({ variant: 'profileMenu' });
+
 
 const currentUser = computed(() => useUserStore().getUser);
 
@@ -30,9 +38,10 @@ const logOutHandler = async () => {
     <ButtonBurger @click="openSideBar"  />
 
     <Teleport to="body">
-      <transition name="fade">
-        <SideBar v-if="isSideBatActive" @close="closeSideBar" :style="position" v-click-outside="closeSideBar" />
-      </transition>
+      <transition-group name="fade">
+        <SideBar v-if="isSideBarActive" @close="closeSideBar" :style="sideBarPosition" v-click-outside="closeSideBar" />
+        <ProfileMenu v-if="isProfileMenuActive" @close="closeProfileMenur" :style="profileMenuPosition" v-click-outside="closeProfileMenur" />
+      </transition-group>
     </Teleport>
 
     <div class="logo" @click="navigateTo('/')">
@@ -51,7 +60,7 @@ const logOutHandler = async () => {
 
     <div class="auth">
       <button v-if="currentUser" class="auth__btn" @click="navigateTo('/profile')">{{ currentUser?.name }}</button>
-      <button  v-if="currentUser" class="auth__btn" @click="logOutHandler">Logout</button>
+      <button  v-if="currentUser" class="auth__btn" @click="openProfileMenu">Profile</button>
 
       <button  v-if="!currentUser" class="auth__btn" @click="navigateTo('/register')">Signup</button>
       <button  v-if="!currentUser" class="auth__btn" @click="navigateTo('/login')">Login</button>

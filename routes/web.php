@@ -26,6 +26,10 @@ Route::get('/register', function () {
     return Inertia::render('Register');
 });
 
+Route::get('/prediction', function () {
+    return Inertia::render('Prediction');
+});
+
 Route::get('/new_bet', function () {
     return Inertia::render('NewBet');
 });
