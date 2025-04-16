@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enum\BetStatusEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Enums\BetStatusEnum;
 use App\Http\Requests\BetRequest;
 use App\Http\Resources\BetResource;
 use App\Models\Bet;

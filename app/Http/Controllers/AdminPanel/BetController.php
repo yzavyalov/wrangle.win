@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\AdminPanel;
 
 use App\Http\Controllers\Controller;
+use App\Http\Enums\BetStatusEnum;
+use App\Http\Filters\BetFilter;
 use App\Http\Requests\BetRequest;
+use App\Http\Requests\BetSearchRequest;
+use App\Http\Resources\BetResource;
 use App\Models\Bet;
 use App\Models\BetCategory;
 use App\Services\BetService;
@@ -45,5 +49,78 @@ class BetController extends Controller
         $this->betService->delBet($id);
 
         return redirect()->route('bets-all');
+    }
+
+    public function create()
+    {
+        return view('admin-panel.bets.bet-create-form');
+    }
+
+    public function store(BetRequest $request)
+    {
+        $bet = $this->betService->createBet($request);
+
+        return redirect()->route('bets-all');
+    }
+
+    public function selectForm()
+    {
+        $statuses = BetStatusEnum::cases();
+
+        $categories = BetCategory::orderBy('name')->get();
+
+        return view('admin-panel.bets.bet-select-form',compact('statuses','categories'));
+    }
+
+    public function select(BetSearchRequest $request)
+    {
+        $data = $request->validated();
+
+        $filter = app()->make(BetFilter::class, ['queryParams' => array_filter($data)]);
+
+        $bets= Bet::filter($filter)->paginate(15)->withQueryString();
+
+        if ($request['table'] == 1)
+            return view('admin-panel.bets.allbetstable',compact('bets'));
+        else
+            return view('admin-panel.bets.bets-and-bits-table',compact('bets'));
+    }
+
+
+    public function betsAndBits()
+    {
+        $bets = Bet::orderBy('created_at', 'desc')->paginate(15);;
+
+        return view('admin-panel.bets.bets-and-bits-table',compact('bets'));
+    }
+
+    public function nominateWinner(Request $request)
+    {
+        // Валидируем данные
+        $validated = $request->validate([
+            'bet_id' => 'required|exists:bets,id',
+            'winner_answer_id' => 'required|exists:answers,id',
+        ]);
+
+        // Находим ставку по ID
+        $bet = Bet::findOrFail($validated['bet_id']);
+
+        if ($bet->finish > now())
+        {
+            if ($bet->winner_answer_id)
+            {
+                $bet->winner_answer_id = null;
+                $bet->save();
+            }
+            return redirect()->back()->with('error', 'Finish date!');
+        }
+        else
+        {
+            $bet->winner_answer_id = $validated['winner_answer_id'];
+
+            $bet->save();
+
+            return redirect()->back()->with('success', 'Winner nominated successfully!');
+        }
     }
 }

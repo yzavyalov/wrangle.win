@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Enum;
+namespace App\Http\Enums;
 
-enum TransactionOperationEnum: int
+enum BetStatusEnum: int
 {
-    case DEBET = 1;
-    case CREDIT = 2;
-    case CANCELED = 3;
-
+    case CREATED = 1;
+    case PAID = 2;
+    case APPROVED = 3;
+    case CANCELED = 4;
+    case FINISHED = 5;
 
     // Получение всех значений статусов
     public static function values(): array
@@ -19,9 +20,11 @@ enum TransactionOperationEnum: int
     public function label(): string
     {
         return match ($this) {
-            self::DEBET => 'Debet',
-            self::CREDIT => 'Credit',
+            self::CREATED => 'Created',
+            self::PAID => 'Paid',
+            self::APPROVED => 'Approved',
             self::CANCELED => 'Canceled',
+            self::FINISHED => 'Finished',
         };
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Enum\BetStatusEnum;
+use App\Http\Enums\BetStatusEnum;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

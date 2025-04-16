@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enum\BetStatusEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Enums\BetStatusEnum;
 use App\Http\Filters\BetFilter;
 use App\Http\Requests\BetSearchRequest;
-use App\Http\Resources\BetFinishedResource;
 use App\Http\Resources\BetResource;
 use App\Models\Bet;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BetSortController extends Controller

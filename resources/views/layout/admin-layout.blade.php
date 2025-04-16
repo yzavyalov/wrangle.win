@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{asset('admin-layout/dist/css/adminlte.min.css')}}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     @livewireStyles
     @yield('style')
 </head>
@@ -100,7 +101,7 @@
                          with font-awesome or any other icon font library -->
 
                     <li class="nav-item">
-                        <a href="{{ route('bets-all') }}" class="nav-link">
+                        <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-copy"></i>
                             <p>
                                 BETS
@@ -109,51 +110,27 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="{{asset('admin-layout/pages/layout/top-nav.html')}}" class="nav-link">
+                                <a href="{{ route('bets-all') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>All bets</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('bets-and-bits') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Bets and bits</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('bet-select-form') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Select bets</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('bet-create') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Create bet</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{asset('admin-layout/pages/layout/top-nav-sidebar.html')}}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Top Navigation + Sidebar</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{asset('admin-layout/pages/layout/boxed.html')}}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Boxed</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{asset('admin-layout/pages/layout/fixed-sidebar.html')}}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Fixed Sidebar</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{asset('admin-layout/pages/layout/fixed-sidebar-custom.html')}}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Fixed Sidebar <small>+ Custom Area</small></p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{asset('admin-layout/pages/layout/fixed-topnav.html')}}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Fixed Navbar</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{asset('admin-layout/pages/layout/fixed-footer.html')}}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Fixed Footer</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{asset('admin-layout/pages/layout/collapsed-sidebar.html')}}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Collapsed Sidebar</p>
                                 </a>
                             </li>
                         </ul>
@@ -162,33 +139,16 @@
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-chart-pie"></i>
                             <p>
-                                Charts
+                                Bits
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
+
                             <li class="nav-item">
-                                <a href="{{asset('admin-layout/pages/charts/chartjs.html')}}" class="nav-link">
+                                <a href="{{ route('bits-all') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>ChartJS</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{asset('admin-layout/pages/charts/flot.html')}}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Flot</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{asset('admin-layout/pages/charts/inline.html')}}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Inline</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{asset('admin-layout/pages/charts/uplot.html')}}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>uPlot</p>
+                                    <p>All bits</p>
                                 </a>
                             </li>
                         </ul>
@@ -197,15 +157,15 @@
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-tree"></i>
                             <p>
-                                UI Elements
+                                Categories
                                 <i class="fas fa-angle-left right"></i>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="{{asset('admin-layout/pages/UI/general.html')}}" class="nav-link">
+                                <a href="{{ route('bet-categories.index') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>General</p>
+                                    <p>Bet categories menu</p>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -770,6 +730,7 @@
 <!-- jQuery -->
 <script src="{{asset('admin-layout/plugins/jquery/jquery.min.js')}}"></script>
 <!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{asset('admin-layout/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- AdminLTE -->
 <script src="{{asset('admin-layout/dist/js/adminlte.js')}}"></script>

@@ -1,5 +1,5 @@
 <div>
-    <form action="#" id="create-bet-form" method="post" enctype="multipart/form-data">
+    <form action="{{ route('bet-store') }}" id="create-bet-form" method="post" enctype="multipart/form-data">
         @csrf
         @if(session('success-message'))
             <div class="alert alert-info text-dark fw-bold p-3 rounded">
