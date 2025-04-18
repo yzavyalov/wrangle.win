@@ -44,7 +44,7 @@ Route::post('/search-category',[BetCategorySearchController::class,'searchCatego
 
 
 
-Route::middleware('auth:sanctum')->group(function (){
+Route::middleware(['auth:sanctum','baduser'])->group(function (){
     Route::get('/user', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 

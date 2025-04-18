@@ -56,5 +56,30 @@ class CheckUserService
         return false;
     }
 
+
+    public static function addUserInIAFS($email)
+    {
+        $token = env('IAFS_SYSTEM_KEY');
+
+        $response = Http::withToken($token)
+            ->post('https://www.iafs.info/api/upload-users', [
+                'user' => [
+                    'email' => $email,
+                ],
+            ]);
+
+        if ($response->successful())
+        {
+            $result = true;
+        }
+        else
+        {
+            $result = false;
+        }
+
+        return $result;
+    }
+
+
 }
 

@@ -15,7 +15,7 @@ class ModeratorMiddleware
             return $next($request);
         }
 
-        return redirect()->route('index');
+        return redirect()->route('admin.login');
     }
 }
 

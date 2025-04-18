@@ -6,6 +6,8 @@ use App\Http\Controllers\AdminPanel\BetCategoryController;
 use App\Http\Controllers\AdminPanel\BetController;
 use App\Http\Controllers\AdminPanel\BitController;
 use App\Http\Controllers\AdminPanel\PageController;
+use App\Http\Controllers\AdminPanel\TransactionController;
+use App\Http\Controllers\AdminPanel\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -48,4 +50,11 @@ Route::middleware('moderator')->prefix('/admin-panel')->group(function (){
     Route::resource('bet-categories', BetCategoryController::class);
     Route::get('/search-bet-category',[BetCategoryController::class,'searchCategory'])->name('search-category');
 
+    Route::get('/all-transactions',[TransactionController::class,'allTransactions'])->name('all-transactions');
+    Route::post('/transaction-change-status/{id}',[TransactionController::class,'changeStatus'])->name('transaction-change-status');
+
+    Route::get('/all-users',[UserController::class,'allUsers'])->name('all-users');
+    Route::get('/block-user/{id}',[UserController::class,'blockUser'])->name('block-user');
+    Route::get('/unblock-user/{id}',[UserController::class,'unblockUser'])->name('unblock-user');
+    Route::get('/add-black-list/{id}',[UserController::class,'addInIAFS'])->name('add-iafs');
 });
