@@ -1,0 +1,47 @@
+@use './reset';
+@use './variables';
+@use './fonts';
+@use './utils';
+@use './animation';
+
+
+html {
+  background: var(--bg-color-main);
+  min-width: 350px;
+}
+
+body {
+  // fonts
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+  font-weight: normal;
+
+  background: url('/images/sky.svg') no-repeat center -100px fixed;
+
+}
+
+.container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.text {
+  &-light {
+    font-weight: 300;
+  }
+
+  &-bold {
+    font-weight: 600;
+  }
+
+  &-black {
+    font-weight: 900;
+  }
+}
+
+.no-scroll {
+  overflow: hidden;
+}

@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminPanel\PageController;
 use App\Http\Controllers\AdminPanel\TransactionController;
 use App\Http\Controllers\AdminPanel\UserController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,8 +23,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return Inertia::render('Home');
 })->name('index');
+
+Route::get('/login', function () {
+    return Inertia::render('Login');
+});
 
 Route::get('/form-reset-password', function (){dd('form here');});
 
