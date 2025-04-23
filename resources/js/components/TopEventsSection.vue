@@ -47,6 +47,8 @@ const {
 
 <style scoped lang='scss'>
 .active_events {
+  position: relative;
+  z-index: 1;
 
   --header-height: 50px;
 

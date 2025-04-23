@@ -1,13 +1,130 @@
 <script setup>
+import PageWrapperMain from "@/components/PageWrapperMain.vue";
+import ProfileCardSmall from  '@/components/details/ProfileCardSmall.vue';
+import ButtonBase from "@/components/details/ButtonBase.vue";
+
+const APP_NAME = import.meta.env.VITE_APP_NAME;
 
 </script>
 
 <template>
-  <div>
-    WelcomeSection
-  </div>
+  <PageWrapperMain :show-decorator="false" class="wellcome-section">
+    <div class="wellcome-section__header">
+      <h1>
+        Welcome to <b>{{ APP_NAME }}</b> - Your Path to Profitable Predictions!
+      </h1>
+      <ProfileCardSmall class="wellcome-section__header--profile"/>
+    </div>
+    <div class="wellcome-section__body">
+      <div class="wellcome-section__section">
+        <h3>Predict & Get Rewarded!</h3>
+        <p>Make predictions on real-world events and earn rewards for accuracy.</p>
+        <ButtonBase>Login</ButtonBase>
+      </div>
+      <div class="wellcome-section__section">
+        <h3>A Wide Range of Events</h3>
+        <p>Sports, politics, entertainment, technology – choose from multiple categories and predict the hottest topics.</p>
+        <ButtonBase>View Events</ButtonBase>
+      </div>
+      <div class="wellcome-section__section">
+        <h3>Fair Rules & Honest Payouts!</h3>
+        <p>Transparent system, reliable payouts, and fair conditions – we ensure your security and comfort.</p>
+        <ButtonBase>Our Politics</ButtonBase>
+      </div>
+    </div>
+
+    <div class="wellcome-section__decorator"></div>
+
+  </PageWrapperMain>
 </template>
 
 <style scoped lang='scss'>
+.wellcome-section {
+  $screen-sm: 560px;
 
+  :deep(.page__wrapper) {
+    background: linear-gradient(180deg, #FFE432, #FFFFFF);
+    padding: 0;
+  }
+
+  &__header {
+    display: flex;
+    gap: 10px;
+
+    h1 {
+      padding: 20px;
+      text-align: center;
+      font-size: 52px;
+      font-weight: var(--font-weight-light);
+    }
+
+    &--profile {
+      border-top-right-radius: var(--border-radius-main);
+    }
+
+    @media screen and (max-width: $screen-sm) {
+      flex-wrap: wrap-reverse;
+
+      &--profile {
+        flex: 1 1 1;
+        max-width: none;
+        max-height: none;
+      }
+    }
+  }
+
+  &__body {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px;
+    text-align: center;
+  }
+
+  &__section {
+    flex: 1 1 250px;
+    max-width: 400px;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    h3 {
+      font-size: 32px;
+      font-weight: var(--font-weight-light);
+      text-align: center;
+    }
+
+    p {
+      font-size: 20px;
+      font-weight: var(--font-weight-light);
+    }
+
+    button {
+      margin-top: auto;
+      font-weight: var(--font-weight-light);
+      font-size: 32px;
+    }
+  }
+
+  &__decorator {
+    position: absolute;
+    width: 100vw;
+    height: 100%;
+    z-index: 0;
+    // background: url('/images/sky.svg') no-repeat, url('/images/bars.svg') no-repeat;
+    // background-position: top, 0px 200px;
+    background: url('/images/sky.svg'), url('/images/bars.svg');
+    background-repeat: no-repeat, no-repeat;
+    background-position: top, center top;
+    background-size: cover;
+    bottom: -400px;
+    right: 50%;
+    transform: translateX(50%);
+  }
+}
 </style>
