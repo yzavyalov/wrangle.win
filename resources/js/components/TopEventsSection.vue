@@ -1,10 +1,11 @@
 <script setup>
-import EventCard from '@/components/EventCard.vue';
-import ButtonWithIcon from '@/components/details/ButtonWithIcon.vue';
-import { demoCardsV1 } from '@/utils/dummyData';
-import SortOptions from '@/components/details/SortOptions.vue';
-import { useShowComponent } from "@/composables";
 import { ref } from 'vue';
+import { demoCardsV1, demoCards } from '@/utils/dummyData';
+import { useShowComponent } from "@/composables";
+import EventCard from '@/components/EventCard.vue';
+import SortOptions from '@/components/details/SortOptions.vue';
+import ButtonWithIcon from '@/components/details/ButtonWithIcon.vue';
+import SwiperList from '@/components/swiper/SwiperList.vue';
 
 defineOptions({ name: "TopEventsSection" });
 
@@ -39,11 +40,17 @@ const sortDirection = ref(false);
       </transition>
     </Teleport>
 
-    <ul class="active_events__list">
+    <SwiperList :items="demoCards" >
+      <template v-slot:item="{ item }">
+        <EventCard :item="item" :is-hot="true" />
+      </template>
+    </SwiperList>
+
+    <!-- <ul class="active_events__list">
       <li v-for="card in demoCardsV1" :key="card.id">
         <EventCard :item="card" :is-hot="true" />
       </li>
-    </ul>
+    </ul> -->
   </div>
 </template>
 
