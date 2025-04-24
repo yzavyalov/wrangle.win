@@ -4,6 +4,7 @@ import ButtonWithIcon from '@/components/details/ButtonWithIcon.vue';
 import { demoCardsV1 } from '@/utils/dummyData';
 import SortOptions from '@/components/details/SortOptions.vue';
 import { useShowComponent } from "@/composables";
+import { ref } from 'vue';
 
 defineOptions({ name: "TopEventsSection" });
 
@@ -14,6 +15,7 @@ const {
   closeComponent: closeSortOption,
 } = useShowComponent({ variant: 'sortOptions' });
 
+const sortDirection = ref(false);
 
 </script>
 
@@ -23,7 +25,7 @@ const {
 
       <div class="active_events__filters">
         <ButtonWithIcon :icon="'/images/settings.svg'" @submit="closeSortOption" @click="showSortOption" />
-        <ButtonWithIcon :icon="'/images/settings_arrows.svg'" />
+        <ButtonWithIcon :icon="'/images/sort_arrow.svg'" :is-icon-reversed="sortDirection" @click="sortDirection = !sortDirection" />
       </div>
 
       <h3>Top Events</h3>
