@@ -4,6 +4,7 @@
 /public/hot
 /public/storage
 /public/.DS_Store
+public/.DS_Store
 /storage/*.key
 /vendor
 .env

@@ -174,7 +174,7 @@ export const demoCardsV1 = [
   {
     id: 1,
     title: 'Next Prime Minister of Canada after the election?',
-    img: 'https://img.goodfon.ru/wallpaper/big/0/70/badfon-peyzazhi-priroda-foto-krasota.webp',
+    img: 'https://picsum.photos/300/200?random=1',
     bet: '$100',
     tags: ['Tag 1', 'Tag 2'],
     date: new Date('2025-04-15T20:18:00'),
@@ -184,7 +184,7 @@ export const demoCardsV1 = [
   {
     id: 2,
     title: 'Ukraine agrees to Trump mineral deal before April?',
-    img: 'https://www.fonstola.ru/images/202306/www.fonstola.ru.1687828675.2414.jpg',
+    img: 'https://picsum.photos/300/200?random=2',
     bet: '$200',
     tags: ['Tag 3', 'Tag 4'],
     date: new Date('2025-04-10T20:18:00'),
@@ -194,7 +194,7 @@ export const demoCardsV1 = [
   {
     id: 3,
     title: 'Ukraine agrees to Trump mineral deal before April?',
-    img: 'https://i.pinimg.com/736x/17/83/6b/17836b7698244921e54d21f449512edd.jpg',
+    img: 'https://picsum.photos/300/200?random=3',
     bet: '$300',
     tags: ['Tag 5', 'Tag 6'],
     date: new Date('2025-04-11T20:18:00'),

@@ -1,9 +1,11 @@
 <script setup>
-import EventCard from '@/components/EventCard.vue';
-import ButtonWithIcon from '@/components/details/ButtonWithIcon.vue';
-import { demoCardsV1 } from '@/utils/dummyData';
-import SortOptions from '@/components/details/SortOptions.vue';
+import { ref } from 'vue';
+import { demoCardsV1, demoCards } from '@/utils/dummyData';
 import { useShowComponent } from "@/composables";
+import EventCard from '@/components/EventCard.vue';
+import SortOptions from '@/components/details/SortOptions.vue';
+import ButtonWithIcon from '@/components/details/ButtonWithIcon.vue';
+import SwiperList from '@/components/swiper/SwiperList.vue';
 
 defineOptions({ name: "TopEventsSection" });
 
@@ -14,6 +16,7 @@ const {
   closeComponent: closeSortOption,
 } = useShowComponent({ variant: 'sortOptions' });
 
+const sortDirection = ref(false);
 
 </script>
 
@@ -23,7 +26,7 @@ const {
 
       <div class="active_events__filters">
         <ButtonWithIcon :icon="'/images/settings.svg'" @submit="closeSortOption" @click="showSortOption" />
-        <ButtonWithIcon :icon="'/images/settings_arrows.svg'" />
+        <ButtonWithIcon :icon="'/images/sort_arrow.svg'" :is-icon-reversed="sortDirection" @click="sortDirection = !sortDirection" />
       </div>
 
       <h3>Top Events</h3>
@@ -37,16 +40,24 @@ const {
       </transition>
     </Teleport>
 
-    <ul class="active_events__list">
+    <SwiperList :items="demoCards" >
+      <template v-slot:item="{ item }">
+        <EventCard :item="item" :is-hot="true" />
+      </template>
+    </SwiperList>
+
+    <!-- <ul class="active_events__list">
       <li v-for="card in demoCardsV1" :key="card.id">
         <EventCard :item="card" :is-hot="true" />
       </li>
-    </ul>
+    </ul> -->
   </div>
 </template>
 
 <style scoped lang='scss'>
 .active_events {
+  position: relative;
+  z-index: 1;
 
   --header-height: 50px;
 

@@ -1,6 +1,7 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 import { getTimeLeft } from '@/helpers/getTimeLeft';
+import ButtonBase from "@/components/details/ButtonBase.vue";
 
 const props = defineProps({
   item: { type: Object, default: () => ({}) },
@@ -14,6 +15,7 @@ const shortTitle = computed(() => {
     ? props.item.title.slice(0, maxTextLength) + '...'
     : props.item.title;
 });
+
 </script>
 
 <template>
@@ -43,7 +45,7 @@ const shortTitle = computed(() => {
         <p v-if="item?.tags?.length" class="event-card__tags">
           <span v-for="tag in item.tags" :key="tag.id">#{{ tag }}</span>
         </p>
-        <button class="event-card__btn">More Details</button>
+        <ButtonBase class="event-card__btn">More Details</ButtonBase>
       </div>
 
     </div>
@@ -125,9 +127,9 @@ const shortTitle = computed(() => {
   // &__tags {}
 
   &__btn {
-    background-color: var(--btn-bg-color);
-    box-shadow: var(--box-shadow-main);
-    border-radius: var(--border-radius-main);
+    // background-color: var(--btn-bg-color);
+    // box-shadow: var(--box-shadow-main);
+    // border-radius: var(--border-radius-main);
     padding: var(--card-indent) 10px;
     margin-top: auto;
     margin-left: auto;

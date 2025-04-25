@@ -1,13 +1,14 @@
 <script setup>
 const props = defineProps({
   icon: { type: String, default: "/images/settings_arrows.svg" },
-  alt: { type: String, default: "button" }
+  alt: { type: String, default: "button" },
+  isIconReversed: { type: Boolean, default: false },
 })
 </script>
 
 <template>
-  <button class="button">
-    <img :src="icon" :alt="alt">
+  <button :class="['button', { 'reverse-icon': isIconReversed }]">
+    <img :src="icon" :alt="alt"  >
     <slot></slot>
   </button>
 </template>
@@ -24,14 +25,23 @@ const props = defineProps({
     justify-content: center;
     align-items: center;
 
+    &.reverse-icon {
+      img {
+        transform: rotate(180deg);
+      }
+    }
+
     &:hover {
       background: var(--btn-bg-color-active);
     }
 
     img {
+      transition: transform 0.3s ease-in-out;
       width: 100%;
       max-width: 30px;
       max-height: 30px;
     }
+
+
   }
 </style>

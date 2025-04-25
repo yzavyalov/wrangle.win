@@ -11,12 +11,14 @@ export default {
 
 <script setup>
 import { Head } from "@inertiajs/vue3";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import { useUserStore } from "@/store/user";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 
 const currentUser = computed(() => useUserStore().getUser);
+const userBalance = ref(100)
+
 
 </script>
 
@@ -34,7 +36,7 @@ const currentUser = computed(() => useUserStore().getUser);
         <p class="profile__header--top">{{ currentUser?.name || 'Nickname Name' }}</p>
         <ButtonBase class="min-width-80">Edit Profile</ButtonBase>
         <p class="profile__header--bottom coin-decorator">
-          Balance: <b>100$</b>
+          Balance: <b>{{ userBalance }}$</b>
         </p>
       </div>
 
