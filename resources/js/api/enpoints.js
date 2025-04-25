@@ -10,3 +10,13 @@ export const AUTH = {
   URL_LOGIN_FACEBOOK: "/api/auth/telegram/redirect",
 };
 
+
+export const BETS = {
+  URL_BETS: "/api/bets",
+  GET_FINISHED: "/api/finish-bets",
+  SEARCH_BET: "/api/search-bet",
+  TOGGLE_TO_FAVORITE: "/api/favorites",
+  GET_OWN: "/api/own-bets",
+  GET_FAVORITE: "/api/favorite-bets",
+  BIT: "/api/bit/",
+}
