@@ -5,6 +5,7 @@ import EventCard from '@/components/EventCard.vue';
 import ButtonBase from '@/components/details/ButtonBase.vue';
 import { demoCards } from '@/utils/dummyData';
 import { useLoading } from '@/composables';
+import VirtualScroller from '@/components/virtualScroller/VirtualScroller.vue';
 
 const { isLoading, loadingStart, loadingStop } = useLoading();
 
@@ -77,6 +78,8 @@ onMounted(() => {
     <ButtonBase class="active_events__btn" @click="fetchMoreBets">
       <p class="active_events__btn--text text-light">Fetch more</p>
     </ButtonBase>
+
+    <!-- <VirtualScroller :items="bets" /> -->
 
     <div class="background-decorator"></div>
   </div>
