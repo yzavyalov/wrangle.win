@@ -205,6 +205,32 @@
                         </ul>
                     </li>
 
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-tree"></i>
+                            <p>
+                                Payments
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('all-payments') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>All payments</p>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('create-payment') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Create payment</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
 
                 </ul>
             </nav>

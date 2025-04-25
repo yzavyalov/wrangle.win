@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\BetController;
 use App\Http\Controllers\Api\BetSortController;
 use App\Http\Controllers\Api\BitController;
 use App\Http\Controllers\Api\FavoriteController;
+use App\Http\Controllers\Api\PaymnetsController;
 use App\Http\Controllers\Api\UserDataController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
@@ -42,6 +43,8 @@ Route::get('/bet-categories', [BetCategoryController::class,'index']);
 Route::get('/bet-categories/{id}', [BetCategoryController::class,'show']);
 Route::post('/search-category',[BetCategorySearchController::class,'searchCategory']);
 
+Route::get('/payments/in',[PaymnetsController::class,'allInPayments']);
+Route::get('/payments/out',[PaymnetsController::class,'allOutPayments']);
 
 
 Route::middleware(['auth:sanctum','baduser'])->group(function (){

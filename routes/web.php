@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminPanel\BetCategoryController;
 use App\Http\Controllers\AdminPanel\BetController;
 use App\Http\Controllers\AdminPanel\BitController;
 use App\Http\Controllers\AdminPanel\PageController;
+use App\Http\Controllers\AdminPanel\PaymentController;
 use App\Http\Controllers\AdminPanel\TransactionController;
 use App\Http\Controllers\AdminPanel\UserController;
 use Illuminate\Support\Facades\Route;
@@ -62,4 +63,11 @@ Route::middleware('moderator')->prefix('/admin-panel')->group(function (){
     Route::get('/block-user/{id}',[UserController::class,'blockUser'])->name('block-user');
     Route::get('/unblock-user/{id}',[UserController::class,'unblockUser'])->name('unblock-user');
     Route::get('/add-black-list/{id}',[UserController::class,'addInIAFS'])->name('add-iafs');
+
+    Route::get('/all-payments',[PaymentController::class,'index'])->name('all-payments');
+    Route::get('/create-payments',[PaymentController::class,'create'])->name('create-payment');
+    Route::post('/store-payments',[PaymentController::class,'store'])->name('store-payment');
+    Route::get('/show-payment/{id}',[PaymentController::class,'showEditForm'])->name('payment-show');
+    Route::put('/update-payment/{id}',[PaymentController::class,'updatePaymnet'])->name('payment-update');
+    Route::get('/del-payment/{id}',[PaymentController::class,'delPaymnet'])->name('payment-del');
 });
