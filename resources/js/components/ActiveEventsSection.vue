@@ -1,9 +1,64 @@
 <script setup>
+import { onMounted, ref } from 'vue';
+import { getActualBets } from '@/services/bets';
 import EventCard from '@/components/EventCard.vue';
 import ButtonBase from '@/components/details/ButtonBase.vue';
 import { demoCards } from '@/utils/dummyData';
+import { useLoading } from '@/composables';
 
+const { isLoading, loadingStart, loadingStop } = useLoading();
 
+const bets = ref([]);
+
+const fetchBets = async () => {
+  console.log('fetchBets');
+
+  if (isLoading.value) {return console.warn("Loading, plese wait");}
+
+  try {
+    loadingStart();
+
+    const fetchedBets = await getActualBets();
+    console.log(fetchedBets, 'fetchedBets - getActualBets');
+
+    // test zone =====================
+    // todo: remove dummy code
+    if (!fetchedBets.length) {
+      const dummyData = demoCards.map((card, idx) => {
+        return {
+          ...card,
+          id: Date.now() + '_' + idx,
+        }
+      });
+      bets.value = [...bets.value, ...dummyData]
+      console.log(bets.value, 'bets.value - dummyData - fetchBets');
+      return
+    }
+    // test zone end =====================
+
+    fetchedBets.length && ( bets.value = [...bets.value, ...fetchedBets] );
+
+    console.log(bets.value, 'bets.value - fetchBets');
+
+  } catch (error) {
+    console.warn(error);
+
+  } finally {
+    loadingStop();
+  }
+}
+
+const fetchMoreBets = async () => {
+  console.log('fetchMoreBets');
+
+  if (isLoading.value) {return console.warn("Loading, plese wait");}
+
+  fetchBets();
+}
+
+onMounted(() => {
+  fetchBets();
+})
 
 </script>
 
@@ -14,12 +69,12 @@ import { demoCards } from '@/utils/dummyData';
     </div>
 
     <ul class="active_events__list">
-      <li v-for="card in demoCards" :key="card.id">
+      <li v-for="card in bets" :key="card.id">
         <EventCard :item="card" :is-hot="card.isHot" />
       </li>
     </ul>
 
-    <ButtonBase class="active_events__btn">
+    <ButtonBase class="active_events__btn" @click="fetchMoreBets">
       <p class="active_events__btn--text text-light">Fetch more</p>
     </ButtonBase>
 

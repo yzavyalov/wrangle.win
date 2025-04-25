@@ -6,7 +6,7 @@ export const getActualBets = async () => {
   .then(res => {
     console.log(res, "res - getActualBets");
 
-    return res.data;
+    return res.data.data;
   })
   .catch(e => console.error(e.message));
 };
