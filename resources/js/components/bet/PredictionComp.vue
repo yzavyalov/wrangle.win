@@ -100,6 +100,7 @@ onMounted(() => {
 
   &__details {
     padding-bottom: 80px;
+    background: var(--btn-bg-color);
 
     &--header {
       position: relative;

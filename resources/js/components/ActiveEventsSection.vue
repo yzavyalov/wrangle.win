@@ -7,6 +7,7 @@ import { demoCards } from '@/utils/dummyData';
 import { useLoading } from '@/composables';
 import VirtualScroller from '@/components/virtualScroller/VirtualScroller.vue';
 import GridDemo from '@/components/virtualScroller/GridDemo.vue';
+import { triggerOpenNewModal, triggerCloseModal } from '@/composables';
 
 const { isLoading, loadingStart, loadingStop } = useLoading();
 
@@ -82,7 +83,13 @@ onMounted(() => {
 
     <!-- <VirtualScroller :items="bets" /> -->
 
-    <GridDemo :items="bets" />
+    <!-- <GridDemo :items="bets" /> -->
+
+    <p>
+      <button @click="triggerOpenNewModal('prediction-modal')">triggerOpenNewModal - prediction-modal</button>
+      <button @click="triggerOpenNewModal('prediction-modal')">triggerOpenNewModal - prediction-modal</button>
+    </p>
+    <p><button @click="triggerCloseModal">triggerCloseModal</button></p>
 
     <div class="background-decorator"></div>
   </div>
