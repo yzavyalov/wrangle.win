@@ -48,6 +48,10 @@ Route::get('/profile', function () {
     return Inertia::render('Profile');
 });
 
+Route::get('/categories', function () {
+    return Inertia::render('Categories');
+});
+
 
 Route::get('/form-reset-password', function (){dd('form here');});
 

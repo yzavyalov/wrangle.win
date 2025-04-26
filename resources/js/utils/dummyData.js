@@ -220,6 +220,7 @@ export const predictionDemoData = {
     { text: "Test. Lorem ipsum dolo. Doloremque labore expedita corporis sapiente nulla earum.", percent: 15, profit: 1.25 }
   ],
   isOpen: true,
+  source1: "http://www.will.com/sunt-veniam-error-rerum-mollitia-dolores"
 
 //   description
 // :
@@ -253,15 +254,30 @@ export const predictionDemoData = {
 // 37
 };
 
+// test zone
+function formatDate(date) {
+  const pad = (n) => n.toString().padStart(2, '0');
+
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const hours = pad(date.getHours());
+  const minutes = pad(date.getMinutes());
+  const seconds = pad(date.getSeconds());
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+// test zone end
+
 export const demoBetDataPayload = {
   title: `test title - ${Date.now()}`,
   description: `test description - ${Date.now()}`,
   categories: [ 1, 2, 3 ],
-  source1: `test source 1 - ${Date.now()}`,
+  source1: 'http://www.will.com/sunt-veniam-error-rerum-mollitia-dolores',
   answers: [
     `test answer 1 - ${Date.now()}`,
     `test answer 2 - ${Date.now()}`,
     `test answer 3 - ${Date.now()}`,
   ],
-  finish: new Date('2025-05-01T14:00:00'),
+  finish: formatDate(new Date('2025-05-01T14:00:00')),
 }

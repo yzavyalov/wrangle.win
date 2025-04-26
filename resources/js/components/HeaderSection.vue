@@ -49,7 +49,7 @@ const logOutHandler = async () => {
     </div>
 
     <nav class="nav">
-      <button class="nav__btn">All Categories</button>
+      <button class="nav__btn" @click="navigateTo('/categories')">All Categories</button>
       <button class="nav__btn">Popular</button>
       <button class="nav__btn" @click="navigateTo('/prediction')">Prediction</button>
       <button class="nav__btn" @click="navigateTo('/new_bet')">New Bet</button>
