@@ -6,6 +6,7 @@ import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import PageCloudDecorator from '@/components/details/PageCloudDecorator.vue';
 import { getTimeLeft } from '@/helpers/getTimeLeft';
 import { predictionDemoData } from '@/utils/dummyData';
+import BetOptionItem from "@/components/details/BetOptionItem.vue"
 
 const props = defineProps({
   item: { type: Object, required: true, default: predictionDemoData }, // todo: remove demo data
@@ -63,16 +64,12 @@ onMounted(() => {
         </div>
         <h4 class="p-item__options--title">Сhoose option</h4>
 
-        <div v-for="(option, index) in predictionDemoData.options"
+        <BetOptionItem v-for="(item, index) in predictionDemoData.options"
           :key="index"
-          class="p-item__option"
-        >
-          <p>
-            <span><b>{{ option.percent }}</b> thinks so:</span>
-            <span>Possible profit from 1€: <b>{{ option.profit }}</b></span>
-          </p>
-          <ButtonBase>{{ option.text }}</ButtonBase>
-        </div>
+          :option="item"
+          class="mb-10"
+        />
+
       </div>
     </div>
   </div>
@@ -203,25 +200,6 @@ onMounted(() => {
         background-color: var(--btn-bg-color);
         margin-left: auto;
       }
-    }
-  }
-
-  &__option {
-    margin-bottom: 10px;
-    width: 100%;
-
-    p {
-      display: flex;
-      justify-content: space-between;
-    }
-
-    span {
-      font-size: 13px;
-    }
-
-    :deep(.button) {
-      width: 100%;
-      border: 1px solid black;
     }
   }
 }

@@ -217,10 +217,10 @@ export const predictionDemoData = {
   tags: ["#Politic", "#Popular", "#Other"],
   wallet: "99 USD",
   options: [
-    { text: "Answer 111", percent: "10%", profit: "2€" },
-    { text: "Answer 222", percent: "20%", profit: "2€" },
-    { text: "Answer 333", percent: "50%", profit: "2€" },
-    { text: "Answer 444", percent: "55%", profit: "2€" }
+    { text: "Test. Lorem. Doloremque.", percent: 50, profit: 2 },
+    { text: "Test. Lorem. Doloremque earum.", percent: 25, profit: 1.5 },
+    { text: "Test. Lorem. Doloremque corporis.", percent: 10, profit: 1 },
+    { text: "Test. Lorem ipsum dolo. Doloremque labore expedita corporis sapiente nulla earum.", percent: 15, profit: 1.25 }
   ],
   isOpen: true,
 };
