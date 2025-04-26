@@ -221,5 +221,19 @@ export const predictionDemoData = {
     { text: "Answer 222", percent: "20%", profit: "2€" },
     { text: "Answer 333", percent: "50%", profit: "2€" },
     { text: "Answer 444", percent: "55%", profit: "2€" }
-  ]
+  ],
+  isOpen: true,
 };
+
+export const demoBetDataPayload = {
+  title: `test title - ${Date.now()}`,
+  description: `test description - ${Date.now()}`,
+  categories: [ 1, 2, 3 ],
+  source1: `test source 1 - ${Date.now()}`,
+  answers: [
+    `test answer 1 - ${Date.now()}`,
+    `test answer 2 - ${Date.now()}`,
+    `test answer 3 - ${Date.now()}`,
+  ],
+  finish: new Date('2025-05-01T14:00:00'),
+}

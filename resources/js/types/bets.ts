@@ -11,7 +11,7 @@ interface CreateBetPayload {
   categories: number[]
   source1: string
   answers: string[]
-  finish: Date
+  finish: Date | string
 }
 
 interface ToggleToFavoritePayload {

@@ -6,6 +6,7 @@ import ButtonBase from '@/components/details/ButtonBase.vue';
 import { demoCards } from '@/utils/dummyData';
 import { useLoading } from '@/composables';
 import VirtualScroller from '@/components/virtualScroller/VirtualScroller.vue';
+import GridDemo from '@/components/virtualScroller/GridDemo.vue';
 
 const { isLoading, loadingStart, loadingStop } = useLoading();
 
@@ -80,6 +81,8 @@ onMounted(() => {
     </ButtonBase>
 
     <!-- <VirtualScroller :items="bets" /> -->
+
+    <GridDemo :items="bets" />
 
     <div class="background-decorator"></div>
   </div>

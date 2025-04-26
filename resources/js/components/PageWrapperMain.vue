@@ -1,9 +1,13 @@
 <script setup>
+import { computed } from 'vue';
 import PageCloudDecorator from '@/components/details/PageCloudDecorator.vue';
 
 const props = defineProps({
-  showDecorator: { type: Boolean, default: true }
+  showDecorator: { type: Boolean, default: true },
+  padding: { type: String, default: 0 },
 })
+
+const padding = computed(() => props.padding + 'px');
 
 </script>
 
@@ -32,7 +36,8 @@ const props = defineProps({
       border-radius: var(--border-radius-main);
       height: 100%;
       min-height: 700px;
-      padding: 20px;
+      padding: v-bind(padding);
+      display: flex;
     }
   }
 </style>
