@@ -5,9 +5,8 @@ import ButtonBurger from "@/components/details/ButtonBurger.vue"
 import { useShowComponent } from "@/composables";
 import { navigateTo } from '@/helpers/navigate';
 import { useUserStore } from "@/store/user";
-import { computed, nextTick } from 'vue';
-import { logout } from '@/services/user';
-import { sideBarLinks } from "@/utils/datasets.js";
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
+import { sideBarLinks, headerLinks } from "@/utils/datasets.js";
 
 const {
   position: sideBarPosition,
@@ -25,13 +24,50 @@ const {
 
 const currentUser = computed(() => useUserStore().getUser);
 
-const logOutHandler = async () => {
-  const result = await logout()
-  useUserStore().logout();
-  await nextTick();
-  navigateTo('/login');
-}
+const linksVisible = ref([...sideBarLinks]); // ті, що видно у шапці
+const linksHidden = ref([...headerLinks]);   // ті, що ховаються у бокове меню
 
+const navContainer = ref(null);
+const navButtons = ref([]);
+
+const recalculateLinks = () => {
+  console.log('recalculateLinks');
+
+  if (!navContainer.value) return;
+
+  const containerWidth = navContainer.value.clientWidth;
+  let totalWidth = 0;
+  const newVisible = [];
+  const newHidden = [];
+
+  sideBarLinks.forEach((link, index) => {
+    const buttonEl = navButtons.value[index];
+    if (!buttonEl) return;
+
+    const buttonWidth = buttonEl.offsetWidth;
+
+    if (totalWidth + buttonWidth <= containerWidth) {
+      totalWidth += buttonWidth;
+      newVisible.push(link);
+    } else {
+      newHidden.push(link);
+    }
+  });
+
+  linksVisible.value = newVisible;
+  linksHidden.value = newHidden;
+};
+
+onMounted(() => {
+  nextTick(() => {
+    recalculateLinks();
+    window.addEventListener('resize', recalculateLinks);
+  });
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', recalculateLinks);
+});
 </script>
 
 <template>
@@ -49,7 +85,7 @@ const logOutHandler = async () => {
       <img :src="'/images/logo.svg'" alt="WRANGLER.WIN Logo" />
     </div>
 
-    <nav class="nav">
+    <nav class="nav" ref="navContainer">
       <button class="nav__btn" @click="navigateTo('/categories')">All Categories</button>
       <button class="nav__btn">Popular</button>
       <button class="nav__btn" @click="navigateTo('/prediction')">Prediction</button>
@@ -82,7 +118,7 @@ const logOutHandler = async () => {
   display: flex;
   gap: 10px;
   justify-content: start;
-  flex-wrap: wrap;
+  // flex-wrap: wrap;
   align-items: center;
   padding: 10px 20px;
   font-weight: var(--font-weight-light);
