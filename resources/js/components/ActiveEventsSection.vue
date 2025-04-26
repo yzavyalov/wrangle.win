@@ -95,21 +95,7 @@ onMounted(() => {
       <p class="active_events__btn--text text-light">Fetch more</p>
     </ButtonBase>
 
-    <!-- <VirtualScroller :items="bets" /> -->
-
-    <!-- <GridDemo :items="bets" /> -->
-
-    <!-- <p>
-      <button @click="triggerOpenNewModal('prediction-modal')">triggerOpenNewModal - prediction-modal</button>
-      <button @click="triggerOpenNewModal('prediction-modal')">triggerOpenNewModal - prediction-modal</button>
-    </p>
-    <p><button @click="triggerCloseModal">triggerCloseModal</button></p>
-
-    <p class=""><button @click="testConfirm">testConfirm</button></p> -->
-
-    <ButtonBase @click="triggerOpenNewModal('prediction-modal')">triggerOpenNewModal - prediction-modal</ButtonBase>
-
-    <ButtonBase @click="triggerCloseModal">triggerCloseModal</ButtonBase>
+    <ButtonBase class="mb-10 mt-10" @click="triggerOpenNewModal('prediction-modal')">triggerOpenNewModal - prediction-modal</ButtonBase>
 
     <ButtonBase @click="testConfirm">testConfirm</ButtonBase>
 
@@ -120,7 +106,6 @@ onMounted(() => {
 <style scoped lang='scss'>
 .active_events {
   position: relative;
-  // z-index: 1;
   padding-bottom: 20px;
 
   &__header {

@@ -62,9 +62,10 @@ onUnmounted(() => {
   <div class="modal-confirm__wrapper">
     <div class="modal-confirm">
       <div class="modal-confirm__body">
+        <ButtonWithIcon icon="/images/cross.svg" class="modal-confirm__close" @click.stop.prevent="cancel" />
 
         <div class="modal-confirm__header">
-          <h4>{{ title || "Are you sure ?" }}</h4>
+          <p>{{ title || "Are you sure ?" }}</p>
         </div>
 
         <div class="modal-confirm__text">
@@ -72,11 +73,11 @@ onUnmounted(() => {
         </div>
 
         <div class="modal-confirm__footer">
-          <ButtonBaseWithIcon v-if="confirmText" src="/images/arrow-left.svg" @click.stop.prevent="confirm" :text="confirmText" :alt="confirmText" />
-          <ButtonWithIcon v-else src="/images/arrow-left.svg" @click.stop.prevent="confirm" />
+          <ButtonBaseWithIcon v-if="confirmText" @click.stop.prevent="confirm" :text="confirmText" :alt="confirmText" />
+          <ButtonWithIcon v-else icon="/images/arrow-left.svg" @click.stop.prevent="confirm" />
 
-          <ButtonBaseWithIcon v-if="cancelText" src="/images/arrow-left.svg" @click.stop.prevent="cancel" :text="cancelText" :alt="cancelText" />
-          <ButtonWithIcon v-else src="/images/arrow-right.svg" @click.stop.prevent="cancel" />
+          <ButtonBaseWithIcon v-if="cancelText" @click.stop.prevent="cancel" :text="cancelText" :alt="cancelText" />
+          <ButtonWithIcon v-else icon="/images/arrow-right.svg" @click.stop.prevent="cancel" />
         </div>
       </div>
 
@@ -103,14 +104,17 @@ onUnmounted(() => {
 
   &__body {
     background: var(--bg-color-secondary);
-    padding: 10px 20px;
+    padding: 20px 40px 10px 40px;
     border-radius: var(--border-radius-main);
     display: flex;
     flex-direction: column;
     gap: 10px;
+    font-size: 20px;
+    font-weight: var(--font-weight-light);
+    position: relative;
   }
 
-  &__header h4 {
+  &__header p {
     text-align: center;
   }
 
@@ -123,6 +127,17 @@ onUnmounted(() => {
     flex-direction: row;
     justify-content: space-around;
     gap: 10px;
+    font-style: italic;
+  }
+
+  &__close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    border-radius: 5px;
+    padding: 0px;
+    width: 20px;
+    height: 20px;
   }
 }
 </style>

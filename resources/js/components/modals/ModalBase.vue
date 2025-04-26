@@ -41,7 +41,7 @@ onUnmounted(() => {
 </script>
 <template>
   <div class="modal">
-    <ButtonWithIcon :icon="'/images/arrow-left.svg'" class="modal__button" @click="closeCurrentModalHandler" />
+    <ButtonWithIcon :icon="'/images/cross.svg'" class="modal__button" @click="closeCurrentModalHandler" />
 
     <div class="modal__wrapper">
       <div class="modal__body" v-click-outside="() => closeCurrentModalHandler()">
