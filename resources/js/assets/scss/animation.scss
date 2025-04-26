@@ -21,3 +21,13 @@
     opacity: 0;
   }
 }
+
+.bounce {
+  &-enter-active {
+    animation: bounce-in 0.5s;
+  }
+
+  &-leave-active {
+    animation: bounce-in 0.5s reverse;
+  }
+}

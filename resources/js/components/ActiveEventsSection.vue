@@ -8,8 +8,10 @@ import { useLoading } from '@/composables';
 import VirtualScroller from '@/components/virtualScroller/VirtualScroller.vue';
 import GridDemo from '@/components/virtualScroller/GridDemo.vue';
 import { triggerOpenNewModal, triggerCloseModal } from '@/composables';
+import { useConfirm } from '@/composables';
 
 const { isLoading, loadingStart, loadingStop } = useLoading();
+const { confirm } = useConfirm();
 
 const bets = ref([]);
 
@@ -59,6 +61,18 @@ const fetchMoreBets = async () => {
   fetchBets();
 }
 
+const testConfirm = async () => {
+  const result = await confirm({
+    title: 'Are you sure?',
+    text: 'This action cannot be undone',
+    confirmText: 'Confirm',
+    cancelText: 'Cancel'
+  })
+
+  console.log(result , 'result');
+
+}
+
 onMounted(() => {
   fetchBets();
 })
@@ -85,11 +99,19 @@ onMounted(() => {
 
     <!-- <GridDemo :items="bets" /> -->
 
-    <p>
+    <!-- <p>
       <button @click="triggerOpenNewModal('prediction-modal')">triggerOpenNewModal - prediction-modal</button>
       <button @click="triggerOpenNewModal('prediction-modal')">triggerOpenNewModal - prediction-modal</button>
     </p>
     <p><button @click="triggerCloseModal">triggerCloseModal</button></p>
+
+    <p class=""><button @click="testConfirm">testConfirm</button></p> -->
+
+    <ButtonBase @click="triggerOpenNewModal('prediction-modal')">triggerOpenNewModal - prediction-modal</ButtonBase>
+
+    <ButtonBase @click="triggerCloseModal">triggerCloseModal</ButtonBase>
+
+    <ButtonBase @click="testConfirm">testConfirm</ButtonBase>
 
     <div class="background-decorator"></div>
   </div>

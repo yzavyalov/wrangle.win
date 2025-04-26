@@ -55,7 +55,7 @@ onUnmounted(() => {
 
 .modal {
   position: fixed;
-  background: rgba(0, 0, 0, 0.75);
+  background: var(--modal-bg-color);
   top: 0;
   right: 0;
   bottom: 0;
