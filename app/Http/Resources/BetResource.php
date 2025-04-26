@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Enums\BetStatusEnum;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,11 +21,15 @@ class BetResource extends JsonResource
             'title' => $this->title,
             'image' => $this->image,
             'status' => $this->status,
+            'status-type' => BetStatusEnum::from($this->status)->label(),
             'source1' => $this->source1,
             'source2' => $this->source2,
             'source3' => $this->source3,
             'description' => $this->description,
             'finish' => $this->finish,
+            'budget' => $this->bits()->pluck('sum')->sum(),
+            'answers' => AnswerResource::collection($this->answers),
+            'winner' => AnswerResource::make($this->winnerAnswer),
         ];
     }
 }

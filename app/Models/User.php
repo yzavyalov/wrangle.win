@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Http\Enums\TransactionOperationEnum;
 use App\Models\Auth\SocialAccount;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -66,6 +67,11 @@ class User extends Authenticatable
         return $this->hasOne(Transaction::class)->latestOfMany();
     }
 
+    public function debitTransactions()
+    {
+        return $this->hasMany(Transaction::class,'user_id','id')->where('operation',TransactionOperationEnum::DEBET);
+    }
+
     public function bits()
     {
         return $this->hasMany(Bit::class);
@@ -81,5 +87,10 @@ class User extends Authenticatable
         return $this->hasMany(SocialAccount::class);
     }
 
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new \App\Notifications\ResetPasswordNotification($token));
+    }
 
 }

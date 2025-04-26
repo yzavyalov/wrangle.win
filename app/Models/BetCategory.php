@@ -23,4 +23,10 @@ class BetCategory extends Model
     {
         return $this->belongsToMany(Bet::class,'bet_bet_categories','bet_category_id','bet_id');
     }
+
+    public function activeBets()
+    {
+        return $this->belongsToMany(Bet::class,'bet_bet_categories','bet_category_id','bet_id')
+            ->where('status',3);
+    }
 }

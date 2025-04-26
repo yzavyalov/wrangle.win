@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Enum\TransactionMethodEnum;
-use App\Enum\TransactionOperationEnum;
-use App\Enum\TransactionStatusEnum;
+use App\Http\Enums\TransactionMethodEnum;
+use App\Http\Enums\TransactionOperationEnum;
+use App\Http\Enums\TransactionStatusEnum;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;

@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Enum\BetStatusEnum;
 use App\Enum\TransactionMethodEnum;
 use App\Http\Controllers\Front\PageController;
+use App\Http\Enums\BetStatusEnum;
 use App\Http\Requests\BetRequest;
 use App\Models\Bet;
 use Carbon\Carbon;
@@ -186,6 +186,24 @@ class BetService
         $transaction = $this->transactionService->debit($owner->id, $reward,'reward for your bet id='.$bet->is.' title = '.$bet->title);
 
         return $transaction->sum;
+    }
+
+    public function delBet($id)
+    {
+        $bet = Bet::query()->find($id);
+
+        if ($bet) {
+            // Удалить файл изображения, если существует
+            if ($bet->image && Storage::disk('public')->exists($bet->image)) {
+                Storage::disk('public')->delete($bet->image);
+            }
+
+            // Отвязать категории
+            $bet->categories()->detach();
+
+            // Удалить саму ставку
+            $bet->delete();
+        }
     }
 
 

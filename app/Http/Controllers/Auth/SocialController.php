@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AuthResource;
 use App\Models\Auth\SocialAccount;
 use App\Models\User;
+use App\Services\BalanceService;
 use App\Services\CheckUserService;
 use App\Traits\JsonResponseTrait;
 use Illuminate\Http\Request;

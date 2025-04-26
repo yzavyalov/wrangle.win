@@ -8,6 +8,7 @@ class BetFilter extends AbstractFilter
 {
     public const ID = 'id';
     public const USER_ID = 'user_id';
+    public const EMAIL = 'email';
     public const TITLE = 'title';
     public const STATUS = 'status';
     public const DESCRIPTION = 'description';
@@ -21,6 +22,7 @@ class BetFilter extends AbstractFilter
         return [
             self::ID => [$this, 'id'],
             self::USER_ID => [$this, 'user_id'],
+            self::EMAIL => [$this, 'email'],
             self::TITLE => [$this, 'title'],
             self::STATUS => [$this, 'status'],
             self::DESCRIPTION => [$this, 'description'],
@@ -40,6 +42,13 @@ class BetFilter extends AbstractFilter
         $builder->where('user_id', $value);
     }
 
+    public function email(Builder $builder, $value)
+    {
+        $builder->whereHas('owner', function ($query) use ($value) {
+            $query->where('email', 'like', "%$value%");
+        });
+    }
+
     public function title(Builder $builder, $value)
     {
         $builder->where(function ($query) use ($value) {
@@ -53,6 +62,16 @@ class BetFilter extends AbstractFilter
         $builder->whereHas('categories', function ($query) use ($value) {
             $query->whereIn('bet_categories.id', (array) $value);
         });
+    }
+
+    public function status(Builder $builder, $value)
+    {
+        $builder->where('status',$value);
+    }
+
+    public function finish(Builder $builder, $value)
+    {
+        $builder->where('finish','>=',$value);
     }
 
     public function sortBy(Builder $builder, $value)
