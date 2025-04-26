@@ -19,7 +19,7 @@ function generateItem() {
   }
 }
 
-export function getData(count, letters) {
+function getData(count, letters) {
   const raw = {}
 
   const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('')
@@ -62,7 +62,7 @@ export function getData(count, letters) {
   return list
 }
 
-export function addItem(list) {
+function addItem(list) {
   list.push({
     id: uid++,
     index: list.length + 1,
@@ -72,7 +72,7 @@ export function addItem(list) {
   })
 }
 
-export function generateMessage() {
+function generateMessage() {
   return {
     avatar: faker.internet.avatar(),
     message: faker.lorem.text(),
