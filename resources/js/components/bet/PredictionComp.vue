@@ -29,7 +29,8 @@ onMounted(() => {
 
         <div class="p-item__details--main">
           <h2 class="p-item__details--title">{{ item.title }}</h2>
-          <p class="p-item__details--text" v-for="(desc, index) in item.description" :key="index">{{ desc }}</p>
+          <p class="p-item__details--text">Description:</p>
+          <p class="p-item__details--text" >{{ item.description }}</p>
 
           <div class="p-item__details--body">
             <ul class="p-item__details--info">

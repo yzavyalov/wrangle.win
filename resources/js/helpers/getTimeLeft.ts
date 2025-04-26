@@ -20,3 +20,17 @@ export const getTimeLeft = (time: Date): string => {
 
   return '--:--';
 };
+
+export const getDaysLeft = (time: Date): number => {
+  const now = new Date();
+  const end = new Date(time);
+  const diff = end.getTime() - now.getTime();
+  return Math.floor(diff / 1000 / 60 / 60 / 24);
+};
+
+export const isLessThanOneDay = (time: Date): boolean => {
+  const now = new Date();
+  const end = new Date(time);
+  const diff = end.getTime() - now.getTime();
+  return diff <= 1000 * 60 * 60 * 24;
+};

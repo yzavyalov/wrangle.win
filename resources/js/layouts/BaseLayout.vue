@@ -21,12 +21,12 @@ const { modals } = useModals({ isLayout: true });
     </div>
 
     <div class="modals__container">
-      <Transition-group name="modal">
+      <transition-group name="modal">
         <ModalBase v-for="(modal, index) in modals"
           :key="modal + '_' + index"
           :idx="index"
         />
-      </Transition-group>
+      </transition-group>
     </div>
 
     <FooterSection />

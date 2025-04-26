@@ -16,4 +16,18 @@ export default {
     this.modals.pop();
   },
 
+  setModalContent(modalContent) {
+    this.modalContent = modalContent;
+  },
+
+  updateModalContent(modalContent) {
+    this.modalContent = {
+      ...this.modalContent,
+      ...modalContent
+    };
+  },
+
+  clearModalContent() {
+    this.modalContent = null;
+  },
 };

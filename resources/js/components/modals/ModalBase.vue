@@ -70,7 +70,7 @@ onUnmounted(() => {
     max-width: 100%;
     max-height: 100%;
     overflow: auto;
-    padding: 60px 10px;
+    padding: 20px;
   }
 
   &__body {

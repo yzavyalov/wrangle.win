@@ -1,39 +1,43 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
-import { getTimeLeft } from '@/helpers/getTimeLeft';
-import ButtonBase from './details/ButtonBase.vue';
+import { getTimeLeft, getDaysLeft } from '@/helpers/getTimeLeft';
+import ButtonBase from '@/components/details/ButtonBase.vue';
+import { predictionDemoData } from '@/utils/dummyData';
+import { useModalsStore } from '@/store/modals';
+import BetOptionItem from '@/components/details/BetOptionItem.vue';
 
-const props = defineProps({
-  item: { type: Object, default: () => ({}) },
-  isHot: { type: Boolean, default: false },
-})
+const currentBet = computed(() => useModalsStore().getModalContent?.currentBet || predictionDemoData);
 
 const showMore = ref(false);
+
+const maxTextLength = 50;
+
+const shortTitle = computed(() => {
+  return currentBet.value.title?.length > maxTextLength
+    ? currentBet.value.title.slice(0, maxTextLength) + '...'
+    : currentBet.value.title;
+});
+
+const dynamicHot = computed(() => getDaysLeft(currentBet.value.finish) <= 1);
 
 const showMoreHandler = () => {
   showMore.value = !showMore.value;
 }
 
-const maxTextLength = 50;
-
-const shortTitle = computed(() => {
-  return props.item.title?.length > maxTextLength
-    ? props.item.title.slice(0, maxTextLength) + '...'
-    : props.item.title;
-});
-
 onMounted(() => {
-  showMore.value = props.item.showMore;
+  // showMore.value = props.currentBet.showMore;
+  console.log(currentBet.value, 'currentBet - onMounted');
+
 });
 </script>
 
 <template>
-  <div :class="['event-card', { hot: isHot }]">
+  <div :class="['event-card', { hot: dynamicHot }]">
     <div class="event-card__main">
       <div class="event-card__overlay">
-        <div class="event-card__overlay--image"
+        <div v-if="currentBet.img" class="event-card__overlay--image"
           :style="{
-            backgroundImage: `url(${item.img})`,
+            backgroundImage: `url(${currentBet.img})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }"
@@ -48,29 +52,45 @@ onMounted(() => {
         </div>
 
         <div class="event-card__body--right">
-          <p v-if="isHot" class="event-card__time text-bold"><span class="hot-text">HOT!</span> Time left: {{ getTimeLeft(item.date) }}</p>
-          <p v-else class="event-card__time text-bold">Time left: {{ getTimeLeft(item.date) }}</p>
+          <p v-if="dynamicHot" class="event-card__time text-bold"><span class="hot-text">HOT!</span> Time left: {{ getTimeLeft(currentBet.finish) }}</p>
+          <p v-else class="event-card__time text-bold">Time left: {{ getTimeLeft(currentBet.finish) }}</p>
 
-          <p class="event-card__bet">Bet amount: <b class="text-bold">{{ item.bet }}</b></p>
-          <p v-if="item?.tags?.length" class="event-card__tags">
-            <span v-for="tag in item.tags" :key="tag.id">#{{ tag }}</span>
+          <p class="event-card__bet">Bet amount: <b class="text-bold">{{ currentBet.bet || '--:--' }}</b></p>
+          <p v-if="currentBet?.tags?.length" class="event-card__tags">
+            <span v-for="tag in currentBet.tags" :key="tag.id">#{{ tag }}</span>
           </p>
-          <button class="event-card__btn" @click="showMoreHandler">{{ showMore.value ? 'Show less' : 'More Details' }}</button>
         </div>
 
       </div>
     </div>
 
-    <div v-if="showMore" class="event-card__details">
-      <span>Descriptions:</span>
-      <p class="event-card__details--text">{{ item.descriptions }}</p>
+    <div class="event-card__details">
+      <span>Description:</span>
+      <p class="event-card__details--text">{{ currentBet.description }}</p>
     </div>
 
-    <div v-if="showMore" class="event-card__full">
-      <p class="event-card__full--text">Your Prediction:</p>
-      <div class="full__btn-section">
-        <ButtonBase class="full__btn-section--btn">Yes</ButtonBase>
-        <ButtonBase class="full__btn-section--btn">No</ButtonBase>
+    <div class="event-card__info">
+      <span>Total bets: <b>{{ currentBet.totalBets || '--:--' }}</b></span>
+      <span>Maximal profit from 1€: <b>3€</b></span>
+    </div>
+
+    <div class="event-card__footer">
+      <div class="event-card__footer--wrapper">
+        <p class="event-card__footer--text">Your Prediction:</p>
+        <!-- uncomment after Api fix -->
+        <!-- <BetOptionItem v-for="(item, index) in currentBet.options"
+          :key="index"
+          :option="item"
+          class="mb-10"
+        />
+        <p v-if="!currentBet.options?.length">No oprtions for prediction</p> -->
+
+        <BetOptionItem v-for="(item, index) in predictionDemoData.options"
+          :key="index"
+          :option="item"
+          class="event-card__option"
+        />
+        <p v-if="!predictionDemoData.options?.length">No oprtions for prediction</p>
       </div>
     </div>
   </div>
@@ -81,13 +101,14 @@ onMounted(() => {
   --card-height-main: 177px;
   --card-indent: 5px;
 
-  background: #FFE492;
+
+  background: var(--event-card-bg-color);
   box-shadow: var(--box-shadow-main);
   overflow: hidden;
   position: relative;
-  // height: 177px;
   min-height: var(--card-height-main);
   height: 100%;
+  max-width: 450px;
 
   &__overlay {
     position: absolute;
@@ -203,36 +224,49 @@ onMounted(() => {
     min-height: var(--card-height-main);
   }
 
-  &__full {
+  &__info {
+    background: linear-gradient(180deg, var(--event-card-bg-color) 0%, var(--btn-bg-color-active)30%);
+    padding: 20px 10px 10px 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    position: relative;
+    z-index: 1;
+
+    & span {
+      font-size: 14px;
+      font-weight: var(--font-weight-light);
+    }
+
+    & span b {
+      font-size: 16px;
+    }
+  }
+
+  &__footer {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    padding: 0 var(--card-indent);
-    margin: 15px 0;
+    background: var(--btn-bg-color-active);
 
-    &--btn-section {
-      display: flex;
-      flex-direction: row;
+    &--wrapper {
+      padding: 30px 20px 20px 20px;
     }
 
     &--text {
       font-size: 20px;
       font-weight: var(--font-weight-light);
+      text-align: center;
       margin-bottom: 10px;
     }
   }
 
-  .full {
-    &__btn-section {
-      display: flex;
-      flex-direction: row;
-      gap: 5px;
-
-      &--btn{
-        width: 180px;
-      }
-    }
+  &__option {
+    font-style: italic;
+    font-weight: var(--font-weight-light);
+    margin-bottom: 10px;
   }
 }
 

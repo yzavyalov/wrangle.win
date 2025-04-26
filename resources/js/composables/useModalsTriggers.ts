@@ -1,8 +1,10 @@
+import { OpenNewModalHandlerOptions } from "@/types/modals";
+
 export const OPEN_MODAL_EVENT_NAME = "open-modal";
 export const CLOSE_MODAL_EVENT_NAME = "close-modal";
 
 
-export const triggerOpenNewModal = async (modalName: string, options = {}) => {
+export const triggerOpenNewModal = async (modalName: string, options: OpenNewModalHandlerOptions = {}) => {
   console.log("triggerOpenNewModal");
 
   const event = new CustomEvent(OPEN_MODAL_EVENT_NAME, {

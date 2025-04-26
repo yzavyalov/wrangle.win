@@ -14,9 +14,6 @@ import { Head } from "@inertiajs/vue3";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
-import PageCloudDecorator from '@/components/details/PageCloudDecorator.vue';
-import { getTimeLeft } from '@/helpers/getTimeLeft';
-import { predictionDemoData } from '@/utils/dummyData';
 import PredictionComp from "@/components/bet/PredictionComp.vue";
 
 </script>
