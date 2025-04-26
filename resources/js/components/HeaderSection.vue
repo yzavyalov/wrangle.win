@@ -7,6 +7,7 @@ import { navigateTo } from '@/helpers/navigate';
 import { useUserStore } from "@/store/user";
 import { computed, nextTick } from 'vue';
 import { logout } from '@/services/user';
+import { sideBarLinks } from "@/utils/datasets.js";
 
 const {
   position: sideBarPosition,
@@ -39,7 +40,7 @@ const logOutHandler = async () => {
 
     <Teleport to="body">
       <transition-group name="fade">
-        <SideBar v-if="isSideBarActive" @close="closeSideBar" :style="sideBarPosition" v-click-outside="closeSideBar" />
+        <SideBar v-if="isSideBarActive" :links="sideBarLinks" @close="closeSideBar" :style="sideBarPosition" v-click-outside="closeSideBar" />
         <ProfileMenu v-if="isProfileMenuActive" @close="closeProfileMenur" :style="profileMenuPosition" v-click-outside="closeProfileMenur" />
       </transition-group>
     </Teleport>
