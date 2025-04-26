@@ -27,9 +27,27 @@ Route::get('/', function () {
     return Inertia::render('Home');
 })->name('index');
 
+
 Route::get('/login', function () {
     return Inertia::render('Login');
 });
+
+Route::get('/register', function () {
+    return Inertia::render('Register');
+});
+
+Route::get('/prediction', function () {
+    return Inertia::render('Prediction');
+});
+
+Route::get('/new_bet', function () {
+    return Inertia::render('NewBet');
+});
+
+Route::get('/profile', function () {
+    return Inertia::render('Profile');
+});
+
 
 Route::get('/form-reset-password', function (){dd('form here');});
 
