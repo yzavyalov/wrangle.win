@@ -33,7 +33,6 @@ Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 
 
 
-
 Route::get('/bets', [BetController::class,'index']);
 Route::get('/bets/{id}', [BetController::class,'show']);
 Route::post('/search-bet',[BetSortController::class,'searchBet']);
