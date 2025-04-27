@@ -9,6 +9,10 @@ defineOptions({
   name: "SideBar"
 })
 
+const props = defineProps({
+  links: { type: Array, required: true, default: () => [] },
+})
+
 const emit = defineEmits(["close"]);
 
 const emitClose = () => emit("close");
@@ -28,9 +32,9 @@ onUnmounted(() => {
     <ButtonBurger @click="emitClose" />
 
     <ul class="sidebar__list">
-      <li v-for="link in sideBarLinks" :key="link.id" class="sidebar__listitem">
+      <li v-for="item in links" :key="item.id" class="sidebar__listitem">
         <ButtonBase class="sidebar__item">
-          {{ link.name }}
+          {{ item.name }}
         </ButtonBase>
       </li>
     </ul>
