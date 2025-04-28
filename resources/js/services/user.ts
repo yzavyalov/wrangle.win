@@ -1,6 +1,7 @@
 import { http } from "@/api/http";
 import { AUTH } from "@/api/enpoints";
 import { useUserStore } from "@/store/user";
+import { HTTPResponse } from "@/types/http";
 
 export const register = async (payload: RegisterPayload) => {
   return await http.post(AUTH.URL_REGISTER, payload)
@@ -53,7 +54,24 @@ export const logout = async () => {
 
     useUserStore().logout();
 
+    localStorage.removeItem("access_token")
+
     return ;
+  })
+  .catch(e => console.error(e.message));
+};
+
+export const getUserData = async () => {
+
+  return await http.get(AUTH.URL_USER)
+  .then(res => {
+    console.log(res, "res - getUserData");
+
+    const user = res?.data?.data;
+
+    user && useUserStore().updateUser(user);
+
+    return res.data;
   })
   .catch(e => console.error(e.message));
 };

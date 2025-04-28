@@ -11,6 +11,7 @@ use App\Http\Controllers\AdminPanel\TransactionController;
 use App\Http\Controllers\AdminPanel\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +46,7 @@ Route::get('/new_bet', function () {
 });
 
 Route::get('/profile', function () {
-    return Inertia::render('Profile');
+    return Inertia::render('Profile', ['auth' => Auth::check(), 'user' => Auth::user()]);
 });
 
 Route::get('/categories', function () {

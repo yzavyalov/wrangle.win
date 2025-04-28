@@ -9,7 +9,7 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "allowJs": true,
+    // "allowJs": true,
     "noImplicitAny": false,
     "noEmit": true,
     "baseUrl": ".",
