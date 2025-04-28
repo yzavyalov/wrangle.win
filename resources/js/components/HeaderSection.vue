@@ -24,15 +24,22 @@ const {
 
 const currentUser = computed(() => useUserStore().getUser);
 
-const linksVisible = ref([...sideBarLinks]); // ті, що видно у шапці
-const linksHidden = ref([...headerLinks]);   // ті, що ховаються у бокове меню
+const allLinks = ref([...headerLinks, ...sideBarLinks]);
+const linksVisible = ref([...headerLinks]); // ті, що видно у шапці
+const linksHidden = ref([...sideBarLinks]);   // ті, що ховаються у бокове меню
 
 const navContainer = ref(null);
 const navButtons = ref([]);
 
-const recalculateLinks = () => {
-  console.log('recalculateLinks');
+const sideBarClickHandler = (link) => {
+  console.log(link, 'link - sideBarClickHandler');
 
+  link?.path && navigateTo(link.path);
+
+  nextTick(() => closeSideBar());
+}
+
+const recalculateLinks = () => {
   if (!navContainer.value) return;
 
   const containerWidth = navContainer.value.clientWidth;
@@ -40,7 +47,7 @@ const recalculateLinks = () => {
   const newVisible = [];
   const newHidden = [];
 
-  sideBarLinks.forEach((link, index) => {
+  allLinks.value.forEach((link, index) => { // важливо мати оригінальний список всіх лінків
     const buttonEl = navButtons.value[index];
     if (!buttonEl) return;
 
@@ -63,6 +70,10 @@ onMounted(() => {
     recalculateLinks();
     window.addEventListener('resize', recalculateLinks);
   });
+
+  console.log(linksVisible.value, 'linksVisible.value - onMounted');
+  console.log(linksHidden.value, 'linksHidden.value - onMounted');
+
 });
 
 onUnmounted(() => {
@@ -76,7 +87,7 @@ onUnmounted(() => {
 
     <Teleport to="body">
       <transition-group name="fade">
-        <SideBar v-if="isSideBarActive" :links="sideBarLinks" @close="closeSideBar" :style="sideBarPosition" v-click-outside="closeSideBar" />
+        <SideBar v-if="isSideBarActive" :links="sideBarLinks" @item:click="sideBarClickHandler" @close="closeSideBar" :style="sideBarPosition" v-click-outside="closeSideBar" />
         <ProfileMenu v-if="isProfileMenuActive" @close="closeProfileMenur" :style="profileMenuPosition" v-click-outside="closeProfileMenur" />
       </transition-group>
     </Teleport>
@@ -86,13 +97,21 @@ onUnmounted(() => {
     </div>
 
     <nav class="nav" ref="navContainer">
-      <button class="nav__btn" @click="navigateTo('/categories')">All Categories</button>
+      <button v-for="link in linksVisible"
+        :key="link.id"
+        class="nav__btn"
+        @click="navigateTo(link.path)"
+      >
+        {{ link.name }}
+      </button>
+
+      <!-- <button class="nav__btn" @click="navigateTo('/categories')">All Categories</button>
       <button class="nav__btn">Popular</button>
       <button class="nav__btn" @click="navigateTo('/prediction')">Prediction</button>
-      <button class="nav__btn" @click="navigateTo('/new_bet')">New Bet</button>
+      <button class="nav__btn" @click="navigateTo('/new_bet')">New Bet</button> -->
     </nav>
 
-    <div class="search">
+    <div class="search hide_on_mobile">
       <input type="text" placeholder="Search Markets" />
     </div>
 
@@ -104,6 +123,9 @@ onUnmounted(() => {
       <button  v-if="!currentUser" class="auth__btn" @click="navigateTo('/login')">Login</button>
     </div>
   </header>
+
+  <p>linksVisible - {{ linksVisible.length }}</p>
+  <p>linksHidden - {{ linksHidden.length }}</p>
 </template>
 
 <style scoped lang='scss'>
@@ -223,6 +245,12 @@ onUnmounted(() => {
         border: 1px solid black;
         text-decoration: underline;
       }
+    }
+  }
+
+  @media screen and (max-width: 929px) {
+    .hide_on_mobile {
+      display: none;
     }
   }
 }

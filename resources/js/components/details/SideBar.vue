@@ -13,7 +13,7 @@ const props = defineProps({
   links: { type: Array, required: true, default: () => [] },
 })
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close", "item:click"]);
 
 const emitClose = () => emit("close");
 
@@ -33,7 +33,7 @@ onUnmounted(() => {
 
     <ul class="sidebar__list">
       <li v-for="item in links" :key="item.id" class="sidebar__listitem">
-        <ButtonBase class="sidebar__item">
+        <ButtonBase class="sidebar__item" @click.stop.prevent="emit('item:click', item)">
           {{ item.name }}
         </ButtonBase>
       </li>
