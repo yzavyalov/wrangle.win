@@ -72,7 +72,7 @@ onUnmounted(() => {
 
 <template>
   <header class="header">
-    <ButtonBurger @click="openSideBar"  />
+    <ButtonBurger class="header__burdger" @click="openSideBar"  />
 
     <Teleport to="body">
       <transition-group name="fade">
@@ -123,6 +123,9 @@ onUnmounted(() => {
   padding: 10px 20px;
   font-weight: var(--font-weight-light);
 
+  &__burdger {
+    flex: 0 0 48px;
+  }
 
   .logo {
     background-color: var(--btn-bg-color);
@@ -131,6 +134,7 @@ onUnmounted(() => {
     padding: 2px;
     width: 110px;
     cursor: pointer;
+    flex: 0 0 auto;
 
     img {
       height: 40px;
@@ -148,6 +152,7 @@ onUnmounted(() => {
     transition: background 0.3s;
     overflow: hidden;
     min-height: var(--header-height);
+    flex: 0 0 auto;
 
     .nav__btn {
       padding: 8px 16px;
