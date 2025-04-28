@@ -24,6 +24,14 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
+Route::fallback(function () {
+    if(Auth()->id()==null)
+
+    // return redirect()->to('/');
+
+    return redirect()->to('/404');
+});
+
 Route::get('/', function () {
     return Inertia::render('Home');
 })->name('index');
@@ -51,6 +59,10 @@ Route::get('/profile', function () {
 
 Route::get('/categories', function () {
     return Inertia::render('Categories');
+});
+
+Route::get('/404', function () {
+    return Inertia::render('Page404');
 });
 
 
