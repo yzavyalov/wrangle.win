@@ -24,12 +24,11 @@ const {
 
 const currentUser = computed(() => useUserStore().getUser);
 
-const allLinks = ref([...headerLinks, ...sideBarLinks]);
-const linksVisible = ref([...headerLinks]); // ті, що видно у шапці
-const linksHidden = ref([...sideBarLinks]);   // ті, що ховаються у бокове меню
+const dynamicHeaderLinks = ref([...headerLinks]);     // ті, що видно у шапці
+const dynamicSidebarLinks = ref([...sideBarLinks]);   // ті, що ховаються у бокове меню
 
-const navContainer = ref(null);
-const navButtons = ref([]);
+const navContainerEl = ref(null);
+const navButtonsEl = ref([]);
 
 const sideBarClickHandler = (link) => {
   console.log(link, 'link - sideBarClickHandler');
@@ -40,39 +39,32 @@ const sideBarClickHandler = (link) => {
 }
 
 const recalculateLinks = () => {
-  if (!navContainer.value) return;
+  const width = window.innerWidth;
 
-  const containerWidth = navContainer.value.clientWidth;
-  let totalWidth = 0;
-  const newVisible = [];
-  const newHidden = [];
+  if (width >= 1299) {
+    dynamicHeaderLinks.value = [...headerLinks];
+    dynamicSidebarLinks.value = [...sideBarLinks];
 
-  allLinks.value.forEach((link, index) => { // важливо мати оригінальний список всіх лінків
-    const buttonEl = navButtons.value[index];
-    if (!buttonEl) return;
+  } else if (width > 700) {
+    dynamicHeaderLinks.value = headerLinks.filter((_, i) => i !== 1 && i !== 2);
+    dynamicSidebarLinks.value = [...sideBarLinks, ...headerLinks.slice(1, 3)];
 
-    const buttonWidth = buttonEl.offsetWidth;
-
-    if (totalWidth + buttonWidth <= containerWidth) {
-      totalWidth += buttonWidth;
-      newVisible.push(link);
-    } else {
-      newHidden.push(link);
-    }
-  });
-
-  linksVisible.value = newVisible;
-  linksHidden.value = newHidden;
+  } else {
+    dynamicHeaderLinks.value = [];
+    dynamicSidebarLinks.value = [...sideBarLinks, ...headerLinks];
+  }
 };
 
 onMounted(() => {
   nextTick(() => {
-    recalculateLinks();
-    window.addEventListener('resize', recalculateLinks);
+    nextTick(() => {
+      recalculateLinks();
+      window.addEventListener('resize', recalculateLinks);
+    });
   });
 
-  console.log(linksVisible.value, 'linksVisible.value - onMounted');
-  console.log(linksHidden.value, 'linksHidden.value - onMounted');
+  console.log(dynamicHeaderLinks.value, 'dynamicHeaderLinks.value - onMounted');
+  console.log(dynamicSidebarLinks.value, 'dynamicSidebarLinks.value - onMounted');
 
 });
 
@@ -87,8 +79,18 @@ onUnmounted(() => {
 
     <Teleport to="body">
       <transition-group name="fade">
-        <SideBar v-if="isSideBarActive" :links="sideBarLinks" @item:click="sideBarClickHandler" @close="closeSideBar" :style="sideBarPosition" v-click-outside="closeSideBar" />
-        <ProfileMenu v-if="isProfileMenuActive" @close="closeProfileMenur" :style="profileMenuPosition" v-click-outside="closeProfileMenur" />
+        <SideBar v-if="isSideBarActive"
+          v-click-outside="closeSideBar"
+          :links="dynamicSidebarLinks"
+          :style="sideBarPosition"
+          @item:click="sideBarClickHandler"
+          @close="closeSideBar"
+        />
+        <ProfileMenu v-if="isProfileMenuActive"
+          v-click-outside="closeProfileMenur"
+          :style="profileMenuPosition"
+          @close="closeProfileMenur"
+        />
       </transition-group>
     </Teleport>
 
@@ -96,19 +98,16 @@ onUnmounted(() => {
       <img :src="'/images/logo.svg'" alt="WRANGLER.WIN Logo" />
     </div>
 
-    <nav class="nav" ref="navContainer">
-      <button v-for="link in linksVisible"
+    <nav class="nav" ref="navContainerEl">
+      <button
+        v-for="(link, index) in dynamicHeaderLinks"
         :key="link.id"
         class="nav__btn"
         @click="navigateTo(link.path)"
+        ref="navButtonsEl"
       >
         {{ link.name }}
       </button>
-
-      <!-- <button class="nav__btn" @click="navigateTo('/categories')">All Categories</button>
-      <button class="nav__btn">Popular</button>
-      <button class="nav__btn" @click="navigateTo('/prediction')">Prediction</button>
-      <button class="nav__btn" @click="navigateTo('/new_bet')">New Bet</button> -->
     </nav>
 
     <div class="search hide_on_mobile">
@@ -123,9 +122,6 @@ onUnmounted(() => {
       <button  v-if="!currentUser" class="auth__btn" @click="navigateTo('/login')">Login</button>
     </div>
   </header>
-
-  <p>linksVisible - {{ linksVisible.length }}</p>
-  <p>linksHidden - {{ linksHidden.length }}</p>
 </template>
 
 <style scoped lang='scss'>
@@ -174,7 +170,7 @@ onUnmounted(() => {
     transition: background 0.3s;
     overflow: hidden;
     min-height: var(--header-height);
-    flex: 0 0 auto;
+    // flex: 0 0 auto;
 
     .nav__btn {
       padding: 8px 16px;

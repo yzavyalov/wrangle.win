@@ -3,8 +3,7 @@ export const sideBarLinks = [
   { id: 'politics', name: "Politics", path: "/politics" },
   { id: 'rules', name: "Rules", path: "/rules" },
   { id: 'events', name: "All Events", path: "/events" },
-  { id: 'create_event', name: "Create Event", path: "/events/create" },
-  { id: 'account', name: "To Account", path: "/account" },
+  { id: 'account', name: "To Account", path: "/profile" },
 ];
 
 export const headerLinks = [

@@ -192,6 +192,8 @@ const userBalance = ref(100)
       gap: 10px;
       padding: var(--profile-padding-main);
       padding-left: var(--profile-padding-secondary);
+      position: relative;
+      z-index: 1;
 
       button {
         font-weight: var(--font-weight-light);

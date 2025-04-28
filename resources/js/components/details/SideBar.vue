@@ -62,9 +62,9 @@ onUnmounted(() => {
     margin-top: 30px;
   }
 
-  &__listitem:last-child {
-    margin-top: 50px;
-  }
+  // &__listitem:last-child {
+  //   margin-top: 50px;
+  // }
 
   &__item {
     display: flex;
