@@ -28,7 +28,7 @@ class UserService
             'user' => [
                 'name' => $user->name,
                 'email' => $user->email,
-                'balance' => $user->balance->balance,
+                'balance' => $user->balance?->balance ?? 0,
             ]
         ]);
     }
