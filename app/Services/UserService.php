@@ -28,7 +28,6 @@ class UserService
             'user' => [
                 'name' => $user->name,
                 'email' => $user->email,
-                'token' => $user->currentAccessToken(),
                 'balance' => $user->balance->balance,
             ]
         ]);
