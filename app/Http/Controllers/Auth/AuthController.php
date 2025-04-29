@@ -7,6 +7,7 @@ use App\Http\Resources\AuthResource;
 use App\Http\Resources\UserResource;
 use App\Services\BalanceService;
 use App\Services\CheckUserService;
+use App\Services\UserService;
 use App\Traits\JsonResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -16,6 +17,12 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
     use JsonResponseTrait;
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
+
     public function login(Request $request)
     {
         $request->validate([
@@ -32,7 +39,7 @@ class AuthController extends Controller
 //        $token = $user->createToken('auth-token')->plainTextToken;
         auth()->login($user);
 
-        session()->put('user',$user);
+        $this->userService->putInSession($user);
 
         return $this->successJsonAnswer200('user', UserResource::make($user));
     }
@@ -81,9 +88,7 @@ class AuthController extends Controller
 
             auth()->login($user);
 
-            session([
-                'user' => $user,
-            ]);
+            $this->userService->putInSession($user);
 
             return $this->successJsonAnswer200('User',AuthResource::make($user));
         }

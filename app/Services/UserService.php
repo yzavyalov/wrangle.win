@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\BalanceResource;
 use App\Models\User;
 
 class UserService
@@ -20,4 +21,17 @@ class UserService
 
         $user->assignRole('user');
     }
+
+    public function putInSession(User $user)
+    {
+        session()->put([
+            'user' => [
+                'name' => $user->name,
+                'email' => $user->email,
+                'token' => $user->currentAccessToken(),
+                'balance' => $user->balance->balance,
+            ]
+        ]);
+    }
+
 }
