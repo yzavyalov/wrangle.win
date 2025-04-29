@@ -21,7 +21,9 @@ class BetResource extends JsonResource
             'title' => $this->title,
             'image' => $this->image,
             'status' => $this->status,
-            'status_type' => $this->status->label(),
+            'status_type' => $this->status instanceof BetStatusEnum
+                ? $this->status->label()
+                : BetStatusEnum::from($this->status)->label(),
             'source1' => $this->source1,
             'source2' => $this->source2,
             'source3' => $this->source3,
