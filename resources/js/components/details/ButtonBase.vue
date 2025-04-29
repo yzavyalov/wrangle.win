@@ -1,9 +1,13 @@
 <script setup>
 
+defineProps({
+  isActive: { type: Boolean, default: false },
+})
+
 </script>
 
 <template>
-  <button class="button">
+  <button :class="['button', { 'active': isActive }]">
     <slot></slot>
   </button>
 </template>
@@ -21,6 +25,10 @@
     align-items: center;
 
     &:hover {
+      background: var(--btn-bg-color-active);
+    }
+
+    &.active {
       background: var(--btn-bg-color-active);
     }
   }

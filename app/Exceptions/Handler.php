@@ -4,6 +4,8 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Auth\AuthenticationException; // добавь это, чтобы ловить ошибки авторизации
+use Illuminate\Validation\ValidationException; // добавь это, чтобы красиво обрабатывать валидацию
 
 class Handler extends ExceptionHandler
 {
@@ -27,4 +29,39 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    /**
+     * Обработка всех ошибок для API
+     */
+    public function render($request, Throwable $exception)
+    {
+        if ($request->expectsJson()) {
+
+            // Специальная обработка ошибок аутентификации
+            if ($exception instanceof AuthenticationException) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ], 401);
+            }
+
+            // Специальная обработка ошибок валидации
+            if ($exception instanceof ValidationException) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $exception->errors(),
+                ], 422);
+            }
+
+            // Универсальная обработка всех остальных ошибок
+            return response()->json([
+                'success' => false,
+                'message' => $exception->getMessage(),
+            ], method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : 500);
+        }
+
+        return parent::render($request, $exception);
+    }
 }
+

@@ -14,6 +14,7 @@ import { Head } from "@inertiajs/vue3";
 import WelcomeSection from '@/components/WelcomeSection.vue';
 import TopEventsSection from '@/components/TopEventsSection.vue';
 import ActiveEventsSection from '@/components/ActiveEventsSection.vue';
+import CategoriesSection from "@/components/CategoriesSection.vue";
 
 defineOptions({ name: "Categories" })
 
@@ -21,6 +22,8 @@ defineOptions({ name: "Categories" })
 
 <template>
   <Head title="Categories" />
+
+  <CategoriesSection />
 
   <TopEventsSection />
 

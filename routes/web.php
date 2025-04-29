@@ -11,6 +11,7 @@ use App\Http\Controllers\AdminPanel\TransactionController;
 use App\Http\Controllers\AdminPanel\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,14 @@ use Inertia\Inertia;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::fallback(function () {
+    if(Auth()->id()==null)
+
+    // return redirect()->to('/');
+
+    return redirect()->to('/404');
+});
 
 Route::get('/', function () {
     return Inertia::render('Home');
@@ -45,11 +54,15 @@ Route::get('/new_bet', function () {
 });
 
 Route::get('/profile', function () {
-    return Inertia::render('Profile');
+    return Inertia::render('Profile', ['auth' => Auth::check(), 'user' => Auth::user()]);
 });
 
 Route::get('/categories', function () {
     return Inertia::render('Categories');
+});
+
+Route::get('/404', function () {
+    return Inertia::render('Page404');
 });
 
 
