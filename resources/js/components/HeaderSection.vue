@@ -5,8 +5,8 @@ import ButtonBurger from "@/components/details/ButtonBurger.vue"
 import { useShowComponent } from "@/composables";
 import { navigateTo } from '@/helpers/navigate';
 import { useUserStore } from "@/store/user";
-import { computed, nextTick } from 'vue';
-import { logout } from '@/services/user';
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
+import { sideBarLinks, headerLinks } from "@/utils/datasets.js";
 
 const {
   position: sideBarPosition,
@@ -24,23 +24,73 @@ const {
 
 const currentUser = computed(() => useUserStore().getUser);
 
-const logOutHandler = async () => {
-  const result = await logout()
-  useUserStore().logout();
-  await nextTick();
-  navigateTo('/login');
+const dynamicHeaderLinks = ref([...headerLinks]);     // ті, що видно у шапці
+const dynamicSidebarLinks = ref([...sideBarLinks]);   // ті, що ховаються у бокове меню
+
+const navContainerEl = ref(null);
+const navButtonsEl = ref([]);
+
+const sideBarClickHandler = (link) => {
+  console.log(link, 'link - sideBarClickHandler');
+
+  link?.path && navigateTo(link.path);
+
+  nextTick(() => closeSideBar());
 }
 
+const recalculateLinks = () => {
+  const width = window.innerWidth;
+
+  if (width >= 1299) {
+    dynamicHeaderLinks.value = [...headerLinks];
+    dynamicSidebarLinks.value = [...sideBarLinks];
+
+  } else if (width > 700) {
+    dynamicHeaderLinks.value = headerLinks.filter((_, i) => i !== 1 && i !== 2);
+    dynamicSidebarLinks.value = [...sideBarLinks, ...headerLinks.slice(1, 3)];
+
+  } else {
+    dynamicHeaderLinks.value = [];
+    dynamicSidebarLinks.value = [...sideBarLinks, ...headerLinks];
+  }
+};
+
+onMounted(() => {
+  nextTick(() => {
+    nextTick(() => {
+      recalculateLinks();
+      window.addEventListener('resize', recalculateLinks);
+    });
+  });
+
+  console.log(dynamicHeaderLinks.value, 'dynamicHeaderLinks.value - onMounted');
+  console.log(dynamicSidebarLinks.value, 'dynamicSidebarLinks.value - onMounted');
+
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', recalculateLinks);
+});
 </script>
 
 <template>
   <header class="header">
-    <ButtonBurger @click="openSideBar"  />
+    <ButtonBurger class="header__burdger" @click="openSideBar"  />
 
     <Teleport to="body">
       <transition-group name="fade">
-        <SideBar v-if="isSideBarActive" @close="closeSideBar" :style="sideBarPosition" v-click-outside="closeSideBar" />
-        <ProfileMenu v-if="isProfileMenuActive" @close="closeProfileMenur" :style="profileMenuPosition" v-click-outside="closeProfileMenur" />
+        <SideBar v-if="isSideBarActive"
+          v-click-outside="closeSideBar"
+          :links="dynamicSidebarLinks"
+          :style="sideBarPosition"
+          @item:click="sideBarClickHandler"
+          @close="closeSideBar"
+        />
+        <ProfileMenu v-if="isProfileMenuActive"
+          v-click-outside="closeProfileMenur"
+          :style="profileMenuPosition"
+          @close="closeProfileMenur"
+        />
       </transition-group>
     </Teleport>
 
@@ -48,13 +98,19 @@ const logOutHandler = async () => {
       <img :src="'/images/logo.svg'" alt="WRANGLER.WIN Logo" />
     </div>
 
-    <nav class="nav">
-      <button class="nav__btn">All Categories</button>
-      <button class="nav__btn">Popular</button>
-      <button class="nav__btn" @click="navigateTo('/new_bet')">New Bet</button>
+    <nav class="nav" ref="navContainerEl">
+      <button
+        v-for="(link, index) in dynamicHeaderLinks"
+        :key="link.id"
+        class="nav__btn"
+        @click="navigateTo(link.path)"
+        ref="navButtonsEl"
+      >
+        {{ link.name }}
+      </button>
     </nav>
 
-    <div class="search">
+    <div class="search hide_on_mobile">
       <input type="text" placeholder="Search Markets" />
     </div>
 
@@ -80,11 +136,14 @@ const logOutHandler = async () => {
   display: flex;
   gap: 10px;
   justify-content: start;
-  flex-wrap: wrap;
+  // flex-wrap: wrap;
   align-items: center;
   padding: 10px 20px;
   font-weight: var(--font-weight-light);
 
+  &__burdger {
+    flex: 0 0 48px;
+  }
 
   .logo {
     background-color: var(--btn-bg-color);
@@ -93,6 +152,7 @@ const logOutHandler = async () => {
     padding: 2px;
     width: 110px;
     cursor: pointer;
+    flex: 0 0 auto;
 
     img {
       height: 40px;
@@ -110,6 +170,7 @@ const logOutHandler = async () => {
     transition: background 0.3s;
     overflow: hidden;
     min-height: var(--header-height);
+    // flex: 0 0 auto;
 
     .nav__btn {
       padding: 8px 16px;
@@ -180,6 +241,12 @@ const logOutHandler = async () => {
         border: 1px solid black;
         text-decoration: underline;
       }
+    }
+  }
+
+  @media screen and (max-width: 929px) {
+    .hide_on_mobile {
+      display: none;
     }
   }
 }

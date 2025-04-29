@@ -1,6 +1,16 @@
 <script setup>
 import HeaderSection from '@/components/HeaderSection.vue';
 import FooterSection from '@/components/FooterSection.vue';
+import ModalBase from '@/components/modals/ModalBase.vue';
+import { useModals } from '@/composables';
+import { onMounted } from 'vue';
+import { getUserData } from '@/services/user';
+
+const { modals } = useModals({ isLayout: true });
+
+onMounted(() => {
+  getUserData();
+})
 
 </script>
 
@@ -14,6 +24,15 @@ import FooterSection from '@/components/FooterSection.vue';
         <slot></slot>
 
       </div>
+    </div>
+
+    <div class="modals__container">
+      <transition-group name="modal">
+        <ModalBase v-for="(modal, index) in modals"
+          :key="modal + '_' + index"
+          :idx="index"
+        />
+      </transition-group>
     </div>
 
     <FooterSection />

@@ -32,7 +32,7 @@ const userBalance = ref(100)
         <h1>WRANGLER.WIN</h1>
       </div>
 
-      <div class="profile__header--user">
+      <!-- <div class="profile__header--user">
         <p class="profile__header--top">{{ currentUser?.name || 'Nickname Name' }}</p>
         <ButtonBase class="min-width-80">Edit Profile</ButtonBase>
         <p class="profile__header--bottom coin-decorator">
@@ -42,6 +42,20 @@ const userBalance = ref(100)
 
       <div class="profile__header--avatar">
         <img :src="'/images/avatar-sample.svg'" alt="avatar">
+      </div> -->
+
+      <div class="profile__user">
+        <div class="profile__user--details">
+          <p class="profile__user--top">{{ currentUser?.name || 'Nickname Name' }}</p>
+          <ButtonBase class="min-width-80">Edit Profile</ButtonBase>
+          <p class="coin-decorator">
+            Balance: <b>{{ userBalance }}$</b>
+          </p>
+        </div>
+
+        <div class="profile__user--avatar">
+          <img :src="'/images/avatar-sample.svg'" alt="avatar">
+        </div>
       </div>
     </div>
 
@@ -73,7 +87,6 @@ const userBalance = ref(100)
   --profile-bg-secondary: #FFE432;
 
   &:deep(.page__wrapper) {
-    // background: var(--profile-bg-main);
     background: transparent;
     padding: 0;
     overflow: hidden;
@@ -86,25 +99,37 @@ const userBalance = ref(100)
     display: flex;
     min-height: 170px;
     background: #ffe432c7;
-    flex-wrap: wrap;
+    // flex-wrap: wrap;
+    flex-wrap: wrap-reverse;
 
     &--welcome {
       flex: 1;
       padding: var(--profile-padding-main);
-      // font-size: 52px;
+      font-size: 52px;
 
       h1 {
         font-weight: var(--font-weight-bold);
-        font-size: 52px;
+        font-size: inherit;
       }
 
       h3 {
         font-weight: var(--font-weight-lighter);
-        font-size: 52px;
+        font-size: inherit;
+
+      }
+
+      @media screen and (max-width: 929px) {
+        font-size: 32px;
       }
     }
+  }
 
-    &--user {
+  &__user {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+
+    &--details {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -119,8 +144,6 @@ const userBalance = ref(100)
       line-height: 32px;
     }
 
-    // &--bottom {}
-
     &--avatar {
       padding: var(--profile-padding-main) calc(var(--profile-padding-main) * 2);
       background: #FFEC1C;
@@ -129,6 +152,18 @@ const userBalance = ref(100)
         width: 100%;
         max-width: 150px;
         aspect-ratio: 1 / 1;
+        min-width: 80px;
+      }
+    }
+
+    @media screen and (max-width: 929px) {
+      &--details {
+        min-width: 150px;
+      }
+
+      &--top {
+        font-size: 24px;
+        line-height: 24px;
       }
     }
   }
@@ -139,10 +174,6 @@ const userBalance = ref(100)
     background: #FFEC1C;
     min-width: 100%;
     flex: 1;
-
-    @media screen and (max-width: 1299px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
 
     @media screen and (max-width: 929px) {
       grid-template-columns: repeat(1, 1fr);
@@ -161,6 +192,8 @@ const userBalance = ref(100)
       gap: 10px;
       padding: var(--profile-padding-main);
       padding-left: var(--profile-padding-secondary);
+      position: relative;
+      z-index: 1;
 
       button {
         font-weight: var(--font-weight-light);

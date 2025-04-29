@@ -4,14 +4,9 @@ import { useUserStore } from "@/store/user";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import { navigateTo } from '@/helpers/navigate';
 
-// const currentUser = computed(() => useUserStore().getUser);
-const currentUser = computed(() => isAuth.value);
+const currentUser = computed(() => useUserStore().getUser);
 
 const userBalance = ref(100)
-
-const isAuth = ref(false);
-
-const toggleAuth = () => isAuth.value = !isAuth.value
 
 </script>
 

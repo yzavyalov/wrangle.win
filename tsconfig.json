@@ -1,5 +1,17 @@
 {
   "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    // "allowJs": true,
+    "noImplicitAny": false,
+    "noEmit": true,
     "baseUrl": ".",
     "paths": {
       "@/*": [

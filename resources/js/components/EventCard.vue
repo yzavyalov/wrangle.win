@@ -1,7 +1,8 @@
 <script setup>
-import { computed, nextTick, ref } from 'vue';
-import { getTimeLeft } from '@/helpers/getTimeLeft';
+import { computed, nextTick, onMounted, ref } from 'vue';
+import { getTimeLeft, getDaysLeft } from '@/helpers/getTimeLeft';
 import ButtonBase from "@/components/details/ButtonBase.vue";
+import { triggerOpenNewModal } from '@/composables';
 
 const props = defineProps({
   item: { type: Object, default: () => ({}) },
@@ -16,12 +17,18 @@ const shortTitle = computed(() => {
     : props.item.title;
 });
 
+const dynamicHot = computed(() => props.isHot || getDaysLeft(props.item.finish) < 1);
+
+const showMoreDetailsHandler = () => {
+  triggerOpenNewModal('bet-modal', { 'updateModalContent': { currentBet: props.item } });
+};
+
 </script>
 
 <template>
-  <div :class="['event-card', { hot: isHot }]">
+  <div :class="['event-card', { hot: dynamicHot }]">
     <div class="event-card__overlay">
-      <div class="event-card__overlay--image"
+      <div v-if="item.img" class="event-card__overlay--image"
         :style="{
           backgroundImage: `url(${item.img})`,
           backgroundSize: 'cover',
@@ -38,14 +45,14 @@ const shortTitle = computed(() => {
       </div>
 
       <div class="event-card__body--right">
-        <p v-if="isHot" class="event-card__time text-bold"><span class="hot-text">HOT!</span> Time left: {{ getTimeLeft(item.date) }}</p>
-        <p v-else class="event-card__time text-bold">Time left: {{ getTimeLeft(item.date) }}</p>
+        <p v-if="dynamicHot" class="event-card__time text-bold"><span class="hot-text">HOT!</span> Time left: {{ getTimeLeft(item.finish) }}</p>
+        <p v-else class="event-card__time text-bold">Time left: {{ getTimeLeft(item.finish) }}</p>
 
         <p class="event-card__bet">Bet amount: <b class="text-bold">{{ item.bet }}</b></p>
         <p v-if="item?.tags?.length" class="event-card__tags">
           <span v-for="tag in item.tags" :key="tag.id">#{{ tag }}</span>
         </p>
-        <ButtonBase class="event-card__btn">More Details</ButtonBase>
+        <ButtonBase class="event-card__btn" @click="showMoreDetailsHandler">More Details</ButtonBase>
       </div>
 
     </div>
@@ -56,7 +63,7 @@ const shortTitle = computed(() => {
 .event-card {
   --card-indent: 5px;
 
-  background: #FFE492;
+  background: var(--event-card-bg-color);
   box-shadow: var(--box-shadow-main);
   overflow: hidden;
   position: relative;
@@ -122,14 +129,7 @@ const shortTitle = computed(() => {
     top: var(--card-indent);
   }
 
-  // &__bet {}
-
-  // &__tags {}
-
   &__btn {
-    // background-color: var(--btn-bg-color);
-    // box-shadow: var(--box-shadow-main);
-    // border-radius: var(--border-radius-main);
     padding: var(--card-indent) 10px;
     margin-top: auto;
     margin-left: auto;

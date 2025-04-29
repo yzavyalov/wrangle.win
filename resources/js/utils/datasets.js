@@ -1,10 +1,17 @@
 export const sideBarLinks = [
-  { id: 1, name: "About", path: "/about" },
-  { id: 2, name: "Politics", path: "/politics" },
-  { id: 3, name: "Rules", path: "/rules" },
-  { id: 4, name: "All Events", path: "/events" },
-  { id: 5, name: "Create Event", path: "/events/create" },
-  { id: 6, name: "To Account", path: "/account" },
+  { id: 'about', name: "About", path: "/about" },
+  { id: 'politics', name: "Politics", path: "/politics" },
+  { id: 'rules', name: "Rules", path: "/rules" },
+  { id: 'events', name: "All Events", path: "/events" },
+  { id: 'account', name: "To Account", path: "/profile" },
+];
+
+export const headerLinks = [
+  { id: 'categories', name: "All categories", path: "/categories" },
+  { id: 'popular', name: "Popular", path: "/popular" },
+  { id: 'prediction', name: "Prediction", path: "/prediction" },
+  { id: 'new_bet', name: "New bet", path: "/new_bet" },
+
 ];
 
 export const profileMenuLinks = [

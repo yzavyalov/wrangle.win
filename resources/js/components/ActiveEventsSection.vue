@@ -1,34 +1,30 @@
 <script setup>
+import { onMounted, ref } from 'vue';
 import EventCard from '@/components/EventCard.vue';
 import ButtonBase from '@/components/details/ButtonBase.vue';
-import { demoCards } from '@/utils/dummyData';
+import { triggerOpenNewModal, triggerCloseModal } from '@/composables';
+import { useConfirm } from '@/composables';
+import { useBets } from '@/composables/useBets';
 
-const demoCards2 = [
-  {
-    id: 1,
-    title: 'Next Prime Minister of Canada after the election?',
-    img: 'https://img.goodfon.ru/wallpaper/big/0/70/badfon-peyzazhi-priroda-foto-krasota.webp',
-    bet: '$100',
-    tags: ['Tag 1', 'Tag 2'],
-    date: new Date('2025-04-15T20:18:00'),
-  },
-  {
-    id: 2,
-    title: 'Ukraine agrees to Trump mineral deal before April?',
-    img: 'https://www.fonstola.ru/images/202306/www.fonstola.ru.1687828675.2414.jpg',
-    bet: '$200',
-    tags: ['Tag 3', 'Tag 4'],
-    date: new Date('2025-04-10T20:18:00'),
-  },
-  {
-    id: 3,
-    title: 'Ukraine agrees to Trump mineral deal before April?',
-    img: 'https://i.pinimg.com/736x/17/83/6b/17836b7698244921e54d21f449512edd.jpg',
-    bet: '$300',
-    tags: ['Tag 5', 'Tag 6'],
-    date: new Date('2025-04-11T20:18:00'),
-  },
-]
+const { confirm } = useConfirm();
+
+const { fetchBets, fetchMoreBets, bets } = useBets()
+
+const testConfirm = async () => {
+  const result = await confirm({
+    title: 'Are you sure?',
+    text: 'This action cannot be undone',
+    confirmText: 'Confirm',
+    cancelText: 'Cancel'
+  })
+
+  console.log(result , 'result');
+
+}
+
+onMounted(() => {
+  fetchBets();
+})
 
 </script>
 
@@ -39,14 +35,18 @@ const demoCards2 = [
     </div>
 
     <ul class="active_events__list">
-      <li v-for="card in demoCards" :key="card.id">
+      <li v-for="card in bets" :key="card.id">
         <EventCard :item="card" :is-hot="card.isHot" />
       </li>
     </ul>
 
-    <ButtonBase class="active_events__btn">
-      <p class="active_events__btn--text text-light">Create own Event</p>
+    <ButtonBase class="active_events__btn" @click="fetchMoreBets">
+      <p class="active_events__btn--text text-light">Fetch more</p>
     </ButtonBase>
+
+    <ButtonBase class="mb-10 mt-10" @click="triggerOpenNewModal('prediction-modal')">triggerOpenNewModal - prediction-modal</ButtonBase>
+
+    <ButtonBase @click="testConfirm">testConfirm</ButtonBase>
 
     <div class="background-decorator"></div>
   </div>
@@ -55,7 +55,6 @@ const demoCards2 = [
 <style scoped lang='scss'>
 .active_events {
   position: relative;
-  // z-index: 1;
   padding-bottom: 20px;
 
   &__header {

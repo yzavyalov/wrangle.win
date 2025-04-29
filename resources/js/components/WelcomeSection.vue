@@ -1,6 +1,6 @@
 <script setup>
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
-import ProfileCardSmall from  '@/components/details/ProfileCardSmall.vue';
+import ProfileCardSmall from  '@/components/profile/ProfileCardSmall.vue';
 import ButtonBase from "@/components/details/ButtonBase.vue";
 
 const APP_NAME = import.meta.env.VITE_APP_NAME;
@@ -8,28 +8,30 @@ const APP_NAME = import.meta.env.VITE_APP_NAME;
 </script>
 
 <template>
-  <PageWrapperMain :show-decorator="false" class="wellcome-section">
-    <div class="wellcome-section__header">
-      <h1>
-        Welcome to <b>{{ APP_NAME }}</b> - Your Path to Profitable Predictions!
-      </h1>
-      <ProfileCardSmall class="wellcome-section__header--profile"/>
-    </div>
-    <div class="wellcome-section__body">
-      <div class="wellcome-section__section">
-        <h3>Predict & Get Rewarded!</h3>
-        <p>Make predictions on real-world events and earn rewards for accuracy.</p>
-        <ButtonBase>Login</ButtonBase>
+  <PageWrapperMain :show-decorator="false" >
+    <div class="wellcome-section">
+      <div class="wellcome-section__header">
+        <h1>
+          Welcome to <b>{{ APP_NAME }}</b> - Your Path to Profitable Predictions!
+        </h1>
+        <ProfileCardSmall class="wellcome-section__header--profile"/>
       </div>
-      <div class="wellcome-section__section">
-        <h3>A Wide Range of Events</h3>
-        <p>Sports, politics, entertainment, technology – choose from multiple categories and predict the hottest topics.</p>
-        <ButtonBase>View Events</ButtonBase>
-      </div>
-      <div class="wellcome-section__section">
-        <h3>Fair Rules & Honest Payouts!</h3>
-        <p>Transparent system, reliable payouts, and fair conditions – we ensure your security and comfort.</p>
-        <ButtonBase>Our Politics</ButtonBase>
+      <div class="wellcome-section__body">
+        <div class="wellcome-section__section">
+          <h3>Predict & Get Rewarded!</h3>
+          <p>Make predictions on real-world events and earn rewards for accuracy.</p>
+          <ButtonBase>Login</ButtonBase>
+        </div>
+        <div class="wellcome-section__section">
+          <h3>A Wide Range of Events</h3>
+          <p>Sports, politics, entertainment, technology – choose from multiple categories and predict the hottest topics.</p>
+          <ButtonBase>View Events</ButtonBase>
+        </div>
+        <div class="wellcome-section__section">
+          <h3>Fair Rules & Honest Payouts!</h3>
+          <p>Transparent system, reliable payouts, and fair conditions – we ensure your security and comfort.</p>
+          <ButtonBase>Our Politics</ButtonBase>
+        </div>
       </div>
     </div>
 
