@@ -4,7 +4,7 @@ import { getModalComponent } from "@/composables/useModalComponets";
 import { useModalsStore } from "@/store/modals";
 import { triggerCloseModal } from "@/composables";
 import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
-import { addClass, removeClass, select } from "@/helpers/domHelpers";
+import { toggleBodyScroll } from "@/helpers/toggleBodyScroll";
 
 const props = defineProps({
   idx: { type: Number || undefined, default: undefined, },
@@ -28,13 +28,13 @@ const closeCurrentModalHandler = () => {
 
 onMounted(() => {
   if (props.idx === 0) {
-    addClass(select("html"), "stop-scrolling");
+    toggleBodyScroll(true);
   }
 })
 
 onUnmounted(() => {
   if (props.idx === 0) {
-    removeClass(select("html"), "stop-scrolling");
+    toggleBodyScroll(false);
   }
 })
 
