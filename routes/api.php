@@ -33,7 +33,6 @@ Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 
 
 
-
 Route::get('/bets', [BetController::class,'index']);
 Route::get('/bets/{id}', [BetController::class,'show']);
 Route::post('/search-bet',[BetSortController::class,'searchBet']);
@@ -45,7 +44,6 @@ Route::post('/search-category',[BetCategorySearchController::class,'searchCatego
 
 Route::get('/payments/in',[PaymnetsController::class,'allInPayments']);
 Route::get('/payments/out',[PaymnetsController::class,'allOutPayments']);
-
 
 Route::middleware(['auth:sanctum','baduser'])->group(function (){
     Route::get('/user', [AuthController::class, 'me']);

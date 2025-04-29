@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Enum\TransactionMethodEnum;
-use App\Http\Controllers\Front\PageController;
+
 use App\Http\Enums\BetStatusEnum;
+use App\Http\Enums\TransactionMethodEnum;
 use App\Http\Requests\BetRequest;
 use App\Models\Bet;
 use Carbon\Carbon;

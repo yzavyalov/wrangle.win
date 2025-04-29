@@ -29,9 +29,12 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        $token = $user->createToken('auth-token')->plainTextToken;
+//        $token = $user->createToken('auth-token')->plainTextToken;
+        auth()->login($user);
 
-        return response()->json(['token' => $token, 'user' => $user]);
+        session()->put('user',$user);
+
+        return $this->successJsonAnswer200('user', UserResource::make($user));
     }
 
     public function logout(Request $request)
@@ -42,6 +45,10 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
+        if (!auth()->check()) {
+            abort(401, 'Unauthorized');
+        }
+
         return $this->successJsonAnswer200('You data', UserResource::make($request->user()));
     }
 
@@ -70,6 +77,12 @@ class AuthController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
+            ]);
+
+            auth()->login($user);
+
+            session([
+                'user' => $user,
             ]);
 
             return $this->successJsonAnswer200('User',AuthResource::make($user));

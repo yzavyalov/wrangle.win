@@ -5,6 +5,7 @@ namespace App\Services;
 
 
 use App\Models\Answers;
+use App\Models\Bet;
 
 class AnswerService
 {
@@ -23,4 +24,17 @@ class AnswerService
         else
             return $dohod/$answerBudget;
     }
+
+    public static function procentage(Bet $bet, Answers $answer)
+    {
+        $total = max(1, $bet->answers->sum(fn($a) => $a->bits()->pluck('sum')->sum())); // Чтобы не было деления на 0
+
+        $rateSum = $answer->bits()->pluck('sum')->sum();
+
+        $procentage = ($rateSum / $total) * 100;
+
+        return $procentage;
+
+    }
+
 }

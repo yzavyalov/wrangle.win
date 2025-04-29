@@ -20,6 +20,7 @@ class AnswerResource extends JsonResource
             'bet_id' => $this->bet_id,
             'description' => $this->description,
             'profit' => AnswerService::profit($this->resource),
+            'procentage' => AnswerService::procentage($this->bet, $this->resource),
         ];
     }
 }
