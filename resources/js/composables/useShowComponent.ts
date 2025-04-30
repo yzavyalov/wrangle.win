@@ -14,8 +14,10 @@ export const useShowComponent = ({ variant = 'default' }: UseShowComponentOption
     const { left, top, width, height } = el.getBoundingClientRect();
 
     position.value = {
-      left: `${left + width / 2 + window.scrollX + offsetX}px`,
       top: `${top + height / 2 + window.scrollY + offsetY}px`,
+      left: `${left + width / 2 + window.scrollX + offsetX}px`,
+      topNum: top + height / 2 + window.scrollY + offsetY,
+      leftNum: left + width / 2 + window.scrollX + offsetX,
     };
 
 

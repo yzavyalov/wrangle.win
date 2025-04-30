@@ -1,7 +1,12 @@
 export default () => ({
   currentcy: null,
 
-  filters: {},
+  filters: {
+    betAmount: 0,
+    thema: '',
+    tags: '',
+    finish: '',
+  },
 
   categories: [],
   selectedCategories: [],
