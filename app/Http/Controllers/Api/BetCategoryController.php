@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BetCategoryCreateRequest;
 use App\Http\Requests\BetRequest;
 use App\Http\Resources\BetCategoryResource;
+use App\Http\Resources\CurrentUserResource;
 use App\Models\BetCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BetCategoryController extends Controller
 {
@@ -30,7 +32,11 @@ class BetCategoryController extends Controller
 
         $category = BetCategory::create($validateData);
 
-        return $this->successJsonAnswer200('Your category',BetCategoryResource::make($category));
+        $category = BetCategoryResource::make($category);
+
+        $user = CurrentUserResource::make(Auth::user());
+
+        return $this->successJsonAnswer200('Your category',compact('category','user'));
     }
 
     /**

@@ -7,6 +7,8 @@ use App\Http\Enums\BetStatusEnum;
 use App\Http\Filters\BetFilter;
 use App\Http\Requests\BetSearchRequest;
 use App\Http\Resources\BetResource;
+use App\Http\Resources\CurrentUserResource;
+use App\Http\Resources\UserResource;
 use App\Models\Bet;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +20,11 @@ class BetSortController extends Controller
 
         $bets = $user->mybets;
 
-        return $this->successJsonAnswer200('My bets',BetResource::collection($bets));
+        $bets = BetResource::collection($bets);
+
+        $user = CurrentUserResource::make($user);
+
+        return $this->successJsonAnswer200('My bets',compact('bets','user'));
     }
 
     public function favoriteBets()
@@ -27,7 +33,11 @@ class BetSortController extends Controller
 
         $bets = $user->favoriteBets;
 
-        return $this->successJsonAnswer200('My favorite bets',BetResource::collection($bets));
+        $bets = BetResource::collection($bets);
+
+        $user = CurrentUserResource::make($user);
+
+        return $this->successJsonAnswer200('My favorite bets',compact('bets','user'));
     }
 
 
@@ -42,7 +52,10 @@ class BetSortController extends Controller
             ->where('finish','>=',now())
             ->get();
 
-        return $this->successJsonAnswer200('Bets',BetResource::collection($bets));
+        $bets = BetResource::collection($bets);
+        $user = CurrentUserResource::make(Auth::user());
+
+        return $this->successJsonAnswer200('Bets',compact('bets','user'));
     }
 
 
