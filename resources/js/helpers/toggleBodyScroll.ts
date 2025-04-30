@@ -1,5 +1,5 @@
 export const toggleBodyScroll = (shouldDisable: boolean) => {
-  const className = 'no-scroll';
+  const className = 'stop-scrolling';
   const body = document.body;
 
   if (shouldDisable) {

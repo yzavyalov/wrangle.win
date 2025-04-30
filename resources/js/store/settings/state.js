@@ -1,4 +1,11 @@
 export default () => ({
-  isShowModal: null,
   currentcy: null,
+
+  filters: {},
+
+  categories: [],
+  selectedCategories: [],
+
+  sortBy: 'desc', // desc | asc
+
 });

@@ -9,6 +9,7 @@ import { getUserData } from '@/services/user';
 const { modals } = useModals({ isLayout: true });
 
 onMounted(() => {
+  // fetch user data from server
   getUserData();
 })
 

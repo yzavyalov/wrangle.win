@@ -1,13 +1,17 @@
 <script setup>
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import { getAllCtegories } from "@/services/categories";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useLoading } from "@/composables/useLoading";
+import { useSettingsStore } from "@/store/settings";
 
 const { isLoading, loadingStart, loadingStop } = useLoading();
 
-const categories = ref([]);
-const selectedCategory = ref(null);
+const { setCategories, toggleSelectedCategory } = useSettingsStore();
+
+const categories = computed(() => useSettingsStore().getCategories);
+const selectedCategories = computed(() => useSettingsStore().getSelectedCategories);
+const selectedCategoriesIds = computed(() => selectedCategories.value.map(category => category.id));
 
 const selectCategory = (category) => {
   if (selectedCategory.value?.id === category.id) {
@@ -23,13 +27,15 @@ const createNewCategoryHandler = () => {
 }
 
 const fetchCategories = async () => {
+  if (categories.value?.length) {return;}
+
   try {
     loadingStart();
 
     const fetchedCategories = await getAllCtegories() || [];
     console.log(fetchedCategories, "fetchedCategories");
 
-    categories.value = fetchedCategories;
+    fetchedCategories.length && setCategories(fetchedCategories);
 
   } catch (error) {
     console.warn(error);
@@ -48,7 +54,7 @@ onMounted(() => {
 <template>
   <div class="categories">
     <ButtonBase @click="createNewCategoryHandler">Create new one category</ButtonBase>
-    <ButtonBase v-for="category in categories" :key="category" :is-active="selectedCategory?.id === category.id" @click="selectCategory(category)">
+    <ButtonBase v-for="category in categories" :key="category" :is-active="selectedCategoriesIds.includes(category.id)" @click="toggleSelectedCategory(category)">
       <span class="text-length-wrapper" >{{ category.name }}</span>
     </ButtonBase>
   </div>

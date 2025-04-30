@@ -6,6 +6,8 @@ import EventCard from '@/components/EventCard.vue';
 import SortOptions from '@/components/details/SortOptions.vue';
 import ButtonWithIcon from '@/components/details/ButtonWithIcon.vue';
 import SwiperList from '@/components/swiper/SwiperList.vue';
+import FilterAndSort from "@/components/details/FilterAndSort.vue"
+import SectionHaeder from "@/components/details/SectionHaeder.vue"
 
 defineOptions({ name: "TopEventsSection" });
 
@@ -22,35 +24,25 @@ const sortDirection = ref(false);
 
 <template>
   <div class="active_events">
-    <div class="active_events__header">
 
-      <div class="active_events__filters">
-        <ButtonWithIcon :icon="'/images/settings.svg'" @submit="closeSortOption" @click="showSortOption" />
-        <ButtonWithIcon :icon="'/images/sort_arrow.svg'" :is-icon-reversed="sortDirection" @click="sortDirection = !sortDirection" />
-      </div>
+    <SectionHaeder :title="'Top Events'">
+
+      <FilterAndSort class="active_events__filters" />
+
+    </SectionHaeder>
+    <!-- <div class="active_events__header">
+
 
       <h3>Top Events</h3>
 
       <p></p>
-    </div>
-
-    <Teleport to="body">
-      <transition name="fade">
-        <SortOptions v-if="isSortOptionsActive" @close="closeSortOption" :style="position" v-click-outside="closeSortOption" />
-      </transition>
-    </Teleport>
+    </div> -->
 
     <SwiperList :items="demoCards" >
       <template v-slot:item="{ item }">
         <EventCard :item="item" :is-hot="true" />
       </template>
     </SwiperList>
-
-    <!-- <ul class="active_events__list">
-      <li v-for="card in demoCardsV1" :key="card.id">
-        <EventCard :item="card" :is-hot="true" />
-      </li>
-    </ul> -->
   </div>
 </template>
 

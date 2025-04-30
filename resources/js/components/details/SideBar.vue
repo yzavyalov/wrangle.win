@@ -2,7 +2,6 @@
 import { onMounted, onUnmounted } from "vue";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import ButtonBurger from "@/components/details/ButtonBurger.vue"
-import { sideBarLinks } from "@/utils/datasets.js";
 import { toggleBodyScroll } from "@/helpers/toggleBodyScroll";
 
 defineOptions({

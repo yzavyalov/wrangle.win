@@ -11,12 +11,15 @@ export default {
 
 <script setup>
 import { Head } from "@inertiajs/vue3";
+import { ref } from "vue";
 import WelcomeSection from '@/components/WelcomeSection.vue';
 import TopEventsSection from '@/components/TopEventsSection.vue';
 import ActiveEventsSection from '@/components/ActiveEventsSection.vue';
 import CategoriesSection from "@/components/CategoriesSection.vue";
 
 defineOptions({ name: "Categories" })
+
+const items = ref([]);
 
 </script>
 
@@ -25,9 +28,7 @@ defineOptions({ name: "Categories" })
 
   <CategoriesSection />
 
-  <TopEventsSection />
-
-  <ActiveEventsSection />
+  <ActiveEventsSection :items="[]" />
 
 </template>
 
