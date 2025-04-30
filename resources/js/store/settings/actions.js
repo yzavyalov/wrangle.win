@@ -35,4 +35,8 @@ export default {
       this.selectedCategories.push(category);
     }
   },
+
+  setSearchQuery(query) {
+    this.searchQuery = query;
+  },
 };

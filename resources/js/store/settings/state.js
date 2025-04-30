@@ -8,6 +8,8 @@ export default () => ({
     finish: '',
   },
 
+  searchQuery: '',
+
   categories: [],
   selectedCategories: [],
 

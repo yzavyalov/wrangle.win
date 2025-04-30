@@ -5,9 +5,12 @@ import ButtonBurger from "@/components/details/ButtonBurger.vue"
 import { useShowComponent } from "@/composables";
 import { navigateTo } from '@/helpers/navigate';
 import { useUserStore } from "@/store/user";
+import { useSettingsStore } from "@/store/settings";
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
 import { sideBarLinks, headerLinks } from "@/utils/datasets.js";
+import { useDebounceFn } from '@vueuse/core'
 
+const { setSearchQuery } = useSettingsStore();
 const {
   position: sideBarPosition,
   isVisible: isSideBarActive,
@@ -20,7 +23,6 @@ const {
   showComponent: openProfileMenu,
   closeComponent: closeProfileMenur,
 } = useShowComponent({ variant: 'profileMenu' });
-
 
 const currentUser = computed(() => useUserStore().getUser);
 
@@ -54,6 +56,12 @@ const recalculateLinks = () => {
     dynamicSidebarLinks.value = [...sideBarLinks, ...headerLinks];
   }
 };
+
+const updateSearchQuery = useDebounceFn((event) => {
+  const query = event.target.value;
+
+  setSearchQuery(query);
+}, 500)
 
 onMounted(() => {
   nextTick(() => {
@@ -99,8 +107,7 @@ onUnmounted(() => {
     </div>
 
     <nav class="nav" ref="navContainerEl">
-      <button
-        v-for="(link, index) in dynamicHeaderLinks"
+      <button v-for="(link, index) in dynamicHeaderLinks"
         :key="link.id"
         class="nav__btn"
         @click="navigateTo(link.path)"
@@ -111,7 +118,7 @@ onUnmounted(() => {
     </nav>
 
     <div class="search hide_on_mobile">
-      <input type="text" placeholder="Search Markets" />
+      <input type="text" placeholder="Search Markets" @input="updateSearchQuery" />
     </div>
 
     <div class="auth">
