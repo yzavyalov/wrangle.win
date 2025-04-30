@@ -39,7 +39,6 @@ const submitHandler = () => {
     tags: tags.value,
     endDate: new Date(endDate.value).toUTCString(),
   }
-  console.log(payload, "payload - submitHandler");
 
   emit('submit', payload);
 }

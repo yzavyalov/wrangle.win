@@ -5,6 +5,8 @@ import ButtonBase from '@/components/details/ButtonBase.vue';
 import { triggerOpenNewModal, triggerCloseModal } from '@/composables';
 import { useConfirm } from '@/composables';
 import { useBets } from '@/composables/useBets';
+import FilterAndSort from "@/components/details/FilterAndSort.vue"
+import SectionHaeder from "@/components/details/SectionHaeder.vue"
 
 const { confirm } = useConfirm();
 
@@ -30,9 +32,12 @@ onMounted(() => {
 
 <template>
   <div class="active_events">
-    <div class="active_events__header">
-      <h3>Active Events</h3>
-    </div>
+
+    <SectionHaeder :title="'Active Events'">
+
+      <FilterAndSort class="active_events__filters" />
+
+    </SectionHaeder>
 
     <ul class="active_events__list">
       <li v-for="card in bets" :key="card.id">
@@ -56,16 +61,6 @@ onMounted(() => {
 .active_events {
   position: relative;
   padding-bottom: 20px;
-
-  &__header {
-    position: relative;
-
-    h3 {
-      text-align: center;
-      font-size: 36px;
-      font-weight: normal;
-    }
-  }
 
   &__list {
     display: grid;
