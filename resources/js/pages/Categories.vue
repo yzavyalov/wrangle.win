@@ -28,7 +28,7 @@ const items = ref([]);
 
   <CategoriesSection />
 
-  <ActiveEventsSection :items="[]" />
+  <ActiveEventsSection :items="[]" :is-show-filters="true" />
 
 </template>
 

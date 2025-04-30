@@ -22,7 +22,7 @@ import { Head } from "@inertiajs/vue3";
 
   <WelcomeSection />
 
-  <TopEventsSection />
+  <TopEventsSection :is-show-filters="true" />
 
   <ActiveEventsSection />
 </template>

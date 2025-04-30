@@ -9,6 +9,12 @@ import FilterAndSort from "@/components/details/FilterAndSort.vue"
 import SectionHaeder from "@/components/details/SectionHaeder.vue"
 import LoaderComponent from '@/components/LoaderComponent.vue';
 
+defineOptions({ name: "ActiveEventsSection" });
+
+defineProps({
+  isShowFilters: { type: Boolean, default: false }
+})
+
 const { confirm } = useConfirm();
 
 const { fetchBets, fetchMoreBets, bets } = useBets()
@@ -36,7 +42,7 @@ onMounted(() => {
 
     <SectionHaeder :title="'Active Events'">
 
-      <FilterAndSort class="active_events__filters" />
+      <FilterAndSort v-if="isShowFilters" class="active_events__filters" />
 
     </SectionHaeder>
 

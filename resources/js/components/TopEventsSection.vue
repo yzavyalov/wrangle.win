@@ -11,6 +11,10 @@ import SectionHaeder from "@/components/details/SectionHaeder.vue"
 
 defineOptions({ name: "TopEventsSection" });
 
+defineProps({
+  isShowFilters: { type: Boolean, default: false }
+})
+
 const {
   position,
   isVisible: isSortOptionsActive,
@@ -27,7 +31,7 @@ const sortDirection = ref(false);
 
     <SectionHaeder :title="'Top Events'">
 
-      <FilterAndSort class="active_events__filters" />
+      <FilterAndSort v-if="isShowFilters" class="active_events__filters" />
 
     </SectionHaeder>
     <!-- <div class="active_events__header">
