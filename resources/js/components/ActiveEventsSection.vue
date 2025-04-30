@@ -7,6 +7,7 @@ import { useConfirm } from '@/composables';
 import { useBets } from '@/composables/useBets';
 import FilterAndSort from "@/components/details/FilterAndSort.vue"
 import SectionHaeder from "@/components/details/SectionHaeder.vue"
+import LoaderComponent from '@/components/LoaderComponent.vue';
 
 const { confirm } = useConfirm();
 
