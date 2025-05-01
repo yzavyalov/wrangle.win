@@ -1,6 +1,6 @@
 import { computed, Ref, ref } from "vue";
 import { useLoading, useFilters } from "@/composables";
-import { getActualBets } from '@/services/bets';
+import { getActualBets, getHotBets } from '@/services/bets';
 import { demoCards } from '@/utils/dummyData';
 import { triggerOpenNewModal } from "@/composables";
 
@@ -33,7 +33,9 @@ export const useBets = (options: UseBetsOptions = {}) => {
     try {
       loadingStart();
 
-      const fetchedBets = await getActualBets() || [];
+      const betsHandler = isHot ? getHotBets : getActualBets;
+
+      const fetchedBets = await betsHandler() || [];
       console.log(fetchedBets, 'fetchedBets - getActualBets');
 
       // test zone =====================
