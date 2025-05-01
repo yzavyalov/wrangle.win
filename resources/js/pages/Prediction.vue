@@ -11,11 +11,16 @@ export default {
 
 <script setup>
 import { Head } from "@inertiajs/vue3";
+import { onBeforeUnmount } from "vue";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import PredictionComp from "@/components/bet/PredictionComp.vue";
+import { useFilters } from '@/composables/useFilters';
 
+onBeforeUnmount(() => {
+  useFilters().resetFilters();
+})
 </script>
 
 <template>

@@ -1,14 +1,24 @@
-import { ref } from "vue";
-import { useLoading } from "@/composables";
+import { computed, Ref, ref } from "vue";
+import { useLoading, useFilters } from "@/composables";
 import { getActualBets } from '@/services/bets';
 import { demoCards } from '@/utils/dummyData';
 import { triggerOpenNewModal } from "@/composables";
 
 
-export const useBets = () => {
-  const { isLoading, loadingStart, loadingStop } = useLoading();
+export const useBets = (options: UseBetsOptions = {}) => {
 
-  const bets = ref([]);
+  const { isHot = false } = options;
+
+  const { isLoading, loadingStart, loadingStop } = useLoading();
+  const { searchQuery } = useFilters();
+
+  const bets: Ref<BetItem[]> = ref([]);
+
+  const dynamicBets = computed(() => {
+    if (!searchQuery.value?.trim()) {return bets.value;}
+
+    return bets.value.filter(bet => bet.title.toLowerCase().includes(searchQuery.value.toLowerCase() || bet.description.toLowerCase().includes(searchQuery.value.toLowerCase())));
+  });
 
   const openBetModal = () => {
     console.log('openBetModal');
@@ -23,7 +33,7 @@ export const useBets = () => {
     try {
       loadingStart();
 
-      const fetchedBets = await getActualBets();
+      const fetchedBets = await getActualBets() || [];
       console.log(fetchedBets, 'fetchedBets - getActualBets');
 
       // test zone =====================
@@ -63,6 +73,8 @@ export const useBets = () => {
 
   return {
     bets,
+    dynamicBets,
+
     openBetModal,
     fetchBets,
     fetchMoreBets

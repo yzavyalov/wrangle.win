@@ -1,26 +1,17 @@
 <script setup>
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import { getAllCtegories } from "@/services/categories";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, onBeforeUnmount } from "vue";
 import { useLoading } from "@/composables/useLoading";
 import { useSettingsStore } from "@/store/settings";
 
 const { isLoading, loadingStart, loadingStop } = useLoading();
 
-const { setCategories, toggleSelectedCategory } = useSettingsStore();
+const { setCategories, toggleSelectedCategory, setDefaultSearchParams } = useSettingsStore();
 
 const categories = computed(() => useSettingsStore().getCategories);
 const selectedCategories = computed(() => useSettingsStore().getSelectedCategories);
 const selectedCategoriesIds = computed(() => selectedCategories.value.map(category => category.id));
-
-const selectCategory = (category) => {
-  if (selectedCategory.value?.id === category.id) {
-    selectedCategory.value = null;
-    return
-  }
-
-  selectedCategory.value = category;
-}
 
 const createNewCategoryHandler = () => {
   console.warn('No logic for createNewCategoryHandler');
@@ -49,10 +40,15 @@ onMounted(() => {
   fetchCategories();
 })
 
+onBeforeUnmount(() => {
+
+})
+
 </script>
 
 <template>
   <div class="categories">
+    <button @click="setDefaultSearchParams">setDefaultSearchParams</button>
     <ButtonBase @click="createNewCategoryHandler">Create new one category</ButtonBase>
     <ButtonBase v-for="category in categories" :key="category" :is-active="selectedCategoriesIds.includes(category.id)" @click="toggleSelectedCategory(category)">
       <span class="text-length-wrapper" >{{ category.name }}</span>

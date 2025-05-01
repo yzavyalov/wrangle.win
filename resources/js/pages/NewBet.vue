@@ -10,7 +10,7 @@ export default {
 
 
 <script setup lang="ts">
-import { reactive } from "vue";
+import { onBeforeUnmount, reactive } from "vue";
 import { Head } from "@inertiajs/vue3";
 import PredictionComp from "@/components/bet/PredictionComp.vue";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
@@ -19,6 +19,7 @@ import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import { predictionDemoData, demoBetDataPayload } from '@/utils/dummyData';
 import { createBet } from "@/services/bets";
 import { useLoading } from "@/composables/useLoading";
+import { useFilters } from '@/composables/useFilters';
 
 const { isLoading, loadingStart, loadingStop } = useLoading()
 
@@ -73,6 +74,10 @@ const handleCreateDemoPrediction = async () => {
     loadingStop();
   }
 }
+
+onBeforeUnmount(() => {
+  useFilters().resetFilters();
+})
 </script>
 
 <template>

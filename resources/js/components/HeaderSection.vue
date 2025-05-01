@@ -2,15 +2,14 @@
 import SideBar from '@/components/details/SideBar.vue';
 import ProfileMenu from '@/components/details/ProfileMenu.vue';
 import ButtonBurger from "@/components/details/ButtonBurger.vue"
-import { useShowComponent } from "@/composables";
+import { useShowComponent, useFilters } from "@/composables";
 import { navigateTo } from '@/helpers/navigate';
 import { useUserStore } from "@/store/user";
-import { useSettingsStore } from "@/store/settings";
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
 import { sideBarLinks, headerLinks } from "@/utils/datasets.js";
 import { useDebounceFn } from '@vueuse/core'
 
-const { setSearchQuery } = useSettingsStore();
+const { searchQuery, setSearchQuery, resetFilters } = useFilters();
 const {
   position: sideBarPosition,
   isVisible: isSideBarActive,
@@ -61,7 +60,7 @@ const updateSearchQuery = useDebounceFn((event) => {
   const query = event.target.value;
 
   setSearchQuery(query);
-}, 500)
+}, 100)
 
 onMounted(() => {
   nextTick(() => {
@@ -74,6 +73,7 @@ onMounted(() => {
   console.log(dynamicHeaderLinks.value, 'dynamicHeaderLinks.value - onMounted');
   console.log(dynamicSidebarLinks.value, 'dynamicSidebarLinks.value - onMounted');
 
+  resetFilters();
 });
 
 onUnmounted(() => {
@@ -118,7 +118,7 @@ onUnmounted(() => {
     </nav>
 
     <div class="search hide_on_mobile">
-      <input type="text" placeholder="Search Markets" @input="updateSearchQuery" />
+      <input type="text" :value="searchQuery" placeholder="Search Markets" @input="updateSearchQuery" />
     </div>
 
     <div class="auth">

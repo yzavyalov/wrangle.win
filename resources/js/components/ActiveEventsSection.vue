@@ -16,8 +16,7 @@ defineProps({
 })
 
 const { confirm } = useConfirm();
-
-const { fetchBets, fetchMoreBets, bets } = useBets()
+const { fetchBets, fetchMoreBets, dynamicBets } = useBets()
 
 const testConfirm = async () => {
   const result = await confirm({
@@ -47,7 +46,7 @@ onMounted(() => {
     </SectionHaeder>
 
     <ul class="active_events__list">
-      <li v-for="card in bets" :key="card.id">
+      <li v-for="card in dynamicBets" :key="card.id">
         <EventCard :item="card" :is-hot="card.isHot" />
       </li>
     </ul>

@@ -14,6 +14,12 @@ import WelcomeSection from '@/components/WelcomeSection.vue';
 import TopEventsSection from '@/components/TopEventsSection.vue';
 import ActiveEventsSection from '@/components/ActiveEventsSection.vue';
 import { Head } from "@inertiajs/vue3";
+import { onBeforeUnmount } from 'vue';
+import { useFilters } from '@/composables/useFilters';
+
+onBeforeUnmount(() => {
+  useFilters().resetFilters();
+})
 
 </script>
 
