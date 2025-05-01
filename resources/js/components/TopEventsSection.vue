@@ -38,7 +38,7 @@ onMounted(() => {
 
     </SectionHaeder>
 
-    <SwiperList :items="dynamicBets" >
+    <SwiperList :items="dynamicBets" @reach-end="fetchMoreBets">
       <template v-slot:item="{ item }">
         <EventCard :item="item" :is-hot="true" />
       </template>
