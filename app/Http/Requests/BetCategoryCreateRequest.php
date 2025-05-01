@@ -23,7 +23,7 @@ class BetCategoryCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:bet_categories|max:255'
+            'name' => 'required|unique:bet_categories|max:120'
         ];
     }
 }
