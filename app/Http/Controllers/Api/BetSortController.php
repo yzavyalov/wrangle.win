@@ -10,6 +10,7 @@ use App\Http\Resources\BetResource;
 use App\Http\Resources\CurrentUserResource;
 use App\Http\Resources\UserResource;
 use App\Models\Bet;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class BetSortController extends Controller
@@ -64,5 +65,20 @@ class BetSortController extends Controller
         $bets = Bet::query()->where('status',2)->get();
 
         return $this->successJsonAnswer200('Ended bets.',BetResource::collection($bets));
+    }
+
+    public function hotBets()
+    {
+        $bets = Bet::query()
+            ->where('status', BetStatusEnum::APPROVED)
+            ->whereBetween('finish', [
+                Carbon::today(),              // сегодня с 00:00:00
+                Carbon::tomorrow()->endOfDay() // завтра до 23:59:59
+            ])
+            ->get();
+
+        $bets = BetResource::collection($bets);
+
+        return $this->successJsonAnswer200('Bets',compact('bets'));
     }
 }
