@@ -16,9 +16,9 @@ class BetCategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($paginate)
     {
-        $categories = BetCategory::orderBy('name')->get();
+        $categories = BetCategory::orderBy('name')->paginate($paginate);
 
         return $this->successJsonAnswer200('bets\' categories',BetCategoryResource::collection($categories));
     }

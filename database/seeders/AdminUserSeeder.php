@@ -18,10 +18,10 @@ class AdminUserSeeder extends Seeder
     {
         $userData = [
            [
-            'name' => 'Horban',
-            'email' => 'andriihorban74@gmail.com',
+            'name' => 'Nikita',
+            'email' => 'ceo@winteca.com',
             'email_verified_at' => now(),
-            'password' => bcrypt('Horban1#'),
+            'password' => bcrypt('Nikita1#'),
            ],
            [
                'name' => 'Yaroslav',
@@ -29,6 +29,12 @@ class AdminUserSeeder extends Seeder
                'email_verified_at' => now(),
                'password' => bcrypt('Admin1#'),
            ],
+            [
+                'name' => 'Konstantin',
+                'email' => 'konstantin@winteca.com',
+                'email_verified_at' => now(),
+                'password' => bcrypt('Admin3#'),
+            ],
         ];
 
         foreach ($userData as $user)

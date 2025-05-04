@@ -11,7 +11,7 @@ class ModeratorMiddleware
     public function handle(Request $request, Closure $next)
     {
 
-        if (Auth::check() && Auth::user()->hasRole('admin')) {
+        if (Auth::check() && Auth::user()->hasRole(['admin','content manager','finance manager'])) {
             return $next($request);
         }
 

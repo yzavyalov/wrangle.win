@@ -12,13 +12,13 @@ use Illuminate\Http\Request;
 class BetCategorySearchController extends Controller
 {
 
-    public function searchCategory(BetCategoryRequest $request)
+    public function searchCategory(BetCategoryRequest $request, $paginate)
     {
         $data = $request->validated();
 
         $filter = app()->make(BetCategoryFilter::class, ['queryParams' => array_filter($data)]);
 
-        $categories= BetCategory::filter($filter)->get();
+        $categories= BetCategory::filter($filter)->paginate($paginate);
 
         return $this->successJsonAnswer200('Categories',BetCategoryResource::collection($categories));
     }

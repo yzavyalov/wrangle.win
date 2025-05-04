@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Auth;
 
 class BetSortController extends Controller
 {
-    public function myBets()
+    public function myBets($paginate)
     {
         $user = Auth::user();
 
-        $bets = $user->mybets;
+        $bets = $user->mybets()->paginate($paginate);
 
         $bets = BetResource::collection($bets);
 
@@ -28,11 +28,11 @@ class BetSortController extends Controller
         return $this->successJsonAnswer200('My bets',compact('bets','user'));
     }
 
-    public function favoriteBets()
+    public function favoriteBets($paginate)
     {
         $user = Auth::user();
 
-        $bets = $user->favoriteBets;
+        $bets = $user->favoriteBets()->paginate($paginate);
 
         $bets = BetResource::collection($bets);
 
@@ -42,7 +42,7 @@ class BetSortController extends Controller
     }
 
 
-    public function searchBet(BetSearchRequest $request)
+    public function searchBet(BetSearchRequest $request, $paginate)
     {
         $data = $request->validated();
 
@@ -51,7 +51,7 @@ class BetSortController extends Controller
         $bets= Bet::filter($filter)
             ->where('status',BetStatusEnum::APPROVED)
             ->where('finish','>=',now())
-            ->get();
+            ->paginate($paginate);
 
         $bets = BetResource::collection($bets);
         $user = CurrentUserResource::make(Auth::user());
@@ -60,14 +60,14 @@ class BetSortController extends Controller
     }
 
 
-    public function finishBet()
+    public function finishBet($paginate)
     {
-        $bets = Bet::query()->where('status',2)->get();
+        $bets = Bet::query()->where('status',2)->paginate($paginate);
 
         return $this->successJsonAnswer200('Ended bets.',BetResource::collection($bets));
     }
 
-    public function hotBets()
+    public function hotBets($paginate)
     {
         $bets = Bet::query()
             ->where('status', BetStatusEnum::APPROVED)
@@ -75,7 +75,7 @@ class BetSortController extends Controller
                 Carbon::today(),              // сегодня с 00:00:00
                 Carbon::tomorrow()->endOfDay() // завтра до 23:59:59
             ])
-            ->get();
+            ->paginate($paginate);
 
         $bets = BetResource::collection($bets);
 

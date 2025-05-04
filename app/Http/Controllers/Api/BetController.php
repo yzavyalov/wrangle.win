@@ -21,12 +21,12 @@ class BetController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($paginate)
     {
         $bets = Bet::query()
             ->where('status',BetStatusEnum::APPROVED)
             ->where('finish','>=',Carbon::make(now()))
-            ->get();
+            ->paginate($paginate);
 
         return $this->successJsonAnswer200('allbets',BetResource::collection($bets));
     }
