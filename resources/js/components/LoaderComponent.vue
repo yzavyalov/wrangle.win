@@ -8,6 +8,7 @@
 
 <style scoped lang='scss'>
 .loader {
+  position: absolute;
   width: 50px;
   padding: 8px;
   aspect-ratio: 1;

@@ -4,6 +4,7 @@ import { getAllCtegories } from "@/services/categories";
 import { computed, onMounted, ref, onBeforeUnmount } from "vue";
 import { useLoading } from "@/composables/useLoading";
 import { useSettingsStore } from "@/store/settings";
+import LoaderComponent from "@/components/LoaderComponent.vue";
 
 const { isLoading, loadingStart, loadingStop } = useLoading();
 
@@ -48,6 +49,8 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="categories">
+    <LoaderComponent v-if="isLoading" />
+
     <ButtonBase @click="createNewCategoryHandler">Create new one category</ButtonBase>
     <ButtonBase v-for="category in categories" :key="category" :is-active="selectedCategoriesIds.includes(category.id)" @click="toggleSelectedCategory(category)">
       <span class="text-length-wrapper" >{{ category.name }}</span>
