@@ -7,7 +7,7 @@ import SortOptions from '@/components/details/SortOptions.vue';
 import ButtonWithIcon from '@/components/details/ButtonWithIcon.vue';
 import SwiperList from '@/components/swiper/SwiperList.vue';
 import FilterAndSort from "@/components/details/FilterAndSort.vue"
-import SectionHaeder from "@/components/details/SectionHaeder.vue"
+import SectionHeader from "@/components/details/SectionHeader.vue"
 
 defineOptions({ name: "TopEventsSection" });
 
@@ -32,11 +32,11 @@ onMounted(() => {
 <template>
   <div class="active_events">
 
-    <SectionHaeder :title="'Top Events'">
+    <SectionHeader :title="'Top Events'">
 
       <FilterAndSort v-if="isShowFilters" class="active_events__filters" />
 
-    </SectionHaeder>
+    </SectionHeader>
 
     <SwiperList :items="dynamicBets" @reach-end="fetchMoreBets">
       <template v-slot:item="{ item }">

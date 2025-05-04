@@ -6,13 +6,14 @@ import { triggerOpenNewModal, triggerCloseModal } from '@/composables';
 import { useConfirm } from '@/composables';
 import { useBets } from '@/composables/useBets';
 import FilterAndSort from "@/components/details/FilterAndSort.vue"
-import SectionHaeder from "@/components/details/SectionHaeder.vue"
+import SectionHeader from "@/components/details/SectionHeader.vue"
 import LoaderComponent from '@/components/LoaderComponent.vue';
 
 defineOptions({ name: "ActiveEventsSection" });
 
 defineProps({
-  isShowFilters: { type: Boolean, default: false }
+  isShowFilters: { type: Boolean, default: false },
+  isShowDecorator: { type: Boolean, default: true },
 })
 
 const { confirm } = useConfirm();
@@ -39,11 +40,11 @@ onMounted(() => {
 <template>
   <div class="active_events">
 
-    <SectionHaeder :title="'Active Events'">
+    <SectionHeader :title="'Active Events'">
 
       <FilterAndSort v-if="isShowFilters" class="active_events__filters" />
 
-    </SectionHaeder>
+    </SectionHeader>
 
     <ul class="active_events__list">
       <li v-for="card in dynamicBets" :key="card.id">
@@ -59,7 +60,7 @@ onMounted(() => {
 
     <ButtonBase @click="testConfirm">testConfirm</ButtonBase>
 
-    <div class="background-decorator"></div>
+    <div v-if="isShowDecorator" class="background-decorator"></div>
   </div>
 </template>
 
@@ -67,6 +68,7 @@ onMounted(() => {
 .active_events {
   position: relative;
   padding-bottom: 20px;
+  min-height: 80vh;
 
   &__list {
     display: grid;
