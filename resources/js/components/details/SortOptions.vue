@@ -5,28 +5,33 @@ import { toggleBodyScroll } from "@/helpers/toggleBodyScroll";
 
 const emit = defineEmits(["submit", "close"]);
 
+const props = defineProps({
+  options: { type: Object, default: () => ({}) },
+});
+
 const betAmount = ref(0);
 const thema = ref('');
 const tags = ref('');
-const endDate = ref('');
+const finish = ref('');
+
 
 const isValid = () => {
-  if (!betAmount.value > 0) {
-    console.warn("Field 'Bet Amount' is required");
-    return false;
-  }
-  if (!thema.value?.trim()) {
-    console.warn("Field 'Thema' is required");
-    return false;
-  }
-  if (!tags.value?.trim()) {
-    console.warn("Field 'Tags' is required");
-    return false;
-  }
-  if (!endDate.value) {
-    console.warn("Field 'End date' is required");
-    return false;
-  }
+  // if (!betAmount.value > 0) {
+  //   console.warn("Field 'Bet Amount' is required");
+  //   return false;
+  // }
+  // if (!thema.value?.trim()) {
+  //   console.warn("Field 'Thema' is required");
+  //   return false;
+  // }
+  // if (!tags.value?.trim()) {
+  //   console.warn("Field 'Tags' is required");
+  //   return false;
+  // }
+  // if (!finish.value) {
+  //   console.warn("Field 'End date' is required");
+  //   return false;
+  // }
   return true;
 };
 
@@ -37,7 +42,7 @@ const submitHandler = () => {
     betAmount: betAmount.value,
     thema: thema.value,
     tags: tags.value,
-    endDate: new Date(endDate.value).toUTCString(),
+    finish: new Date(finish.value).toUTCString() || '',
   }
 
   emit('submit', payload);
@@ -47,6 +52,11 @@ const cancelHandler = () => emit('close');
 
 onMounted(() => {
   toggleBodyScroll(true);
+
+  betAmount.value = props.options?.betAmount;
+  thema.value = props.options?.thema;
+  tags.value = props.options?.tags;
+  finish.value = props.options?.finish;
 });
 
 onUnmounted(() => {
@@ -90,7 +100,7 @@ onUnmounted(() => {
           <td>
             <p>End date</p>
           </td>
-          <td><input type="datetime-local" v-model="endDate"></td>
+          <td><input type="datetime-local" v-model="finish"></td>
         </tr>
       </tbody>
     </table>

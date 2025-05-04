@@ -20,4 +20,8 @@ export default {
   getCurrentcy: (state) => {
     return state.currentcy;
   },
+
+  getSearchQuery: (state) => {
+    return state.searchQuery;
+  },
 };

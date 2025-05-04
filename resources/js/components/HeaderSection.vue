@@ -2,12 +2,14 @@
 import SideBar from '@/components/details/SideBar.vue';
 import ProfileMenu from '@/components/details/ProfileMenu.vue';
 import ButtonBurger from "@/components/details/ButtonBurger.vue"
-import { useShowComponent } from "@/composables";
+import { useShowComponent, useFilters } from "@/composables";
 import { navigateTo } from '@/helpers/navigate';
 import { useUserStore } from "@/store/user";
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
 import { sideBarLinks, headerLinks } from "@/utils/datasets.js";
+import { useDebounceFn } from '@vueuse/core'
 
+const { searchQuery, setSearchQuery, resetFilters } = useFilters();
 const {
   position: sideBarPosition,
   isVisible: isSideBarActive,
@@ -20,7 +22,6 @@ const {
   showComponent: openProfileMenu,
   closeComponent: closeProfileMenur,
 } = useShowComponent({ variant: 'profileMenu' });
-
 
 const currentUser = computed(() => useUserStore().getUser);
 
@@ -55,6 +56,12 @@ const recalculateLinks = () => {
   }
 };
 
+const updateSearchQuery = useDebounceFn((event) => {
+  const query = event.target.value;
+
+  setSearchQuery(query);
+}, 100)
+
 onMounted(() => {
   nextTick(() => {
     nextTick(() => {
@@ -66,6 +73,7 @@ onMounted(() => {
   console.log(dynamicHeaderLinks.value, 'dynamicHeaderLinks.value - onMounted');
   console.log(dynamicSidebarLinks.value, 'dynamicSidebarLinks.value - onMounted');
 
+  resetFilters();
 });
 
 onUnmounted(() => {
@@ -78,7 +86,7 @@ onUnmounted(() => {
     <ButtonBurger class="header__burdger" @click="openSideBar"  />
 
     <Teleport to="body">
-      <transition-group name="fade">
+      <transition-group name="fade-slide-down">
         <SideBar v-if="isSideBarActive"
           v-click-outside="closeSideBar"
           :links="dynamicSidebarLinks"
@@ -99,8 +107,7 @@ onUnmounted(() => {
     </div>
 
     <nav class="nav" ref="navContainerEl">
-      <button
-        v-for="(link, index) in dynamicHeaderLinks"
+      <button v-for="(link, index) in dynamicHeaderLinks"
         :key="link.id"
         class="nav__btn"
         @click="navigateTo(link.path)"
@@ -111,7 +118,7 @@ onUnmounted(() => {
     </nav>
 
     <div class="search hide_on_mobile">
-      <input type="text" placeholder="Search Markets" />
+      <input type="text" :value="searchQuery" placeholder="Search Markets" @input="updateSearchQuery" />
     </div>
 
     <div class="auth">
@@ -205,8 +212,10 @@ onUnmounted(() => {
   }
 
   .auth {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    // display: grid;
+    // grid-template-columns: 1fr 1fr;
+    display: flex;
+
     box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
     min-height: var(--header-height);
     border-radius: var(--border-radius-main);

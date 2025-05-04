@@ -1,4 +1,6 @@
 {
+  "exclude": ["node_modules", "dist", "build", "coverage"],
+  // "include": ["resources/js/**/*.ts", "resources/js/**/*.js", "resources/js/**/*.vue"],
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",

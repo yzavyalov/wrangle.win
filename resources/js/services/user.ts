@@ -21,14 +21,17 @@ export const login = async (payload: LoginPayload) => {
   return await http.post(AUTH.URL_LOGIN, payload)
   .then(res => {
     console.log(res, "res - login");
+    if (!res?.data?.data) { return false; }
 
-    const { user, token } = res?.data;
+    const user = res.data.data;
+
+    const { token } = user;
 
     token && localStorage.setItem("access_token", token);
 
-    user && useUserStore().updateUser(user);
+    useUserStore().updateUser(user);
 
-    return res.data;
+    return user;
   })
   .catch(e => console.error(e.message));
 };

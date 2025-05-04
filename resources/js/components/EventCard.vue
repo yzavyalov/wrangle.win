@@ -9,7 +9,7 @@ const props = defineProps({
   isHot: { type: Boolean, default: false },
 })
 
-const maxTextLength = 50;
+const maxTextLength = 40;
 
 const shortTitle = computed(() => {
   return props.item.title?.length > maxTextLength

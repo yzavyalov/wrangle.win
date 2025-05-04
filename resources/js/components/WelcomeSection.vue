@@ -43,6 +43,7 @@ const APP_NAME = import.meta.env.VITE_APP_NAME;
 <style scoped lang='scss'>
 .wellcome-section {
   $screen-sm: 560px;
+  $screen-md: 960px;
 
   :deep(.page__wrapper) {
     background: linear-gradient(180deg, #FFE432, #FFFFFF);
@@ -118,15 +119,23 @@ const APP_NAME = import.meta.env.VITE_APP_NAME;
     width: 100vw;
     height: 100%;
     z-index: 0;
-    // background: url('/images/sky.svg') no-repeat, url('/images/bars.svg') no-repeat;
-    // background-position: top, 0px 200px;
     background: url('/images/sky.svg'), url('/images/bars.svg');
     background-repeat: no-repeat, no-repeat;
     background-position: top, center top;
-    background-size: cover;
+    background-size: cover, cover;
     bottom: -400px;
     right: 50%;
     transform: translateX(50%);
+
+    @media screen and (max-width: $screen-md) {
+      background-position: top, center;
+      background-size: cover, 150% auto;
+    }
+
+    @media screen and (max-width: $screen-sm) {
+      background-position: top, center;
+      background-size: cover, 150% auto;
+    }
   }
 }
 </style>

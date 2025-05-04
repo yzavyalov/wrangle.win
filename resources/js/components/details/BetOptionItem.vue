@@ -11,7 +11,7 @@ const color1 = 'FFEA00'
 const color2 = 'FFEC6D'
 
 const dynamicGradient = computed(() => {
-  return `linear-gradient(90deg, #${color1} 0%, #${color1} ${props.option.percent}%, #${color2} ${props.option.percent + 1}%, #${color2} 100%)`
+  return `linear-gradient(90deg, #${color1} 0%, #${color1} ${props.option?.procentage?.toFixed(2)}%, #${color2} ${props.option?.procentage?.toFixed(2) + 1}%, #${color2} 100%)`
 })
 
 </script>
@@ -19,10 +19,10 @@ const dynamicGradient = computed(() => {
 <template>
   <div class="bet-option">
     <p>
-      <span><b>{{ option.percent }}%</b> thinks so:</span>
-      <span>Possible profit from 1{{ currency }}: <b>{{ option.profit }}{{ currency }}</b></span>
+      <span><b>{{ option.procentage?.toFixed(0) }}%</b> thinks so:</span>
+      <span>Possible profit from 1{{ currency }}: <b>{{ option.profit?.toFixed(2) }}{{ currency }}</b></span>
     </p>
-    <ButtonBase>{{ option.text }}</ButtonBase>
+    <ButtonBase>{{ option.description }}</ButtonBase>
   </div>
 </template>
 

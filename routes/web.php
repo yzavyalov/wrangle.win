@@ -54,7 +54,7 @@ Route::get('/new_bet', function () {
 });
 
 Route::get('/profile', function () {
-    return Inertia::render('Profile', ['auth' => Auth::check(), 'user' => Auth::user()]);
+    return Inertia::render('Profile', ['auth' => Auth::check(), 'user' => Auth::user(), 'session' => session()->all()]);
 });
 
 Route::get('/categories', function () {

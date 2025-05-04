@@ -3,6 +3,7 @@
 @use './fonts';
 @use './utils';
 @use './animation';
+@use './element-plus';
 
 // // swiper
 // @use 'swiper/css';
@@ -13,7 +14,7 @@
 
 
 html {
-  background: var(--bg-color-main);
+  // background: var(--bg-color-main);
   min-width: 350px;
 }
 
@@ -25,14 +26,14 @@ body {
   font-variation-settings: "wdth" 100;
   font-weight: normal;
 
-  background: url('/images/sky.svg') no-repeat center -100px fixed;
-
+  background: url('/images/sky.svg') no-repeat center -100px fixed, var(--bg-color-main);
 }
 
 .container {
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
+  padding: 0 5px;
 }
 
 .text {

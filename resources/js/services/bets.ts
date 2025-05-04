@@ -31,6 +31,16 @@ export const getOwnBets = async () => {
   .catch(e => console.error(e.message));
 };
 
+export const getHotBets = async () => {
+  return await http.get(BETS.HOT)
+  .then(res => {
+    console.log(res, "res - getHotBets");
+
+    return res.data;
+  })
+  .catch(e => console.error(e.message));
+};
+
 export const getFavoriteBets = async () => {
   return await http.get(BETS.GET_FAVORITE)
   .then(res => {

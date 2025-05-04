@@ -21,3 +21,25 @@ interface ToggleToFavoritePayload {
 interface CreateBitPayload {
   sum: number
 }
+
+interface BetItem {
+  id: number
+  user_id: number
+  title: string
+  image: string
+  status: number
+  status_type: string
+  source1: string
+  source2: string
+  source3: string
+  description: string
+  finish: string
+  budget: number
+  answers: any[]
+  winner: any[]
+  bits: any[]
+}
+
+interface UseBetsOptions {
+  isHot?: boolean
+}

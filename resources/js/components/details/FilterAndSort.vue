@@ -1,28 +1,35 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import { useShowComponent } from "@/composables";
 import SortOptions from '@/components/details/SortOptions.vue';
 import ButtonWithIcon from '@/components/details/ButtonWithIcon.vue';
-import { useSettingsStore } from "@/store/settings";
+import { useFilters } from "@/composables/useFilters";
 
 const {
   position,
   isVisible: isSortOptionsActive,
   showComponent: showSortOption,
   closeComponent: closeSortOption,
+  adjustElementPosition,
 } = useShowComponent({ variant: 'sortOptions' });
+const { setFilters, sortBy, filters, toggleSortBy } = useFilters();
 
-const sortDirection = ref(false);
-
-const sortBy = computed(() => useSettingsStore().sortBy);
-
-const toggleSortByHandler = () => useSettingsStore().toggleSortBy();
+const sortOptionsEl = ref(null);
 
 const submitSortOptions = (options) => {
-  console.log(options, "options - submitSortOptions");
-  closeSortOption();
-}
+  setFilters(options);
 
+  closeSortOption();
+};
+
+watch(
+  () => isSortOptionsActive.value,
+  () => {
+    if (isSortOptionsActive.value) {
+      nextTick(() => adjustElementPosition(sortOptionsEl, position));
+    }
+  }
+);
 
 </script>
 
@@ -36,13 +43,15 @@ const submitSortOptions = (options) => {
     <ButtonWithIcon
       :icon="'/images/sort_arrow.svg'"
       :is-icon-reversed="sortBy === 'asc' ? true : false"
-      @click="toggleSortByHandler"
+      @click="toggleSortBy"
     />
 
     <Teleport to="body">
         <transition name="fade">
           <SortOptions v-if="isSortOptionsActive"
+            ref="sortOptionsEl"
             :style="position"
+            :options="filters"
             v-click-outside="closeSortOption"
             @submit="submitSortOptions"
             @close="closeSortOption"

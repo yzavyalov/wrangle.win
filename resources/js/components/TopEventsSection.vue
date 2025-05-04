@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { demoCardsV1, demoCards } from '@/utils/dummyData';
-import { useShowComponent } from "@/composables";
+import { useShowComponent, useFilters, useBets } from "@/composables";
 import EventCard from '@/components/EventCard.vue';
 import SortOptions from '@/components/details/SortOptions.vue';
 import ButtonWithIcon from '@/components/details/ButtonWithIcon.vue';
@@ -11,14 +11,21 @@ import SectionHaeder from "@/components/details/SectionHaeder.vue"
 
 defineOptions({ name: "TopEventsSection" });
 
+defineProps({
+  isShowFilters: { type: Boolean, default: false }
+})
+
 const {
   position,
   isVisible: isSortOptionsActive,
   showComponent: showSortOption,
   closeComponent: closeSortOption,
 } = useShowComponent({ variant: 'sortOptions' });
+const { fetchBets, fetchMoreBets, dynamicBets } = useBets({ isHot: true });
 
-const sortDirection = ref(false);
+onMounted(() => {
+  fetchBets();
+})
 
 </script>
 
@@ -27,18 +34,11 @@ const sortDirection = ref(false);
 
     <SectionHaeder :title="'Top Events'">
 
-      <FilterAndSort class="active_events__filters" />
+      <FilterAndSort v-if="isShowFilters" class="active_events__filters" />
 
     </SectionHaeder>
-    <!-- <div class="active_events__header">
 
-
-      <h3>Top Events</h3>
-
-      <p></p>
-    </div> -->
-
-    <SwiperList :items="demoCards" >
+    <SwiperList :items="dynamicBets" @reach-end="fetchMoreBets">
       <template v-slot:item="{ item }">
         <EventCard :item="item" :is-hot="true" />
       </template>

@@ -85,7 +85,7 @@ onMounted(() => {
         />
         <p v-if="!currentBet.options?.length">No oprtions for prediction</p> -->
 
-        <BetOptionItem v-for="(item, index) in predictionDemoData.options"
+        <BetOptionItem v-for="(item, index) in currentBet.answers"
           :key="index"
           :option="item"
           class="event-card__option"

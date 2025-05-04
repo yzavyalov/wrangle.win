@@ -35,4 +35,23 @@ export default {
       this.selectedCategories.push(category);
     }
   },
+
+  setSearchQuery(query) {
+    this.searchQuery = query;
+  },
+
+  setDefaultSearchParams() {
+    this.searchQuery = '';
+
+    this.selectedCategories = [];
+
+    this.sortBy = 'desc';
+
+    this.filters = {
+      betAmount: 0,
+      thema: '',
+      tags: '',
+      finish: '',
+    };
+  },
 };
