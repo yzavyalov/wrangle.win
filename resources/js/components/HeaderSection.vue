@@ -86,7 +86,7 @@ onUnmounted(() => {
     <ButtonBurger class="header__burdger" @click="openSideBar"  />
 
     <Teleport to="body">
-      <transition-group name="fade">
+      <transition-group name="fade-slide-down">
         <SideBar v-if="isSideBarActive"
           v-click-outside="closeSideBar"
           :links="dynamicSidebarLinks"
