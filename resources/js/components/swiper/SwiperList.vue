@@ -12,7 +12,7 @@ const BASE_HEIGHT = 200;
 
 const props = defineProps({
   items: { type: Array, default: [] },
-  rows: { type: Number, default: 2 },
+  rows: { type: Number, default: 1 },
 })
 
 const emit = defineEmits(['reachEnd']);
@@ -58,12 +58,13 @@ onUnmounted(() => {
 <template>
   <swiper
     :key="dynamicWidth"
-    :modules="[ Navigation, Pagination, Grid ]"
+    :modules="[ Navigation, Pagination, Grid, Virtual ]"
     :slides-per-view="1"
     :space-between="10"
     :pagination="paginationOptions"
     :navigation="true"
     :grab-cursor="true"
+    :virtual="true"
     :breakpoints="breakpoints"
     :grid="{ rows: rows, fill: 'column' }"
     :watch-slides-progress="true"
@@ -71,7 +72,7 @@ onUnmounted(() => {
     @swiper="(swiper) => swiperRef = swiper"
     @reach-end="emitReachEnd"
   >
-    <swiper-slide v-for="(item, index) in items" :key="index">
+    <swiper-slide v-for="(item, index) in items" :key="index" :virtualIndex="index">
       <slot :item="item" name="item"></slot>
     </swiper-slide>
   </swiper>
