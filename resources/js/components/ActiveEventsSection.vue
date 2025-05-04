@@ -2,8 +2,6 @@
 import { onMounted, ref } from 'vue';
 import EventCard from '@/components/EventCard.vue';
 import ButtonBase from '@/components/details/ButtonBase.vue';
-import { triggerOpenNewModal, triggerCloseModal } from '@/composables';
-import { useConfirm } from '@/composables';
 import { useBets } from '@/composables/useBets';
 import FilterAndSort from "@/components/details/FilterAndSort.vue"
 import SectionHeader from "@/components/details/SectionHeader.vue"
@@ -16,20 +14,7 @@ defineProps({
   isShowDecorator: { type: Boolean, default: true },
 })
 
-const { confirm } = useConfirm();
 const { fetchBets, fetchMoreBets, dynamicBets } = useBets()
-
-const testConfirm = async () => {
-  const result = await confirm({
-    title: 'Are you sure?',
-    text: 'This action cannot be undone',
-    confirmText: 'Confirm',
-    cancelText: 'Cancel'
-  })
-
-  console.log(result , 'result');
-
-}
 
 onMounted(() => {
   fetchBets();
@@ -55,10 +40,6 @@ onMounted(() => {
     <ButtonBase class="active_events__btn" @click="fetchMoreBets">
       <p class="active_events__btn--text text-light">Fetch more</p>
     </ButtonBase>
-
-    <ButtonBase class="mb-10 mt-10" @click="triggerOpenNewModal('prediction-modal')">triggerOpenNewModal - prediction-modal</ButtonBase>
-
-    <ButtonBase @click="testConfirm">testConfirm</ButtonBase>
 
     <div v-if="isShowDecorator" class="background-decorator"></div>
   </div>
