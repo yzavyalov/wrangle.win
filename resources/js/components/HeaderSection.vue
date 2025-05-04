@@ -122,7 +122,7 @@ onUnmounted(() => {
     </div>
 
     <div class="auth">
-      <button v-if="currentUser" class="auth__btn" @click="navigateTo('/profile')">{{ currentUser?.name }}</button>
+      <button v-if="currentUser" class="auth__btn hide_on_mobile" @click="navigateTo('/profile')">{{ currentUser?.name }}</button>
       <button  v-if="currentUser" class="auth__btn" @click="openProfileMenu">Profile</button>
 
       <button  v-if="!currentUser" class="auth__btn" @click="navigateTo('/register')">Signup</button>
@@ -212,8 +212,10 @@ onUnmounted(() => {
   }
 
   .auth {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    // display: grid;
+    // grid-template-columns: 1fr 1fr;
+    display: flex;
+
     box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
     min-height: var(--header-height);
     border-radius: var(--border-radius-main);

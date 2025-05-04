@@ -48,7 +48,6 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="categories">
-    <button @click="setDefaultSearchParams">setDefaultSearchParams</button>
     <ButtonBase @click="createNewCategoryHandler">Create new one category</ButtonBase>
     <ButtonBase v-for="category in categories" :key="category" :is-active="selectedCategoriesIds.includes(category.id)" @click="toggleSelectedCategory(category)">
       <span class="text-length-wrapper" >{{ category.name }}</span>

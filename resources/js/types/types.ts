@@ -1,5 +1,7 @@
+import { Ref } from "vue";
+
 type ComponentOffsetsVariants = 'default' | 'sideBar' | 'sortOptions' | 'profileMenu';
 
-interface UseShowComponentOptions {
+export interface UseShowComponentOptions {
   variant?: ComponentOffsetsVariants
 }

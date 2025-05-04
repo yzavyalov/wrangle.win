@@ -3,67 +3,30 @@ import { computed, nextTick, ref, watch } from "vue";
 import { useShowComponent } from "@/composables";
 import SortOptions from '@/components/details/SortOptions.vue';
 import ButtonWithIcon from '@/components/details/ButtonWithIcon.vue';
-import { useSettingsStore } from "@/store/settings";
+import { useFilters } from "@/composables/useFilters";
 
 const {
   position,
   isVisible: isSortOptionsActive,
   showComponent: showSortOption,
   closeComponent: closeSortOption,
+  adjustElementPosition,
 } = useShowComponent({ variant: 'sortOptions' });
-const { setFilters } = useSettingsStore();
+const { setFilters, sortBy, filters, toggleSortBy } = useFilters();
 
 const sortOptionsEl = ref(null);
-
-const sortBy = computed(() => useSettingsStore().sortBy);
-const filters = computed(() => useSettingsStore().filters);
-
-const toggleSortByHandler = () => useSettingsStore().toggleSortBy();
 
 const submitSortOptions = (options) => {
   setFilters(options);
 
   closeSortOption();
-}
-
-const adjustSortOptionsPosition = () => {
-  const el = sortOptionsEl.value?.$el || sortOptionsEl.value;
-  if (!el) return;
-
-  const rect = el.getBoundingClientRect();
-  const padding = 10;
-
-  let rectTop = rect.top;
-  let rectHeight = rect.height;
-
-  const windowHeight = window.innerHeight;
-  const windowScrollY = window.scrollY;
-
-  const prevTop = position.value.topNum;
-  const prevLeft = position.value.leftNum;
-
-  const diffTop = windowScrollY - prevTop;
-  const diffBottom = windowHeight - (rectHeight + rectTop);
-
-  if (diffBottom < 0) {
-    return position.value = {
-      top: `${prevTop + diffBottom - padding}px`,
-      left: `${prevLeft}px`,
-    };
-
-  } else if (diffTop > 0) {
-    return position.value = {
-      top: `${prevTop + diffTop + padding}px`,
-      left: `${prevLeft}px`,
-    };
-  }
 };
 
 watch(
   () => isSortOptionsActive.value,
   () => {
     if (isSortOptionsActive.value) {
-      nextTick(() => adjustSortOptionsPosition());
+      nextTick(() => adjustElementPosition(sortOptionsEl, position));
     }
   }
 );
@@ -80,7 +43,7 @@ watch(
     <ButtonWithIcon
       :icon="'/images/sort_arrow.svg'"
       :is-icon-reversed="sortBy === 'asc' ? true : false"
-      @click="toggleSortByHandler"
+      @click="toggleSortBy"
     />
 
     <Teleport to="body">
