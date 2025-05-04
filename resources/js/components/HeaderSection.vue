@@ -122,7 +122,7 @@ onUnmounted(() => {
     </div>
 
     <div class="auth">
-      <button v-if="currentUser" class="auth__btn hide_on_mobile" @click="navigateTo('/profile')">{{ currentUser?.name }}</button>
+      <button v-if="currentUser" class="auth__btn" @click="navigateTo('/profile')">{{ currentUser?.name }}</button>
       <button  v-if="currentUser" class="auth__btn" @click="openProfileMenu">Profile</button>
 
       <button  v-if="!currentUser" class="auth__btn" @click="navigateTo('/register')">Signup</button>
