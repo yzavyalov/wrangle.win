@@ -3,6 +3,7 @@ import { useLoading, useFilters } from "@/composables";
 import { getActualBets, getHotBets } from '@/services/bets';
 import { demoCards } from '@/utils/dummyData';
 import { triggerOpenNewModal } from "@/composables";
+import { BetItem, UseBetsOptions } from "@/types/bets";
 
 
 export const useBets = (options: UseBetsOptions = {}) => {
@@ -40,17 +41,17 @@ export const useBets = (options: UseBetsOptions = {}) => {
 
       // test zone =====================
       // todo: remove dummy code
-      if (!fetchedBets.length) {
-        const dummyData = demoCards.map((card, idx) => {
-          return {
-            ...card,
-            id: Date.now() + '_' + idx,
-          }
-        });
-        bets.value = [...bets.value, ...dummyData]
-        console.log(bets.value, 'bets.value - dummyData - fetchBets');
-        return
-      }
+      // if (!fetchedBets.length) {
+      //   const dummyData = demoCards.map((card, idx) => {
+      //     return {
+      //       ...card,
+      //       id: Date.now() + '_' + idx,
+      //     }
+      //   });
+      //   bets.value = [...bets.value, ...dummyData]
+      //   console.log(bets.value, 'bets.value - dummyData - fetchBets');
+      //   return
+      // }
       // test zone end =====================
 
       fetchedBets.length && ( bets.value = [...bets.value, ...fetchedBets] );
@@ -74,6 +75,8 @@ export const useBets = (options: UseBetsOptions = {}) => {
   }
 
   return {
+    isLoading,
+
     bets,
     dynamicBets,
 

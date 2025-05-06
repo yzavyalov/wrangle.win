@@ -6,7 +6,7 @@ import { triggerOpenNewModal } from '@/composables';
 
 const props = defineProps({
   item: { type: Object, default: () => ({}) },
-  isHot: { type: Boolean, default: false },
+  // isHot: { type: Boolean, default: false },
 })
 
 const maxTextLength = 40;
@@ -17,7 +17,11 @@ const shortTitle = computed(() => {
     : props.item.title;
 });
 
-const dynamicHot = computed(() => props.isHot || getDaysLeft(props.item.finish) < 1);
+const dynamicHot = computed(() => {
+  console.log('getDaysLeft - dynamicHot', getDaysLeft(props.item.finish));
+
+  return getDaysLeft(props.item.finish) < 1
+});
 
 const showMoreDetailsHandler = () => {
   triggerOpenNewModal('bet-modal', { 'updateModalContent': { currentBet: props.item } });

@@ -14,7 +14,7 @@ defineProps({
   isShowDecorator: { type: Boolean, default: true },
 })
 
-const { fetchBets, fetchMoreBets, dynamicBets } = useBets()
+const { fetchBets, fetchMoreBets, dynamicBets, isLoading } = useBets()
 
 onMounted(() => {
   fetchBets();
@@ -27,15 +27,19 @@ onMounted(() => {
 
     <SectionHeader :title="'Active Events'">
 
+      <LoaderComponent v-if="isLoading" />
+
       <FilterAndSort v-if="isShowFilters" class="active_events__filters" />
 
     </SectionHeader>
 
-    <ul class="active_events__list">
+    <ul v-if="dynamicBets?.length" class="active_events__list">
       <li v-for="card in dynamicBets" :key="card.id">
-        <EventCard :item="card" :is-hot="card.isHot" />
+        <EventCard :item="card" />
       </li>
     </ul>
+
+    <p v-else class="text-center">No events found</p>
 
     <ButtonBase class="active_events__btn" @click="fetchMoreBets">
       <p class="active_events__btn--text text-light">Fetch more</p>

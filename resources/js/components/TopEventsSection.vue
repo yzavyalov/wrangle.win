@@ -1,13 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { demoCardsV1, demoCards } from '@/utils/dummyData';
-import { useShowComponent, useFilters, useBets } from "@/composables";
 import EventCard from '@/components/EventCard.vue';
-import SortOptions from '@/components/details/SortOptions.vue';
-import ButtonWithIcon from '@/components/details/ButtonWithIcon.vue';
 import SwiperList from '@/components/swiper/SwiperList.vue';
 import FilterAndSort from "@/components/details/FilterAndSort.vue"
 import SectionHeader from "@/components/details/SectionHeader.vue"
+import { useBets } from '@/composables/useBets';
+import LoaderComponent from '@/components/LoaderComponent.vue';
 
 defineOptions({ name: "TopEventsSection" });
 
@@ -15,13 +13,7 @@ defineProps({
   isShowFilters: { type: Boolean, default: false }
 })
 
-const {
-  position,
-  isVisible: isSortOptionsActive,
-  showComponent: showSortOption,
-  closeComponent: closeSortOption,
-} = useShowComponent({ variant: 'sortOptions' });
-const { fetchBets, fetchMoreBets, dynamicBets } = useBets({ isHot: true });
+const { fetchBets, fetchMoreBets, dynamicBets, isLoading } = useBets({ isHot: true });
 
 onMounted(() => {
   fetchBets();
@@ -34,15 +26,19 @@ onMounted(() => {
 
     <SectionHeader :title="'Top Events'">
 
+      <LoaderComponent v-if="isLoading" />
+
       <FilterAndSort v-if="isShowFilters" class="active_events__filters" />
 
     </SectionHeader>
 
-    <SwiperList :items="dynamicBets" @reach-end="fetchMoreBets">
+    <SwiperList v-if="dynamicBets?.length" :items="dynamicBets" @reach-end="fetchMoreBets">
       <template v-slot:item="{ item }">
-        <EventCard :item="item" :is-hot="true" />
+        <EventCard :item="item" />
       </template>
     </SwiperList>
+
+    <p v-else class="text-center">No events found</p>
   </div>
 </template>
 
