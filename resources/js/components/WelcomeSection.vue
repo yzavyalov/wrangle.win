@@ -1,9 +1,15 @@
 <script setup>
+import { computed } from "vue";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import ProfileCardSmall from  '@/components/profile/ProfileCardSmall.vue';
 import ButtonBase from "@/components/details/ButtonBase.vue";
+import { useUserStore } from "@/store/user";
+import { navigateTo } from '@/helpers/navigate';
 
 const APP_NAME = import.meta.env.VITE_APP_NAME;
+
+
+const currentUser = computed(() => useUserStore().getUser);
 
 </script>
 
@@ -20,7 +26,8 @@ const APP_NAME = import.meta.env.VITE_APP_NAME;
         <div class="wellcome-section__section">
           <h3>Predict & Get Rewarded!</h3>
           <p>Make predictions on real-world events and earn rewards for accuracy.</p>
-          <ButtonBase>Login</ButtonBase>
+          <ButtonBase v-if="!currentUser" @click="navigateTo('/login')">Login</ButtonBase>
+          <ButtonBase v-else @click="navigateTo('/profile')">Profile</ButtonBase>
         </div>
         <div class="wellcome-section__section">
           <h3>A Wide Range of Events</h3>

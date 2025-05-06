@@ -57,7 +57,7 @@ onMounted(() => {
 
           <p class="event-card__bet">Bet amount: <b class="text-bold">{{ currentBet.bet || '--:--' }}</b></p>
           <p v-if="currentBet?.tags?.length" class="event-card__tags">
-            <span v-for="tag in currentBet.tags" :key="tag.id">#{{ tag }}</span>
+            <span v-for="tag in currentBet.tags" :key="tag?.id || tag">#{{ tag }}</span>
           </p>
         </div>
 
@@ -176,7 +176,11 @@ onMounted(() => {
 
   // &__bet {}
 
-  // &__tags {}
+  &__tags {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
 
   &__btn {
     background-color: var(--btn-bg-color);
