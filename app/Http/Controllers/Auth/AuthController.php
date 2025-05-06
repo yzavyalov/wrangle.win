@@ -12,6 +12,7 @@ use App\Traits\JsonResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -66,7 +67,13 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => ['required', 'confirmed', Password::min(8)
+        ->mixedCase()     // минимум одна заглавная и одна строчная буква
+        ->letters()       // хотя бы одна буква
+        ->numbers()       // хотя бы одна цифра
+        ->symbols()       // хотя бы один символ
+        ->uncompromised() // не был скомпрометирован (проверка через HaveIBeenPwned API)
+    ],
         ]);
 
         if ($validator->fails()) {

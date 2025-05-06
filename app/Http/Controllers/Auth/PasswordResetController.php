@@ -31,7 +31,13 @@ class PasswordResetController extends Controller
         $request->validate([
             'token'    => 'required',
             'email'    => 'required|email',
-            'password' => 'required|min:8|confirmed',
+            'password' => ['required', 'confirmed', Password::min(8)
+                ->mixedCase()     // минимум одна заглавная и одна строчная буква
+                ->letters()       // хотя бы одна буква
+                ->numbers()       // хотя бы одна цифра
+                ->symbols()       // хотя бы один символ
+                ->uncompromised() // не был скомпрометирован (проверка через HaveIBeenPwned API)
+            ],
         ]);
 
         $status = Password::reset(
