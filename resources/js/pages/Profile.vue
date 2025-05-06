@@ -68,7 +68,8 @@ const testConfirm = async () => {
         </div>
 
         <div class="profile__user--avatar">
-          <img :src="'/images/avatar-sample.svg'" alt="avatar">
+          <img v-if="currentUser" :src="'/images/avatar-sample-active.svg'" alt="avatar">
+          <img v-else :src="'/images/avatar-sample.svg'" alt="avatar">
         </div>
       </div>
     </div>
