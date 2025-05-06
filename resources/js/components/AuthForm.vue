@@ -53,12 +53,21 @@ const loginInHandle = async () => {
   };
 
   const result = await login(paylaod);
+  console.log(result, 'result - login');
 
   if (!result) return console.warn('Login error');
 
   navigateTo('/profile');
+}
 
-  console.log(result, 'result - login');
+const loginWithSocialHandler = async (socialName) => {
+
+  const result = await loginWithSocial(socialName);
+  console.log(result, 'result - loginWithSocialHandler');
+
+  if (!result) return console.warn('loginWithSocialHandler error');
+
+  navigateTo('/profile');
 }
 
 const registerHandle = async () => {
@@ -106,7 +115,7 @@ const formActionHandler = (action) => {
     case 'google':
     case 'facebook':
     case 'telegram':
-      loginWithSocial(action);
+    loginWithSocialHandler(action);
       break;
 
     default:

@@ -23,7 +23,7 @@ export const login = async (payload: LoginPayload) => {
     console.log(res, "res - login");
     if (!res?.data?.data) { return false; }
 
-    const user = res.data.data;
+    const user = res?.data?.data;
 
     const { token } = user;
 
@@ -43,8 +43,17 @@ export const loginWithSocial = async (social: SocialLoginType) => {
   return await http.get(baseUrl)
   .then(res => {
     console.log(res, "res - loginWithSocial");
+    if (!res?.data?.data) { return false; }
 
-    return res.data;
+    const user = res.data.data;
+
+    const { token } = user;
+
+    token && localStorage.setItem("access_token", token);
+
+    useUserStore().updateUser(user);
+
+    return user;
   })
   .catch(e => console.error(e.message));
 };
