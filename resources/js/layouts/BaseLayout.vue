@@ -3,8 +3,10 @@ import HeaderSection from '@/components/HeaderSection.vue';
 import FooterSection from '@/components/FooterSection.vue';
 import ModalBase from '@/components/modals/ModalBase.vue';
 import { useModals } from '@/composables';
-import { onMounted } from 'vue';
+import { onBeforeMount, onMounted } from 'vue';
 import { getUserData } from '@/services/user';
+import { useSettingsStore } from "@/store/settings";
+
 
 const { modals } = useModals({ isLayout: true });
 

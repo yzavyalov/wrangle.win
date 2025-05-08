@@ -5,10 +5,9 @@ import ButtonBase from '@/components/details/ButtonBase.vue';
 import { predictionDemoData } from '@/utils/dummyData';
 import { useModalsStore } from '@/store/modals';
 import BetOptionItem from '@/components/details/BetOptionItem.vue';
+import { getCurrency } from '@/helpers/getCurrency';
 
 const currentBet = computed(() => useModalsStore().getModalContent?.currentBet || predictionDemoData);
-
-const showMore = ref(false);
 
 const maxTextLength = 50;
 
@@ -20,9 +19,9 @@ const shortTitle = computed(() => {
 
 const dynamicHot = computed(() => getDaysLeft(currentBet.value.finish) <= 1);
 
-const showMoreHandler = () => {
-  showMore.value = !showMore.value;
-}
+const currencyName = getCurrency();
+
+const biggestProfit = Math.max(...currentBet.value.answers.map(item => item.profit)).toFixed(2);
 
 onMounted(() => {
   // showMore.value = props.currentBet.showMore;
@@ -55,7 +54,7 @@ onMounted(() => {
           <p v-if="dynamicHot" class="event-card__time text-bold"><span class="hot-text">HOT!</span> Time left: {{ getTimeLeft(currentBet.finish) }}</p>
           <p v-else class="event-card__time text-bold">Time left: {{ getTimeLeft(currentBet.finish) }}</p>
 
-          <p class="event-card__bet">Bet amount: <b class="text-bold">{{ currentBet.bet || '--:--' }}</b></p>
+          <p class="event-card__bet">Bet amount: <b class="text-bold">{{ currentBet.bet || currentBet.budget }}{{ currencyName }}</b></p>
           <p v-if="currentBet?.tags?.length" class="event-card__tags">
             <span v-for="tag in currentBet.tags" :key="tag?.id || tag">#{{ tag }}</span>
           </p>
@@ -70,25 +69,19 @@ onMounted(() => {
     </div>
 
     <div class="event-card__info">
-      <span>Total bets: <b>{{ currentBet.totalBets || '--:--' }}</b></span>
-      <span>Maximal profit from 1€: <b>3€</b></span>
+      <span>Total bets: <b>{{ currentBet.budget || '--:--' }}{{ currencyName }}</b></span>
+      <span>Maximal profit from 1{{ currencyName }}: <b>{{ biggestProfit }}{{ currencyName }}</b></span>
     </div>
 
     <div class="event-card__footer">
       <div class="event-card__footer--wrapper">
         <p class="event-card__footer--text">Your Prediction:</p>
-        <!-- uncomment after Api fix -->
-        <!-- <BetOptionItem v-for="(item, index) in currentBet.options"
-          :key="index"
-          :option="item"
-          class="mb-10"
-        />
-        <p v-if="!currentBet.options?.length">No oprtions for prediction</p> -->
 
         <BetOptionItem v-for="(item, index) in currentBet.answers"
           :key="index"
           :option="item"
           class="event-card__option"
+          :currency="currencyName"
         />
         <p v-if="!predictionDemoData.options?.length">No oprtions for prediction</p>
       </div>

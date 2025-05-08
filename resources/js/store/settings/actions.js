@@ -15,7 +15,9 @@ export default {
   },
 
   setCurrency(currency) {
-    this.currentcy = currency;
+    this.currency = currency;
+
+    localStorage.setItem('currency', currency);
   },
 
   setCategories(categories) {

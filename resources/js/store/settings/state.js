@@ -1,5 +1,5 @@
 export default () => ({
-  currentcy: null,
+  currency: "€",
 
   filters: {
     betAmount: 0,
