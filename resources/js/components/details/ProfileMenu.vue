@@ -2,7 +2,7 @@
 import { nextTick, onMounted, onUnmounted } from "vue";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import ButtonBurger from "@/components/details/ButtonBurger.vue"
-import { profileMenuLinks } from "@/utils/datasets";
+import { profileMenuLinks, PAGE_ROUTES } from "@/utils/datasets";
 import { toggleBodyScroll } from "@/helpers/toggleBodyScroll";
 import { navigateTo } from '@/helpers/navigate';
 import { logout } from '@/services/user';
@@ -18,7 +18,7 @@ const emitClose = () => emit("close");
 const logOutHandle = () => {
   logout();
 
-  navigateTo('/login');
+  navigateTo(PAGE_ROUTES.LOGIN);
 }
 
 const linkActionHandle = (link) => {

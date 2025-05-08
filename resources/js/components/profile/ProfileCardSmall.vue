@@ -3,6 +3,7 @@ import { computed, ref } from "vue";
 import { useUserStore } from "@/store/user";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import { navigateTo } from '@/helpers/navigate';
+import { PAGE_ROUTES } from '@/utils/datasets';
 
 const currentUser = computed(() => useUserStore().getUser);
 
@@ -26,7 +27,7 @@ const userBalance = ref(100)
 
     <div v-else class="profile-card__body">
       <div class="profile-card__body--left">
-        <p class="text-underline cursor-pointer" @click="navigateTo('/login')">Login / Signup</p>
+        <p class="text-underline cursor-pointer" @click="navigateTo(PAGE_ROUTES.LOGIN)">Login / Signup</p>
       </div>
       <div class="profile-card__body--right">
         <img :src="'/images/avatar-sample.svg'" alt="avatar">

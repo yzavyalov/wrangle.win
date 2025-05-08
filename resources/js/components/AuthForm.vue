@@ -7,6 +7,7 @@ import { navigateTo } from '@/helpers/navigate';
 import useVuelidate from '@vuelidate/core';
 import { required, sameAs, email, minLength } from '@vuelidate/validators';
 import { register, login, loginWithSocial } from '@/services/user';
+import { PAGE_ROUTES } from '@/utils/datasets';
 
 const props = defineProps({
   isLoginVariant: { type: Boolean, default: true, },
@@ -57,7 +58,7 @@ const loginInHandle = async () => {
 
   if (!result) return console.warn('Login error');
 
-  navigateTo('/profile');
+  navigateTo(PAGE_ROUTES.PROFILE);
 }
 
 const loginWithSocialHandler = async (socialName) => {
@@ -67,7 +68,7 @@ const loginWithSocialHandler = async (socialName) => {
 
   if (!result) return console.warn('loginWithSocialHandler error');
 
-  navigateTo('/profile');
+  navigateTo(PAGE_ROUTES.PROFILE);
 }
 
 const registerHandle = async () => {
@@ -88,7 +89,7 @@ const registerHandle = async () => {
 
   if (!result) return console.warn('Register error');
 
-  navigateTo('/login');
+  navigateTo(PAGE_ROUTES.LOGIN);
 
 }
 
@@ -97,11 +98,11 @@ const formActionHandler = (action) => {
 
   switch (action) {
     case 'to_sign_in':
-      navigateTo('/login')
+      navigateTo(PAGE_ROUTES.LOGIN)
       break;
 
     case 'to_sign_up':
-      navigateTo('/register')
+      navigateTo(PAGE_ROUTES.REGISTER)
       break;
 
     case 'login':

@@ -6,7 +6,7 @@ import { useShowComponent, useFilters } from "@/composables";
 import { navigateTo } from '@/helpers/navigate';
 import { useUserStore } from "@/store/user";
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
-import { sideBarLinks, headerLinks } from "@/utils/datasets.js";
+import { sideBarLinks, headerLinks, PAGE_ROUTES } from "@/utils/datasets";
 import { useDebounceFn } from '@vueuse/core'
 
 const { searchQuery, setSearchQuery, resetFilters } = useFilters();
@@ -102,7 +102,7 @@ onUnmounted(() => {
       </transition-group>
     </Teleport>
 
-    <div class="logo" @click="navigateTo('/')">
+    <div class="logo" @click="navigateTo(PAGE_ROUTES.HOME)">
       <img :src="'/images/logo.svg'" alt="WRANGLER.WIN Logo" />
     </div>
 
@@ -122,11 +122,11 @@ onUnmounted(() => {
     </div>
 
     <div class="auth">
-      <button v-if="currentUser" class="auth__btn" @click="navigateTo('/profile')">{{ currentUser?.name }}</button>
+      <button v-if="currentUser" class="auth__btn" @click="navigateTo(PAGE_ROUTES.PROFILE)">{{ currentUser?.name }}</button>
       <button  v-if="currentUser" class="auth__btn" @click="openProfileMenu">Profile</button>
 
-      <button  v-if="!currentUser" class="auth__btn" @click="navigateTo('/register')">Signup</button>
-      <button  v-if="!currentUser" class="auth__btn" @click="navigateTo('/login')">Login</button>
+      <button  v-if="!currentUser" class="auth__btn" @click="navigateTo(PAGE_ROUTES.REGISTER)">Signup</button>
+      <button  v-if="!currentUser" class="auth__btn" @click="navigateTo(PAGE_ROUTES.LOGIN)">Login</button>
     </div>
   </header>
 </template>
