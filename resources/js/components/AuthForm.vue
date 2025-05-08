@@ -17,7 +17,6 @@ const formData = reactive({
   name: '',
 
   email: '',
-  emailRepeat: '',
 
   password: '',
   passwordRepeat: '',
@@ -34,7 +33,6 @@ const rules = computed(() => {
     : {
         name: { required, minLength: minLength(3) },
         email: { required, email },
-        emailRepeat: { required, sameAsEmail: sameAs(formData.email) },
         password: { required, minLength: minLength(6) },
         passwordRepeat: { required, sameAsPassword: sameAs(formData.password) },
       };
@@ -146,11 +144,6 @@ const formActionHandler = (action) => {
           <span v-if="v$.email?.required?.$invalid">Email is required</span>
           <span v-else-if="v$.email?.email?.$invalid">Email is invalid</span>
         </span>
-        <InputBase v-if="!isLoginVariant" v-model="formData.emailRepeat" :placeholder="'Email address (Repeat)'" type="email" class="form__input mb-20" />
-        <span v-if="v$.emailRepeat?.$error" class="error">
-          <span v-if="v$.emailRepeat?.required?.$invalid">Email is required</span>
-          <span v-else-if="v$.emailRepeat?.sameAsEmail?.$invalid">Emails do not match</span>
-        </span>
 
         <InputBase v-model="formData.password" placeholder="Password" :type="formData.isShowPassword ? 'text' : 'password'" class="form__input" />
         <span v-if="v$.password?.$error" class="error">
@@ -167,19 +160,25 @@ const formActionHandler = (action) => {
 
         <ButtonBaseWithIcon v-if="isLoginVariant"
           text="Login"
-          class="btn__google"
           @click="formActionHandler('login')"
+          class="auth-button"
         />
         <ButtonBaseWithIcon v-else
           text="Register"
-          class="btn__google"
+          class="auth-button"
           @click="formActionHandler('register')"
         />
+
+        <div class="auth-form__separator">
+          <span></span>
+          <span>or</span>
+          <span></span>
+        </div>
 
         <ButtonBaseWithIcon
           icon="/images/google.svg"
           text="Continue with Google"
-          class="btn__google mt-20"
+          class="btn__google"
           @click="formActionHandler('google')"
         />
         <ButtonBaseWithIcon
@@ -256,6 +255,20 @@ const formActionHandler = (action) => {
       gap: 10px;
     }
 
+    &__separator {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      // margin: 20px 0;
+
+      & span:first-child,
+      & span:last-child {
+        width: 50%;
+        height: 1px;
+        background: #000;
+      }
+    }
+
     &__footer {
       border-top: 1px solid #000;
       max-width: 350px;
@@ -296,6 +309,16 @@ const formActionHandler = (action) => {
       text-decoration: underline;
       margin: 20px 0;
       cursor: pointer;
+    }
+
+    .auth-button {
+      background: var(--btn-bg-color);
+      // border-radius: var(--border-radius-form);
+      border: 1px solid var(--btn-border-color);
+
+      &:hover {
+        background: var(--btn-bg-color-active);
+      }
     }
 
     .form__input {

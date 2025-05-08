@@ -5,7 +5,8 @@ import { computed, onMounted, ref, onBeforeUnmount, watch, nextTick } from "vue"
 import { useLoading } from "@/composables/useLoading";
 import { useSettingsStore } from "@/store/settings";
 import LoaderComponent from "@/components/LoaderComponent.vue";
-import DynamicSelector from "@/components/details/DynamicSelector.vue"
+import DynamicSelector from "@/components/details/DynamicSelector.vue";
+import ButtonWithClose from "@/components/details/ButtonWithClose.vue";
 
 const { isLoading, loadingStart, loadingStop } = useLoading();
 
@@ -85,9 +86,12 @@ onBeforeUnmount(() => {
 
     <div class="categories__list">
       <transition-group name="bounce" mode="out-in">
-        <ButtonBase v-for="category in selectedCategories" :key="category" is-active @click="toggleSelectedCategory(category)">
+        <ButtonWithClose v-for="category in selectedCategories" :key="category" is-active @click="toggleSelectedCategory(category)">
           <span class="text-length-wrapper" >{{ category.name }}</span>
-        </ButtonBase>
+        </ButtonWithClose>
+        <!-- <ButtonBase v-for="category in selectedCategories" :key="category" is-active @click="toggleSelectedCategory(category)">
+          <span class="text-length-wrapper" >{{ category.name }}</span>
+        </ButtonBase> -->
       </transition-group>
     </div>
 
