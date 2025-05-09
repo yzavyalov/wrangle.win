@@ -6,7 +6,7 @@ import { triggerOpenNewModal } from '@/composables';
 
 const props = defineProps({
   item: { type: Object, default: () => ({}) },
-  isHot: { type: Boolean, default: false },
+  // isHot: { type: Boolean, default: false },
 })
 
 const maxTextLength = 40;
@@ -17,11 +17,17 @@ const shortTitle = computed(() => {
     : props.item.title;
 });
 
-const dynamicHot = computed(() => props.isHot || getDaysLeft(props.item.finish) < 1);
+const dynamicHot = computed(() => {
+  console.log('getDaysLeft - dynamicHot', getDaysLeft(props.item.finish));
+
+  return getDaysLeft(props.item.finish) < 1
+});
 
 const showMoreDetailsHandler = () => {
   triggerOpenNewModal('bet-modal', { 'updateModalContent': { currentBet: props.item } });
 };
+
+const testTags = ["tasdfsdfg1", "tasdfsdfg2", "tagsdf3", "tagdsf4"];
 
 </script>
 
@@ -49,8 +55,8 @@ const showMoreDetailsHandler = () => {
         <p v-else class="event-card__time text-bold">Time left: {{ getTimeLeft(item.finish) }}</p>
 
         <p class="event-card__bet">Bet amount: <b class="text-bold">{{ item.bet }}</b></p>
-        <p v-if="item?.tags?.length" class="event-card__tags">
-          <span v-for="tag in item.tags" :key="tag.id">#{{ tag }}</span>
+        <p v-if="item.tags?.length" class="event-card__tags">
+          <span v-for="tag in item.tags.slice(0, 2)" :key="tag.id || tag">#{{ tag }}</span>
         </p>
         <ButtonBase class="event-card__btn" @click="showMoreDetailsHandler">More Details</ButtonBase>
       </div>
@@ -148,6 +154,12 @@ const showMoreDetailsHandler = () => {
     justify-content: center;
     align-items: center;
     gap: 5px;
+  }
+
+  &__tags {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
   }
 
   .hot-text {

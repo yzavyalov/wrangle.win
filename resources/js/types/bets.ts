@@ -1,11 +1,11 @@
-interface SearchBetPayload {
+export interface SearchBetPayload {
   title?: string
   categories?: number[]
   sort_by:  "finish"
   sort_order: "asc" | "desc"
 }
 
-interface CreateBetPayload {
+export interface CreateBetPayload {
   title: string
   description: string
   categories: number[]
@@ -14,15 +14,15 @@ interface CreateBetPayload {
   finish: Date | string
 }
 
-interface ToggleToFavoritePayload {
+export interface ToggleToFavoritePayload {
   bet_id: number
 }
 
-interface CreateBitPayload {
+export interface CreateBitPayload {
   sum: number
 }
 
-interface BetItem {
+export interface BetItem {
   id: number
   user_id: number
   title: string
@@ -40,6 +40,6 @@ interface BetItem {
   bits: any[]
 }
 
-interface UseBetsOptions {
+export interface UseBetsOptions {
   isHot?: boolean
 }

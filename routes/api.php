@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\UserDataController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\SocialController;
+use App\Http\Controllers\Payment\DepositController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,6 +44,7 @@ Route::post('/search-category',[BetCategorySearchController::class,'searchCatego
 Route::get('/payments/in',[PaymnetsController::class,'allInPayments']);
 Route::get('/payments/out',[PaymnetsController::class,'allOutPayments']);
 
+
 Route::middleware(['auth:sanctum','baduser'])->group(function (){
     Route::get('/user', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -55,6 +57,9 @@ Route::middleware(['auth:sanctum','baduser'])->group(function (){
 
     Route::post('bit/{answerId}',[BitController::class,'createBit']);
     Route::get('user-data',[UserDataController::class,'getUser']);
+
+    Route::get('/payment/deposit/cryptoprocessing/currency-list',[DepositController::class,'cryptoList']);
+    Route::get('/payment/deposit/cryptoprocessing/invoice/create',[DepositController::class,'cryptoInvoiceCreate']);
 });
 
 

@@ -22,9 +22,9 @@ const categoriesOptions = computed(() => {
     filter(category => !selectedCategoriesIds.value.includes(category.value))
 });
 
-const createNewCategoryHandler = () => {
-  console.warn('No logic for createNewCategoryHandler');
-}
+// const createNewCategoryHandler = () => {
+//   console.warn('No logic for createNewCategoryHandler');
+// }
 
 const fetchCategories = async () => {
   if (categories.value?.length) {return;}
@@ -80,13 +80,15 @@ onBeforeUnmount(() => {
     <div class="categories__header">
       <DynamicSelector v-model="selectedCategoryId" :options="categoriesOptions" class="categories__header--input" />
 
-      <ButtonBase @click="createNewCategoryHandler">Create new category</ButtonBase>
+      <!-- <ButtonBase @click="createNewCategoryHandler">Create new category</ButtonBase> -->
     </div>
 
     <div class="categories__list">
-      <ButtonBase v-for="category in selectedCategories" :key="category" is-active @click="toggleSelectedCategory(category)">
-        <span class="text-length-wrapper" >{{ category.name }}</span>
-      </ButtonBase>
+      <transition-group name="bounce" mode="out-in">
+        <ButtonBase v-for="category in selectedCategories" :key="category" is-active @click="toggleSelectedCategory(category)">
+          <span class="text-length-wrapper" >{{ category.name }}</span>
+        </ButtonBase>
+      </transition-group>
     </div>
 
   </div>

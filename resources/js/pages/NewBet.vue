@@ -20,64 +20,8 @@ import { predictionDemoData, demoBetDataPayload } from '@/utils/dummyData';
 import { createBet } from "@/services/bets";
 import { useLoading } from "@/composables/useLoading";
 import { useFilters } from '@/composables/useFilters';
+import NewBet from "@/components/NewBet.vue";
 
-const { isLoading, loadingStart, loadingStop } = useLoading()
-
-const formData = reactive({
-  title: '',
-  description: '',
-  categories: [],
-  source1: '',
-  answers: [],
-  finish: '',
-})
-
-const handleCreatePrediction = () => {
-  console.log('handleCreatePrediction');
-
-  try {
-    loadingStart();
-
-    const payload: CreateBetPayload = {
-      title: formData.title,
-      description: formData.description,
-      categories: formData.categories,
-      source1: formData.source1,
-      answers: formData.answers,
-      finish: formData.finish,
-    }
-
-    const newBet = createBet(payload);
-    console.log(newBet, "newBet - handleCreatePrediction");
-
-  } catch (error) {
-    console.warn(error);
-
-  } finally {
-    loadingStop();
-  }
-}
-
-const handleCreateDemoPrediction = async () => {
-  console.log('handleCreateDemoPrediction');
-
-  try {
-    loadingStart();
-
-    const newBet = await createBet(demoBetDataPayload);
-    console.log(newBet, "newBet - handleCreateDemoPrediction");
-
-  } catch (error) {
-    console.warn(error);
-
-  } finally {
-    loadingStop();
-  }
-}
-
-onBeforeUnmount(() => {
-  useFilters().resetFilters();
-})
 </script>
 
 <template>
@@ -85,12 +29,14 @@ onBeforeUnmount(() => {
 
   <PageWrapperMain class="new-bet">
 
-    <PredictionComp :item="predictionDemoData" />
+    <NewBet />
 
-    <div class="new-bet__footer">
+    <!-- <PredictionComp :item="predictionDemoData" /> -->
+
+    <!-- <div class="new-bet__footer">
       <ButtonBase @click="handleCreatePrediction">Create prediction</ButtonBase>
       <ButtonBase @click="handleCreateDemoPrediction">Create DEMO prediction</ButtonBase>
-    </div>
+    </div> -->
 
   </PageWrapperMain>
 
@@ -98,6 +44,11 @@ onBeforeUnmount(() => {
 
 <style scoped lang='scss'>
 .new-bet {
+
+  &__main {
+    position: relative;
+    z-index: 1;
+  }
 
   &__footer {
     display: flex;

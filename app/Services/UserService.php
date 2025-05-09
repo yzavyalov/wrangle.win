@@ -33,4 +33,18 @@ class UserService
         ]);
     }
 
+
+    public function getUserEmail(User $user)
+    {
+        if (!$user->email) {
+            return null;
+        }
+
+        if (str_ends_with($user->email, '@telegram.com')) {
+            return null;
+        }
+
+        return $user->email;
+    }
+
 }

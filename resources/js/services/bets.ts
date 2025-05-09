@@ -1,5 +1,6 @@
 import { http } from "@/api/http";
 import { BETS } from "@/api/enpoints";
+import { CreateBetPayload, CreateBitPayload, SearchBetPayload, ToggleToFavoritePayload } from "@/types/bets";
 
 export const getActualBets = async () => {
   return await http.get(BETS.URL_BETS)

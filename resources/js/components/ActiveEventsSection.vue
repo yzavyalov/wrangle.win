@@ -2,33 +2,19 @@
 import { onMounted, ref } from 'vue';
 import EventCard from '@/components/EventCard.vue';
 import ButtonBase from '@/components/details/ButtonBase.vue';
-import { triggerOpenNewModal, triggerCloseModal } from '@/composables';
-import { useConfirm } from '@/composables';
 import { useBets } from '@/composables/useBets';
 import FilterAndSort from "@/components/details/FilterAndSort.vue"
-import SectionHaeder from "@/components/details/SectionHaeder.vue"
+import SectionHeader from "@/components/details/SectionHeader.vue"
 import LoaderComponent from '@/components/LoaderComponent.vue';
 
 defineOptions({ name: "ActiveEventsSection" });
 
 defineProps({
-  isShowFilters: { type: Boolean, default: false }
+  isShowFilters: { type: Boolean, default: false },
+  isShowDecorator: { type: Boolean, default: true },
 })
 
-const { confirm } = useConfirm();
-const { fetchBets, fetchMoreBets, dynamicBets } = useBets()
-
-const testConfirm = async () => {
-  const result = await confirm({
-    title: 'Are you sure?',
-    text: 'This action cannot be undone',
-    confirmText: 'Confirm',
-    cancelText: 'Cancel'
-  })
-
-  console.log(result , 'result');
-
-}
+const { fetchBets, fetchMoreBets, dynamicBets, isLoading } = useBets()
 
 onMounted(() => {
   fetchBets();
@@ -39,27 +25,27 @@ onMounted(() => {
 <template>
   <div class="active_events">
 
-    <SectionHaeder :title="'Active Events'">
+    <SectionHeader :title="'Active Events'">
+
+      <LoaderComponent v-if="isLoading" />
 
       <FilterAndSort v-if="isShowFilters" class="active_events__filters" />
 
-    </SectionHaeder>
+    </SectionHeader>
 
-    <ul class="active_events__list">
+    <ul v-if="dynamicBets?.length" class="active_events__list">
       <li v-for="card in dynamicBets" :key="card.id">
-        <EventCard :item="card" :is-hot="card.isHot" />
+        <EventCard :item="card" />
       </li>
     </ul>
+
+    <p v-else class="text-center">No events found</p>
 
     <ButtonBase class="active_events__btn" @click="fetchMoreBets">
       <p class="active_events__btn--text text-light">Fetch more</p>
     </ButtonBase>
 
-    <ButtonBase class="mb-10 mt-10" @click="triggerOpenNewModal('prediction-modal')">triggerOpenNewModal - prediction-modal</ButtonBase>
-
-    <ButtonBase @click="testConfirm">testConfirm</ButtonBase>
-
-    <div class="background-decorator"></div>
+    <div v-if="isShowDecorator" class="background-decorator"></div>
   </div>
 </template>
 
@@ -67,6 +53,7 @@ onMounted(() => {
 .active_events {
   position: relative;
   padding-bottom: 20px;
+  min-height: 80vh;
 
   &__list {
     display: grid;

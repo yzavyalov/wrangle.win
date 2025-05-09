@@ -61,6 +61,12 @@
                         </div>
 
                         <div class="form-group mt-3">
+                            <label for="fix_fee" class="form-label">Input the fix_fee</label>
+                            <input name="fix_fee" type="text" value="{{ old('fix_fee') }}" class="form-control @error('commission') is-invalid @enderror">
+                            @error('commission')<span class="text-danger fw-bold">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div class="form-group mt-3">
                             <label for="logo">Upload logo image</label>
                             <input name="logo" type="file" class="form-control @error('logo') is-invalid @enderror">
                             @error('logo')<span class="text-danger fw-bold">{{ $message }}</span> @enderror

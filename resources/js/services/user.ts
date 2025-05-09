@@ -36,24 +36,27 @@ export const login = async (payload: LoginPayload) => {
   .catch(e => console.error(e.message));
 };
 
-//опробовал совет чата ии
-export const loginWithSocial = (social: SocialLoginType) => {
-  const redirectUrl = `/auth/${social}/redirect`;
-  window.location.href = redirectUrl;
-};
+export const loginWithSocial = async (social: SocialLoginType) => {
 
-// export const loginWithSocial = async (social: SocialLoginType) => {
-//
-//   const baseUrl = `/api/auth/${social}/redirect`;
-//
-//   return await http.get(baseUrl)
-//   .then(res => {
-//     console.log(res, "res - loginWithSocial");
-//
-//     return res.data;
-//   })
-//   .catch(e => console.error(e.message));
-// };
+  const baseUrl = `/api/auth/${social}/redirect`;
+
+  return await http.get(baseUrl)
+  .then(res => {
+    console.log(res, "res - loginWithSocial");
+    if (!res?.data?.data) { return false; }
+
+    const user = res.data.data;
+
+    const { token } = user;
+
+    token && localStorage.setItem("access_token", token);
+
+    useUserStore().updateUser(user);
+
+    return user;
+  })
+  .catch(e => console.error(e.message));
+};
 
 export const logout = async () => {
 

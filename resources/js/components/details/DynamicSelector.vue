@@ -33,6 +33,7 @@ const modelValue = defineModel();
     width: 100%;
     border-radius: 30px;
     overflow: hidden;
+    box-shadow: var(--box-shadow-main);
 
     :deep(.el-select__wrapper) {
       border-radius: 30px;
@@ -44,9 +45,6 @@ const modelValue = defineModel();
     --el-fill-color-blank: var(--btn-bg-color);
     --el-bg-color-overlay: var(--btn-bg-color);
     --el-color-primary: #000;
-
-    width: 100%;
-    box-shadow: var(--box-shadow-main);
   }
 }
 </style>

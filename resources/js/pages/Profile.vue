@@ -15,10 +15,24 @@ import { computed, ref } from "vue";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import { useUserStore } from "@/store/user";
 import ButtonBase from "@/components/details/ButtonBase.vue";
+import { useConfirm } from '@/composables';
+import { triggerOpenNewModal } from "@/composables/useModalsTriggers";
+
+const { confirm } = useConfirm();
 
 const currentUser = computed(() => useUserStore().getUser);
 const userBalance = ref(100)
 
+const testConfirm = async () => {
+  const result = await confirm({
+    title: 'Are you sure?',
+    text: 'This action cannot be undone',
+    confirmText: 'Confirm',
+    cancelText: 'Cancel'
+  })
+
+  console.log(result , 'result');
+}
 
 </script>
 
@@ -54,7 +68,8 @@ const userBalance = ref(100)
         </div>
 
         <div class="profile__user--avatar">
-          <img :src="'/images/avatar-sample.svg'" alt="avatar">
+          <img v-if="currentUser" :src="'/images/avatar-sample-active.svg'" alt="avatar">
+          <img v-else :src="'/images/avatar-sample.svg'" alt="avatar">
         </div>
       </div>
     </div>
@@ -73,6 +88,19 @@ const userBalance = ref(100)
         <ButtonBase class="min-width-80">Top up a Balance</ButtonBase>
       </div>
     </div>
+
+
+    <!-- test zone -->
+
+
+      <!-- <div class="profile__footer">
+        <ButtonBase class="mb-10 mt-10" @click="triggerOpenNewModal('prediction-modal')">triggerOpenNewModal - prediction-modal</ButtonBase>
+
+        <ButtonBase @click="testConfirm">testConfirm</ButtonBase>
+      </div> -->
+
+
+    <!-- test zone - end -->
 
   </PageWrapperMain>
 </template>
@@ -215,6 +243,12 @@ const userBalance = ref(100)
       text-align: center;
     }
   }
+
+  &__footer {
+    position: relative;
+    z-index: 1;
+  }
+
 
   .min-width-80 {
     min-width: 80%;

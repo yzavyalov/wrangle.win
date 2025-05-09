@@ -68,6 +68,10 @@ class SocialController extends Controller
                     return $this->successJsonAnswer200('User',AuthResource::make($user));
                 }
             }
+            else
+            {
+                return $this->successJsonAnswer200('User',AuthResource::make($user));
+            }
         }
 
         return $this->successJsonAnswer204('You are logged in!');
