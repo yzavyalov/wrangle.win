@@ -9,6 +9,7 @@ export const PAGE_ROUTES = {
   NEW_BET: "/new_bet",
   LOGIN: "/login",
   REGISTER: "/register",
+  BET: "/bet",
 
   POPULAR: "/popular",          // no page
   PREDICTION: "/prediction",    // temp page

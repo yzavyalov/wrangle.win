@@ -57,7 +57,9 @@ export const getBetById = async (betId) => {
   .then(res => {
     console.log(res, "res - getBetById");
 
-    return res.data;
+    const bet = res?.data?.data;
+
+    return bet;
   })
   .catch(e => console.error(e.message));
 };
@@ -80,7 +82,9 @@ export const createBet = async (payload: CreateBetPayload) => {
   .then(res => {
     console.log(res, "res - createBet");
 
-    return res.data;
+    const newBet = res?.data?.data;
+
+    return newBet;
   })
   .catch(e => console.error(e.message));
 };

@@ -4,8 +4,8 @@ import { linkRegex } from "@/utils/regex";
 import { createBet } from '@/services/bets';
 import { CreateBetPayload } from '@/types/bets';
 import { navigateTo } from '@/helpers/navigate';
-import { cutTextLength } from '@/helpers/cutTextLength.ts';
 import { useLoading } from '@/composables/useLoading';
+import { cutTextLength } from '@/helpers/cutTextLength.ts';
 import { useCategories } from "@/composables/useCategories";
 import { register, login, loginWithSocial } from '@/services/user';
 import { predictionDemoData, demoBetDataPayload } from '@/utils/dummyData';
@@ -159,7 +159,9 @@ const handleCreateBet = async () => {
 
     if (!newBet) { return console.warn('Error creating bet'); }
 
-    setDefaultValues();
+    newBet?.id && navigateTo(`/bet/${newBet.id}`);
+
+    // setDefaultValues();
 
   } catch (error) {
     console.warn(error);
@@ -177,6 +179,8 @@ const setDefaultValues = () => {
   formData.source2 = '';
   formData.source3 = '';
   formData.answers = ['', ''];
+  formData.finish = '';
+  isShowNewCategory.value = false;
 
   v$.value.$reset();
   v$.value.$touch();

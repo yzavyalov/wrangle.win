@@ -207,7 +207,7 @@ export const demoCardsV1 = [
 export const predictionDemoData = {
   title: "Ukraine agrees to Trump mineral deal before April?",
   description: 'TextTextTextText TextTextTextTextT extTextTextTextTextTextTextText TextextTextTextTextTe xtTextTextTe xtText',
-  finish: new Date('2025-05-01T14:00:00'),
+  finish: new Date('2025-06-01T14:00:00'),
   betAmount: "99 USD",
   totalBets: 20,
   maxProfitPer1Euro: "3€",
