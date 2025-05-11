@@ -7,44 +7,18 @@ import { useSettingsStore } from "@/store/settings";
 import LoaderComponent from "@/components/LoaderComponent.vue";
 import DynamicSelector from "@/components/details/DynamicSelector.vue";
 import ButtonWithClose from "@/components/details/ButtonWithClose.vue";
+import { useCategories } from "@/composables/useCategories";
 
-const { isLoading, loadingStart, loadingStop } = useLoading();
-
-const { setCategories, toggleSelectedCategory, setDefaultSearchParams } = useSettingsStore();
+const {
+  categories,
+  selectedCategories,
+  selectedCategoriesIds,
+  categoriesOptions,
+  toggleSelectedCategory,
+  isLoading,
+} = useCategories();
 
 const selectedCategoryId = ref(null);
-const categories = computed(() => useSettingsStore().getCategories);
-const selectedCategories = computed(() => useSettingsStore().getSelectedCategories);
-const selectedCategoriesIds = computed(() => selectedCategories.value.map(category => category.id));
-
-const categoriesOptions = computed(() => {
-  return categories.value
-    .map(category => ({ label: category.name, value: category.id })).
-    filter(category => !selectedCategoriesIds.value.includes(category.value))
-});
-
-// const createNewCategoryHandler = () => {
-//   console.warn('No logic for createNewCategoryHandler');
-// }
-
-const fetchCategories = async () => {
-  if (categories.value?.length) {return;}
-
-  try {
-    loadingStart();
-
-    const fetchedCategories = await getAllCtegories() || [];
-    console.log(fetchedCategories, "fetchedCategories");
-
-    fetchedCategories.length && setCategories(fetchedCategories);
-
-  } catch (error) {
-    console.warn(error);
-
-  } finally {
-    loadingStop();
-  }
-}
 
 const selectCategoryHandler = categoryId => {
   const selectedCategory = categories.value.find(category => category.id === categoryId);
@@ -64,14 +38,6 @@ watch(
   }
 );
 
-onMounted(() => {
-  fetchCategories();
-})
-
-onBeforeUnmount(() => {
-
-})
-
 </script>
 
 <template>
@@ -80,8 +46,6 @@ onBeforeUnmount(() => {
 
     <div class="categories__header">
       <DynamicSelector v-model="selectedCategoryId" :options="categoriesOptions" class="categories__header--input" />
-
-      <!-- <ButtonBase @click="createNewCategoryHandler">Create new category</ButtonBase> -->
     </div>
 
     <div class="categories__list">
@@ -89,9 +53,6 @@ onBeforeUnmount(() => {
         <ButtonWithClose v-for="category in selectedCategories" :key="category" is-active @click="toggleSelectedCategory(category)">
           <span class="text-length-wrapper" >{{ category.name }}</span>
         </ButtonWithClose>
-        <!-- <ButtonBase v-for="category in selectedCategories" :key="category" is-active @click="toggleSelectedCategory(category)">
-          <span class="text-length-wrapper" >{{ category.name }}</span>
-        </ButtonBase> -->
       </transition-group>
     </div>
 

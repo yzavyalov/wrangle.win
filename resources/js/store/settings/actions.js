@@ -24,6 +24,10 @@ export default {
     this.categories = categories;
   },
 
+  addCategory(newCategory) {
+    this.categories.push(newCategory);
+  },
+
   setSelectedCategories(categories) {
     this.selectedCategories = selectedCategories;
   },
