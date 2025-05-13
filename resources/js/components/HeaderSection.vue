@@ -31,6 +31,12 @@ const dynamicSidebarLinks = ref([...sideBarLinks]);   // ті, що ховают
 const navContainerEl = ref(null);
 const navButtonsEl = ref([]);
 
+const isSticky = ref(false);
+
+const handleScroll = () => {
+  isSticky.value = window.scrollY > 200;
+};
+
 const sideBarClickHandler = (link) => {
   console.log(link, 'link - sideBarClickHandler');
 
@@ -74,59 +80,66 @@ onMounted(() => {
   console.log(dynamicSidebarLinks.value, 'dynamicSidebarLinks.value - onMounted');
 
   resetFilters();
+
+  window.addEventListener('scroll', handleScroll);
 });
 
 onUnmounted(() => {
   window.removeEventListener('resize', recalculateLinks);
+  window.removeEventListener('scroll', handleScroll);
 });
 </script>
 
 <template>
-  <header class="header">
-    <ButtonBurger class="header__burdger" @click="openSideBar"  />
+  <header :class="['header', { 'sticky': isSticky }]">
+    <div :class="['header__shadow', { 'sticky': isSticky }]"></div>
 
-    <Teleport to="body">
-      <transition-group name="fade-slide-down">
-        <SideBar v-if="isSideBarActive"
-          v-click-outside="closeSideBar"
-          :links="dynamicSidebarLinks"
-          :style="sideBarPosition"
-          @item:click="sideBarClickHandler"
-          @close="closeSideBar"
-        />
-        <ProfileMenu v-if="isProfileMenuActive"
-          v-click-outside="closeProfileMenur"
-          :style="profileMenuPosition"
-          @close="closeProfileMenur"
-        />
-      </transition-group>
-    </Teleport>
+    <div class="header__body">
+      <ButtonBurger class="header__burdger" @click="openSideBar"  />
 
-    <div class="logo" @click="navigateTo(PAGE_ROUTES.HOME)">
-      <img :src="'/images/logo.svg'" alt="WRANGLER.WIN Logo" />
-    </div>
+      <Teleport to="body">
+        <transition-group name="fade-slide-down">
+          <SideBar v-if="isSideBarActive"
+            v-click-outside="closeSideBar"
+            :links="dynamicSidebarLinks"
+            :style="sideBarPosition"
+            @item:click="sideBarClickHandler"
+            @close="closeSideBar"
+          />
+          <ProfileMenu v-if="isProfileMenuActive"
+            v-click-outside="closeProfileMenur"
+            :style="profileMenuPosition"
+            @close="closeProfileMenur"
+          />
+        </transition-group>
+      </Teleport>
 
-    <nav class="nav" ref="navContainerEl">
-      <button v-for="(link, index) in dynamicHeaderLinks"
-        :key="link.id"
-        class="nav__btn"
-        @click="navigateTo(link.path)"
-        ref="navButtonsEl"
-      >
-        {{ link.name }}
-      </button>
-    </nav>
+      <div class="logo" @click="navigateTo(PAGE_ROUTES.HOME)">
+        <img :src="'/images/logo.svg'" alt="WRANGLER.WIN Logo" />
+      </div>
 
-    <div class="search hide_on_mobile">
-      <input type="text" :value="searchQuery" placeholder="Search Markets" @input="updateSearchQuery" />
-    </div>
+      <nav class="nav" ref="navContainerEl">
+        <button v-for="(link, index) in dynamicHeaderLinks"
+          :key="link.id"
+          class="nav__btn"
+          @click="navigateTo(link.path)"
+          ref="navButtonsEl"
+        >
+          {{ link.name }}
+        </button>
+      </nav>
 
-    <div class="auth">
-      <button v-if="currentUser" class="auth__btn" @click="navigateTo(PAGE_ROUTES.PROFILE)">{{ currentUser?.name }}</button>
-      <button  v-if="currentUser" class="auth__btn" @click="openProfileMenu">Profile</button>
+      <div class="search hide_on_mobile">
+        <input type="text" :value="searchQuery" placeholder="Search Markets" @input="updateSearchQuery" />
+      </div>
 
-      <button  v-if="!currentUser" class="auth__btn" @click="navigateTo(PAGE_ROUTES.REGISTER)">Signup</button>
-      <button  v-if="!currentUser" class="auth__btn" @click="navigateTo(PAGE_ROUTES.LOGIN)">Login</button>
+      <div class="auth">
+        <button v-if="currentUser" class="auth__btn" @click="navigateTo(PAGE_ROUTES.PROFILE)">{{ currentUser?.name }}</button>
+        <button  v-if="currentUser" class="auth__btn" @click="openProfileMenu">Profile</button>
+
+        <button  v-if="!currentUser" class="auth__btn" @click="navigateTo(PAGE_ROUTES.REGISTER)">Signup</button>
+        <button  v-if="!currentUser" class="auth__btn" @click="navigateTo(PAGE_ROUTES.LOGIN)">Login</button>
+      </div>
     </div>
   </header>
 </template>
@@ -137,19 +150,76 @@ onUnmounted(() => {
 
   --header-height: 45px;
 
-  position: sticky;
-  top: 0;
+  position: relative;
+  // // top: 0px;
   z-index: 2;
-  display: flex;
-  gap: 10px;
-  justify-content: start;
-  // flex-wrap: wrap;
-  align-items: center;
-  padding: 10px 20px;
-  font-weight: var(--font-weight-light);
+  // display: flex;
+  // gap: 10px;
+  // justify-content: start;
+  // align-items: center;
+  // padding: 10px 20px;
+  // font-weight: var(--font-weight-light);
+  // transition: all ease 0.3s;
 
   &__burdger {
     flex: 0 0 48px;
+  }
+
+  &__shadow {
+    position: absolute;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    top: -150%;
+    transition: all ease 0.3s;
+
+    &.sticky {
+      top: 0%;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px); /* для Safari */
+      background-color: rgba(255, 255, 255, 0.2); /* напівпрозорий фон */
+      width: 100vw;
+      height: 100%;
+      right: 50%;
+      transform: translateX(50%);
+      z-index: 0;
+    }
+  }
+
+  &__body {
+    position: relative;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    gap: 10px;
+    justify-content: start;
+    align-items: center;
+    padding: 10px 20px;
+    font-weight: var(--font-weight-light);
+    transition: all ease 0.3s;
+  }
+
+  &.sticky {
+    position: sticky;
+    top: 0px;
+    z-index: 2;
+    animation: slideDown 0.3s ease-out;
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
   }
 
   .logo {
@@ -177,7 +247,6 @@ onUnmounted(() => {
     transition: background 0.3s;
     overflow: hidden;
     min-height: var(--header-height);
-    // flex: 0 0 auto;
 
     .nav__btn {
       padding: 8px 16px;
