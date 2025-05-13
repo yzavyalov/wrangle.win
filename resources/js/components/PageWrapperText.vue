@@ -97,6 +97,7 @@ const padding = computed(() => props.padding + 'px');
     &__footer {
       position: relative;
       z-index: 1;
+      margin-bottom: 50px;
     }
 
     & &__btn {
