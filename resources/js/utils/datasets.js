@@ -1,8 +1,9 @@
 export const PAGE_ROUTES = {
   HOME: "/",
-  ABOUT: "/about",              // no page
-  POLITICS: "/politics",        // no page
-  RULES: "/rules",              // no page
+  ABOUT: "/about",
+  POLITICS: "/terms",
+  RULES: "/rules",
+  PRIVACY: "/privacy_policy",
   EVENTS: "/events",            // no page
   PROFILE: "/profile",
   CATEGORIES: "/categories",
@@ -19,6 +20,7 @@ export const sideBarLinks = [
   { id: 'about', name: "About", path: PAGE_ROUTES.ABOUT },
   { id: 'politics', name: "Politics", path: PAGE_ROUTES.POLITICS },
   { id: 'rules', name: "Rules", path: PAGE_ROUTES.RULES },
+  { id: 'privacy', name: "Privacy policy", path: PAGE_ROUTES.PRIVACY },
   { id: 'events', name: "All Events", path: PAGE_ROUTES.CATEGORIES },
   { id: 'account', name: "To Account", path: PAGE_ROUTES.PROFILE },
 ];

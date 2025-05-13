@@ -50,6 +50,22 @@ Route::get('/prediction', function () {         // temp route
     return Inertia::render('Prediction');
 });
 
+Route::get('/about', function () {
+    return Inertia::render('About');
+});
+
+Route::get('/terms', function () {
+    return Inertia::render('Terms');
+});
+
+Route::get('/rules', function () {
+    return Inertia::render('Rules');
+});
+
+Route::get('/privacy_policy', function () {
+    return Inertia::render('PrivacyPolicy');
+});
+
 Route::get('/bet/{id}', function ($id) {
     $bet = Bet::findOrFail($id);
 
