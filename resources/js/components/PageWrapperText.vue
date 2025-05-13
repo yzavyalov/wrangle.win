@@ -39,7 +39,7 @@ const padding = computed(() => props.padding + 'px');
       </slot>
     </div>
 
-    <PageCloudDecorator v-if="showDecorator" />
+    <PageCloudDecorator v-if="showDecorator" class="page__decorator" />
   </div>
 </template>
 
@@ -104,6 +104,12 @@ const padding = computed(() => props.padding + 'px');
       margin: 0 auto;
       padding: 5px 30px;
     }
+
+    // &__decorator {
+    //   bottom: -200px;
+    //   // max-height: 500px;
+
+    // }
 
     h2 {
       font-size: 32px;

@@ -94,9 +94,9 @@ const testConfirm = async () => {
 
 
       <!-- <div class="profile__footer">
-        <ButtonBase class="mb-10 mt-10" @click="triggerOpenNewModal('prediction-modal')">triggerOpenNewModal - prediction-modal</ButtonBase>
+        <ButtonBase class="mb-10 mt-10 m-auto" @click="triggerOpenNewModal('prediction-modal')">triggerOpenNewModal - prediction-modal</ButtonBase>
 
-        <ButtonBase @click="testConfirm">testConfirm</ButtonBase>
+        <ButtonBase class="m-auto" @click="testConfirm">testConfirm</ButtonBase>
       </div> -->
 
 

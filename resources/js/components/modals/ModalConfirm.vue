@@ -98,7 +98,11 @@ onUnmounted(() => {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background: var(--modal-bg-color);
+    // background: var(--modal-bg-color);
+    // background: var(--modal-confirm-bg-color);
+      backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* для Safari */
+    background-color: rgba(255, 255, 255, 0.2); /* напівпрозорий фон */
     z-index: 10;
   }
 
@@ -112,6 +116,7 @@ onUnmounted(() => {
     font-size: 20px;
     font-weight: var(--font-weight-light);
     position: relative;
+    border: 1px solid #DBDBDB;
   }
 
   &__header p {
