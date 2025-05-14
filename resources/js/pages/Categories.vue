@@ -32,7 +32,7 @@ onBeforeUnmount(() => {
 
   <CategoriesSection />
 
-  <ActiveEventsSection :items="[]" :is-show-filters="true" />
+  <ActiveEventsSection :is-show-filters="true" />
 
 </template>
 

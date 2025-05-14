@@ -82,7 +82,7 @@ onUnmounted(() => {
           <td><input type="number" v-model="betAmount" min="0" max="1000"></td>
         </tr>
 
-        <tr>
+        <!-- <tr>
           <td>
             <p>Thema</p>
           </td>
@@ -94,7 +94,7 @@ onUnmounted(() => {
             <p>Tags</p>
           </td>
           <td><input type="text" v-model="tags"></td>
-        </tr>
+        </tr> -->
 
         <tr>
           <td>

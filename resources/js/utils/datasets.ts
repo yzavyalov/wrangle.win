@@ -48,3 +48,8 @@ export const footerMenuLinks = [
   { id: 'new_bet', name: "New bet", path: PAGE_ROUTES.NEW_BET },
   { id: 'account', name: "To Account", path: PAGE_ROUTES.PROFILE },
 ];
+
+export const defaultFilters = {
+  betAmount: 0,
+  finish: '',
+};

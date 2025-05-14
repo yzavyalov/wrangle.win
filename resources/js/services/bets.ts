@@ -1,6 +1,6 @@
 import { http } from "@/api/http";
 import { BETS } from "@/api/enpoints";
-import { CreateBetPayload, CreateBitPayload, SearchBetPayload, ToggleToFavoritePayload } from "@/types/bets";
+import { CreateBetPayload, CreateBitPayload, SearchBetsPayload, ToggleToFavoritePayload } from "@/types/bets";
 
 export const getActualBets = async () => {
   return await http.get(BETS.URL_BETS)
@@ -64,9 +64,17 @@ export const getBetById = async (betId) => {
   .catch(e => console.error(e.message));
 };
 
-export const searchBet = async (payload: SearchBetPayload) => {
+export const searchBets = async (payload: SearchBetsPayload) => {
 
-  return await http.post(BETS.SEARCH_BET, payload)
+  const stringRequestBody = Object.entries(payload).reduce((acc, [key, value]) => {
+    acc[key] = String(value);
+    return acc;
+  }, {} as Record<string, string>);
+
+  const requestUrl = BETS.SEARCH_BET + "?" + new URLSearchParams(stringRequestBody).toString();
+
+
+  return await http.get(requestUrl)
   .then(res => {
     console.log(res, "res - searchBet");
 

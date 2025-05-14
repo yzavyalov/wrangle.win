@@ -1,5 +1,3 @@
-import { set } from "@vueuse/core";
-
 export default {
   toggleSortBy() {
     // desc | asc

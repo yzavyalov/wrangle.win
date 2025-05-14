@@ -1,7 +1,10 @@
-export interface SearchBetPayload {
+export interface SearchBetsPayload {
   title?: string
   categories?: number[]
-  sort_by:  "finish"
+  sort_by?:  "finish"
+
+  page: number
+  per_page: number
   sort_order: "asc" | "desc"
 }
 
