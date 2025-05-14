@@ -23,14 +23,14 @@ class BetRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string',
+            'title' => 'required|string|max:120|min:10',
             'categories' => 'required|array|min:1',  // Ожидаем массив
             'categories.*' => 'required|integer|exists:bet_categories,id',
             'image' => 'file|mimes:jpg,jpeg,png,gif|max:1024',  // Проверка на изображение и размер
             'source1' => 'required|url',  // Проверка на корректный URL
             'source2' => 'nullable|url',
             'source3' => 'nullable|url',
-            'description' => 'required|string|max:3000',
+            'description' => 'required|string|max:1500|min:10',
             'answers' => 'bail|required|array|min:2',
             'answers.*' => 'required|string',
             'finish' => 'required|date',

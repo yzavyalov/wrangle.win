@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminPanel\PageController;
 use App\Http\Controllers\AdminPanel\PaymentController;
 use App\Http\Controllers\AdminPanel\TransactionController;
 use App\Http\Controllers\AdminPanel\UserController;
+use App\Http\Controllers\Auth\SocialController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -92,11 +93,15 @@ Route::get('/404', function () {
     return Inertia::render('Page404');
 });
 
-
 Route::get('/form-reset-password', function (){dd('form here');});
 
 Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.post');
+
+
+Route::get('/auth/{provider}/redirect',[SocialController::class,'redirect'])->name('social.redirect');
+Route::get('/auth/{provider}/callback',[SocialController::class,'callback'])->name('social.callback');
+
 
 Route::middleware('moderator')->prefix('/admin-panel')->group(function (){
     Route::post('/check-code',[AdminTwoFactorAuthController::class, 'checkCode'])->name('check-code');

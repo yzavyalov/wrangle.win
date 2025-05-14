@@ -23,7 +23,7 @@ export const login = async (payload: LoginPayload) => {
     console.log(res, "res - login");
     if (!res?.data?.data) { return false; }
 
-    const user = res?.data?.data;
+    const user = res.data.data;
 
     const { token } = user;
 

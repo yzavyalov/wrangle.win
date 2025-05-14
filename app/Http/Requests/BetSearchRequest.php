@@ -29,10 +29,12 @@ class BetSearchRequest extends FormRequest
             'finish' => 'date|nullable',
             'title' => 'string|nullable',
             'categories' => 'nullable|array|min:1',  // Ожидаем массив
-            'categories.*' => 'nullable|integer|exists:bet_categories,id',
+            'categories.*' => 'integer|exists:bet_categories,id',
             'sort_by' => 'nullable|in:finish,title,budget',
             'sort_order' => 'nullable|in:asc,desc',
-            'table' => 'required|integer|in:1,2',
+            'table' => 'nullable|integer|in:1,2',
+            'page' => 'nullable|integer',
+            'per_page' => 'nullable|integer',
         ];
     }
 }

@@ -6,20 +6,26 @@ use App\Http\Controllers\Controller;
 use App\Http\Enums\BetStatusEnum;
 use App\Http\Filters\BetFilter;
 use App\Http\Requests\BetSearchRequest;
+use App\Http\Requests\PaginateRequest;
 use App\Http\Resources\BetResource;
 use App\Http\Resources\CurrentUserResource;
 use App\Http\Resources\UserResource;
 use App\Models\Bet;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class BetSortController extends Controller
 {
-    public function myBets()
+    public function myBets(PaginateRequest $request)
     {
+        $perPage = $request->input('per_page', 15); // по умолчанию 15
+        $page = $request->input('page', 1);
+
         $user = Auth::user();
 
-        $bets = $user->mybets;
+        $bets = $user->mybets()->paginate($perPage, ['*'], 'page', $page);
 
         $bets = BetResource::collection($bets);
 
@@ -28,11 +34,14 @@ class BetSortController extends Controller
         return $this->successJsonAnswer200('My bets',compact('bets','user'));
     }
 
-    public function favoriteBets()
+    public function favoriteBets(PaginateRequest $request)
     {
+        $perPage = $request->input('per_page', 15); // по умолчанию 15
+        $page = $request->input('page', 1);
+
         $user = Auth::user();
 
-        $bets = $user->favoriteBets;
+        $bets = $user->favoriteBets()->paginate($perPage, ['*'], 'page', $page);;
 
         $bets = BetResource::collection($bets);
 
@@ -44,6 +53,9 @@ class BetSortController extends Controller
 
     public function searchBet(BetSearchRequest $request)
     {
+        $page = $request->query('page', 1);
+        $perPage = $request->query('per_page', 15);
+
         $data = $request->validated();
 
         $filter = app()->make(BetFilter::class, ['queryParams' => array_filter($data)]);
@@ -51,31 +63,41 @@ class BetSortController extends Controller
         $bets= Bet::filter($filter)
             ->where('status',BetStatusEnum::APPROVED)
             ->where('finish','>=',now())
-            ->get();
+            ->paginate($perPage, ['*'], 'page', $page);
 
         $bets = BetResource::collection($bets);
-        $user = CurrentUserResource::make(Auth::user());
+
+        if (Auth::check())
+            $user = CurrentUserResource::make(Auth::user());
+        else
+            $user = null;
 
         return $this->successJsonAnswer200('Bets',compact('bets','user'));
     }
 
 
-    public function finishBet()
+    public function finishBet(PaginateRequest $request)
     {
-        $bets = Bet::query()->where('status',2)->get();
+        $perPage = $request->input('per_page', 15); // по умолчанию 15
+        $page = $request->input('page', 1);
+
+        $bets = Bet::query()->where('status',2)->paginate($perPage, ['*'], 'page', $page);
 
         return $this->successJsonAnswer200('Ended bets.',BetResource::collection($bets));
     }
 
-    public function hotBets()
+    public function hotBets(PaginateRequest $request)
     {
+        $perPage = $request->input('per_page', 15); // по умолчанию 15
+        $page = $request->input('page', 1);
+
         $bets = Bet::query()
             ->where('status', BetStatusEnum::APPROVED)
             ->whereBetween('finish', [
                 Carbon::today(),              // сегодня с 00:00:00
                 Carbon::tomorrow()->endOfDay() // завтра до 23:59:59
             ])
-            ->get();
+            ->paginate($perPage, ['*'], 'page', $page);
 
         $bets = BetResource::collection($bets);
 

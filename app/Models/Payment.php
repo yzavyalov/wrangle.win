@@ -15,6 +15,7 @@ class Payment extends Model
         'type',
         'category',
         'commission',
+        'fix_fee',
         'logo',
         'link',
     ];

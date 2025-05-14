@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BetCategoryCreateRequest;
 use App\Http\Requests\BetRequest;
+use App\Http\Requests\PaginateRequest;
 use App\Http\Resources\BetCategoryResource;
 use App\Http\Resources\CurrentUserResource;
 use App\Models\BetCategory;
@@ -16,9 +17,12 @@ class BetCategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(PaginateRequest $request)
     {
-        $categories = BetCategory::orderBy('name')->get();
+        $perPage = $request->input('per_page', 15); // по умолчанию 15
+        $page = $request->input('page', 1);
+
+        $categories = BetCategory::orderBy('name')->paginate($perPage, ['*'], 'page', $page);
 
         return $this->successJsonAnswer200('bets\' categories',BetCategoryResource::collection($categories));
     }

@@ -32,6 +32,8 @@ class PaymentService
 
         $payment->category = $validateData['category'];
 
+        $payment->fix_fee = $validateData['fix_fee'] ?? null;
+
         $payment->commission = $validateData['commission'] ?? null;
 
         $payment->link = $validateData['link'];

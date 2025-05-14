@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\BetStatusEnum;
 use App\Http\Requests\BetRequest;
+use App\Http\Requests\PaginateRequest;
 use App\Http\Resources\BetResource;
 use App\Models\Bet;
 use App\Services\BetService;
@@ -21,12 +22,15 @@ class BetController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(PaginateRequest $request)
     {
+        $perPage = $request->input('per_page', 15); // по умолчанию 15
+        $page = $request->input('page', 1);
+
         $bets = Bet::query()
             ->where('status',BetStatusEnum::APPROVED)
             ->where('finish','>=',Carbon::make(now()))
-            ->get();
+            ->paginate($perPage, ['*'], 'page', $page);
 
         return $this->successJsonAnswer200('allbets',BetResource::collection($bets));
     }

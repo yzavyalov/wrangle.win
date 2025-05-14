@@ -40,12 +40,14 @@ class RolesTableSeeder extends Seeder
         // Создание ролей и назначение прав
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $financeManager = Role::firstOrCreate(['name' => 'finance manager']);
+        $contentManager = Role::firstOrCreate(['name' => 'content manager']);
         $userRole = Role::firstOrCreate(['name' => 'user']);
         $badUserRole = Role::firstOrCreate(['name' => 'badUser']);
 
         // Назначаем права ролям
-        $adminRole->givePermissionTo(['create bet','edit all bet','moderate bets','delete all bets','finishing bets','block user','unblock user']);
+        $adminRole->givePermissionTo(['create bet','edit all bet','moderate bets','delete all bets','finishing bets','block user','unblock user','change payment status','allow payment']);
         $financeManager->givePermissionTo(['change payment status','allow payment']);
+        $contentManager->givePermissionTo(['create bet','edit all bet','moderate bets','delete all bets','finishing bets']);
         $userRole->givePermissionTo(['create bet','edit own bet','delete own bets']);
         $badUserRole->givePermissionTo([]);
 

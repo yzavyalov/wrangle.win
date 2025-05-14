@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BetCategoryRequest extends FormRequest
+class PaginateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,6 @@ class BetCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'menu_status' => 'integer|nullable',
-            'name' => 'nullable|string|max:150',
             'page' => 'nullable|integer',
             'per_page' => 'nullable|integer',
         ];
