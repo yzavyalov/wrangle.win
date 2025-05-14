@@ -35,6 +35,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_code',
     ];
 
     /**
@@ -91,6 +92,11 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new \App\Notifications\ResetPasswordNotification($token));
+    }
+
+    public function cryptoWallets()
+    {
+        return $this->hasMany(AlphaPoWallet::class);
     }
 
 }

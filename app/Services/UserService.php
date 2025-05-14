@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Resources\BalanceResource;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 class UserService
 {
@@ -45,6 +46,22 @@ class UserService
         }
 
         return $user->email;
+    }
+
+
+    public function createTwoFactorCode(User $user)
+    {
+        $user->two_factor_code = strtoupper(Str::random(6));
+    }
+
+    public function checkCode(User $user, $code)
+    {
+        if ($user->two_factor_code && $user->two_factor_code==$code)
+        {
+            return true;
+        }
+        else
+            return false;
     }
 
 }

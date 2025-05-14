@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
@@ -64,6 +65,16 @@ class CryptoProcessingService
     }
 
 
+    public function pare()
+    {
+        $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/currencies/pairs';
+
+        $params = [];
+
+        return $this->callAlphaPoApi($params,$url);
+    }
+
+
     public function createInvoice($sender_currency,$sum)
     {
         $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/invoices/create';
@@ -83,5 +94,93 @@ class CryptoProcessingService
         ];
 
         return $this->callAlphaPoApi($params, $url);
+    }
+
+
+    public function createDeposit($currency)
+    {
+        $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/addresses/take';
+
+        $user = Auth::user();
+
+        if ($user->cryptoWallets()->where('currency',$currency)->exists())
+        {
+            $wallets = $user->cryptoWallets()->where('currency',$currency)->get();
+        }
+        else
+        {
+            $params = [
+                'foreign_id' => str($user->id),
+                'currency' =>$currency,
+                'convert_to' => 'EUR',
+            ];
+
+            $response = $this->callAlphaPoApi($params, $url);
+
+            if (!is_array($response) || !array_key_exists('data', $response) || is_null($response['data'])) {
+                throw new \Exception('Ошибка получения данных из AlphaPo API');
+            }
+
+            $wallets = $this->saveWallets($response['data'], $user);
+        }
+
+        return $wallets;
+    }
+
+
+    public function newAdres($currency)
+    {
+        $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/addresses/take';
+
+        $user = Auth::user();
+
+        $params = [
+            'foreign_id' => str($user->id),
+            'currency' =>$currency,
+            'convert_to' => 'EUR',
+        ];
+
+        $response = $this->callAlphaPoApi($params, $url);
+
+        if (!is_array($response) || !array_key_exists('data', $response) || is_null($response['data'])) {
+            throw new \Exception('Ошибка получения данных из AlphaPo API');
+        }
+
+
+        if ($user->cryptoWallets()->where('currency',$currency)->exists())
+        {
+            $wallet = $user->cryptoWallets()->updateOrCreate(
+                ['currency' => $currency],
+                $response['data']
+            );
+        }
+
+        return $wallet;
+    }
+
+
+    protected function saveWallets(array $data, User $user)
+    {
+        return $user->cryptoWallets()->create($data);
+    }
+
+
+    public function rates($currencyFrom = null, $currencyTo = null)
+    {
+        $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/currencies/rates';
+
+        $params = [
+            'currency_from' => $currencyFrom,
+            'currency_to' =>$currencyTo,
+        ];
+
+        return $this->callAlphaPoApi($params, $url);
+    }
+
+    public function payOut()
+    {
+        $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/withdrawal/crypto';
+
+
     }
 }

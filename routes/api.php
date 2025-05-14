@@ -11,7 +11,9 @@ use App\Http\Controllers\Api\UserDataController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\SocialController;
+use App\Http\Controllers\Payment\AlphaPoController;
 use App\Http\Controllers\Payment\DepositController;
+use App\Http\Controllers\Payment\PayOutController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -58,8 +60,27 @@ Route::middleware(['auth:sanctum','baduser'])->group(function (){
     Route::post('bit/{answerId}',[BitController::class,'createBit']);
     Route::get('user-data',[UserDataController::class,'getUser']);
 
-    Route::get('/payment/deposit/cryptoprocessing/currency-list',[DepositController::class,'cryptoList']);
+    //Payments
+    Route::get('/payments/in',[PaymnetsController::class,'allInPayments']);
+    Route::get('/payments/in/{id}',[PaymnetsController::class,'showIn']);
+    Route::post('/payment/in/cryptoprocessing/deposit',[DepositController::class,'alphaPoDeposit']);
+    Route::post('/payment/in/cryptoprocessing/new-deposit-adres',[DepositController::class,'alphaNewDepositAdres']);
+
     Route::get('/payment/deposit/cryptoprocessing/invoice/create',[DepositController::class,'cryptoInvoiceCreate']);
+
+    Route::get('/payment/deposit/cryptoprocessing/currency-list',[AlphaPoController::class,'cryptoList']);
+    Route::get('/payment/deposit/cryptoprocessing/pare',[AlphaPoController::class,'pare']);
+    Route::post('/payment/deposit/cryptoprocessing/rates',[AlphaPoController::class,'rates']);
+
+    Route::get('/payments/out',[PaymnetsController::class,'allOutPayments']);
+
+
+
+    //Вебхуки AlphaPo
+    Route::post('/alphapo/callback', [AlphaPoController::class, 'handle']);
+
+
+//    Route::post('payment/payout/cryptoprocessing',[PayOutController::class,'payoutCrypto']);
 });
 
 

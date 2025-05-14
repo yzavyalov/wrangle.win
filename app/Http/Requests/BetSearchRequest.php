@@ -30,6 +30,7 @@ class BetSearchRequest extends FormRequest
             'title' => 'string|nullable',
             'categories' => 'nullable|array|min:1',  // Ожидаем массив
             'categories.*' => 'integer|exists:bet_categories,id',
+            'amount' => 'nullable|numeric',
             'sort_by' => 'nullable|in:finish,title,budget',
             'sort_order' => 'nullable|in:asc,desc',
             'table' => 'nullable|integer|in:1,2',
