@@ -1,4 +1,4 @@
-import { set } from "@vueuse/core";
+import { defaultFilters } from '@/utils/datasets'
 
 export default {
   toggleSortBy() {
@@ -15,11 +15,17 @@ export default {
   },
 
   setCurrency(currency) {
-    this.currentcy = currency;
+    this.currency = currency;
+
+    localStorage.setItem('currency', currency);
   },
 
   setCategories(categories) {
     this.categories = categories;
+  },
+
+  addCategory(newCategory) {
+    this.categories.push(newCategory);
   },
 
   setSelectedCategories(categories) {
@@ -47,11 +53,6 @@ export default {
 
     this.sortBy = 'desc';
 
-    this.filters = {
-      betAmount: 0,
-      thema: '',
-      tags: '',
-      finish: '',
-    };
+    this.filters = defaultFilters;
   },
 };

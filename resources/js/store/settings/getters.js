@@ -17,8 +17,8 @@ export default {
     return state.filters;
   },
 
-  getCurrentcy: (state) => {
-    return state.currentcy;
+  getCurrency: (state) => {
+    return state.currency;
   },
 
   getSearchQuery: (state) => {

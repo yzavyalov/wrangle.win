@@ -14,6 +14,7 @@ import { Head } from "@inertiajs/vue3";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import { navigateTo } from '@/helpers/navigate';
+import { PAGE_ROUTES } from '@/utils/datasets';
 
 
 </script>
@@ -25,7 +26,7 @@ import { navigateTo } from '@/helpers/navigate';
     <div class="page-404__wrapper">
       <h2>Ups... no such page :(</h2>
 
-      <ButtonBase class="page-404__btn" @click="navigateTo('/')">Home page</ButtonBase>
+      <ButtonBase class="page-404__btn" @click="navigateTo(PAGE_ROUTES.HOME)">Home page</ButtonBase>
     </div>
   </PageWrapperMain>
 </template>

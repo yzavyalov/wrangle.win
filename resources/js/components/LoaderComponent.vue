@@ -3,11 +3,22 @@
 </script>
 
 <template>
-  <div class="loader m-auto"></div>
+  <div class="loader__wrapper">
+    <div class="loader m-auto"></div>
+  </div>
 </template>
 
 <style scoped lang='scss'>
 .loader {
+
+  &__wrapper {
+    position: absolute;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   position: absolute;
   width: 50px;
   padding: 8px;

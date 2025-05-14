@@ -1,19 +1,25 @@
-import { computed, Ref, ref } from "vue";
-import { useLoading, useFilters } from "@/composables";
-import { getActualBets, getHotBets } from '@/services/bets';
-import { demoCards } from '@/utils/dummyData';
+import { computed, nextTick, Ref, ref, watch } from "vue";
+import { getActualBets, getHotBets, searchBets as apiSearchBets } from '@/services/bets';
 import { triggerOpenNewModal } from "@/composables";
-import { BetItem, UseBetsOptions } from "@/types/bets";
-
+import { BetItem, SearchBetsPayload, UseBetsOptions } from "@/types/bets";
+import { useFilters } from "@/composables/useFilters";
+import { useLoading } from "@/composables/useLoading";
 
 export const useBets = (options: UseBetsOptions = {}) => {
 
   const { isHot = false } = options;
 
   const { isLoading, loadingStart, loadingStop } = useLoading();
-  const { searchQuery } = useFilters();
+  const { searchQuery, filters, sortBy, selectedCategories, isDefualtFilters } = useFilters();
 
   const bets: Ref<BetItem[]> = ref([]);
+
+  const pagination = ref({
+    page: 1,
+    per_page: 50,
+  });
+
+  const isFirstPage = computed(() => pagination.value.page === 1);
 
   const dynamicBets = computed(() => {
     if (!searchQuery.value?.trim()) {return bets.value;}
@@ -26,6 +32,23 @@ export const useBets = (options: UseBetsOptions = {}) => {
     triggerOpenNewModal("bet-modal");
   }
 
+  const makeSearchPayload = async () => {
+    console.log('searchBets');
+
+    const payload: SearchBetsPayload = {
+      page: pagination.value.page,
+      per_page: pagination.value.per_page,
+
+      sort_order: sortBy.value,
+    }
+
+    // filters.value?.finish?.length && (payload.sort_by = filters.value.finish);
+    searchQuery.value && (payload.title = searchQuery.value);
+    selectedCategories.value.length && (payload.categories = selectedCategories.value.map(category => category.id));
+
+    return payload;
+  }
+
   const fetchBets = async () => {
     console.log('fetchBets');
 
@@ -34,27 +57,37 @@ export const useBets = (options: UseBetsOptions = {}) => {
     try {
       loadingStart();
 
-      const betsHandler = isHot ? getHotBets : getActualBets;
+      let betsHandler;
 
-      const fetchedBets = await betsHandler() || [];
+      console.log("AAAAAAAAAAAAAAAAAAA");
+      console.log("AAAAAAAAAAAAAAAAAAA");
+
+      console.log(isDefualtFilters.value, 'isDefualtFilters.value');
+
+      console.log("AAAAAAAAAAAAAAAAAAA");
+      console.log("AAAAAAAAAAAAAAAAAAA");
+
+
+      if (isDefualtFilters.value) {
+        betsHandler = isHot ? getHotBets : getActualBets;
+
+      } else {
+        betsHandler = apiSearchBets;
+      }
+
+      const payload = await makeSearchPayload();
+
+      const fetchedBets = await betsHandler(payload) || [];
       console.log(fetchedBets, 'fetchedBets - getActualBets');
 
-      // test zone =====================
-      // todo: remove dummy code
-      // if (!fetchedBets.length) {
-      //   const dummyData = demoCards.map((card, idx) => {
-      //     return {
-      //       ...card,
-      //       id: Date.now() + '_' + idx,
-      //     }
-      //   });
-      //   bets.value = [...bets.value, ...dummyData]
-      //   console.log(bets.value, 'bets.value - dummyData - fetchBets');
-      //   return
-      // }
-      // test zone end =====================
+      if (!fetchedBets.length) {return console.warn("No fetchedBets");}
 
-      fetchedBets.length && ( bets.value = [...bets.value, ...fetchedBets] );
+      if (isFirstPage.value) {
+        bets.value = fetchedBets;
+
+      } else {
+        bets.value = [...bets.value, ...fetchedBets];
+      }
 
       console.log(bets.value, 'bets.value - fetchBets');
 
@@ -71,8 +104,18 @@ export const useBets = (options: UseBetsOptions = {}) => {
 
     if (isLoading.value) {return console.warn("Loading, plese wait");}
 
+    pagination.value.page += 1;
+
     fetchBets();
   }
+
+  watch(
+    () => filters.value,
+    () => {
+      pagination.value.page = 1;
+      nextTick(() => fetchBets());
+    },
+  )
 
   return {
     isLoading,

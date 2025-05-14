@@ -1,9 +1,18 @@
 import { http } from "@/api/http";
 import { BETS } from "@/api/enpoints";
-import { CreateBetPayload, CreateBitPayload, SearchBetPayload, ToggleToFavoritePayload } from "@/types/bets";
+import { CreateBetPayload, CreateBitPayload, SearchBetsPayload, ToggleToFavoritePayload } from "@/types/bets";
 
-export const getActualBets = async () => {
-  return await http.get(BETS.URL_BETS)
+export const getActualBets = async (payload: SearchBetsPayload) => {
+  if (!payload) { return console.warn("Payload is required");}
+
+  const stringRequestBody = Object.entries(payload).reduce((acc, [key, value]) => {
+    acc[key] = String(value);
+    return acc;
+  }, {} as Record<string, string>);
+
+  const requestUrl = BETS.URL_BETS + "?" + new URLSearchParams(stringRequestBody).toString();
+
+  return await http.get(requestUrl)
   .then(res => {
     console.log(res, "res - getActualBets");
 
@@ -22,8 +31,17 @@ export const getFinishedBets = async () => {
   .catch(e => console.error(e.message));
 };
 
-export const getOwnBets = async () => {
-  return await http.get(BETS.GET_OWN)
+export const getOwnBets = async (payload: SearchBetsPayload) => {
+  if (!payload) { return console.warn("Payload is required");}
+
+  const stringRequestBody = Object.entries(payload).reduce((acc, [key, value]) => {
+    acc[key] = String(value);
+    return acc;
+  }, {} as Record<string, string>);
+
+  const requestUrl = BETS.GET_OWN + "?" + new URLSearchParams(stringRequestBody).toString();
+
+  return await http.get(requestUrl)
   .then(res => {
     console.log(res, "res - getOwnBets");
 
@@ -32,8 +50,17 @@ export const getOwnBets = async () => {
   .catch(e => console.error(e.message));
 };
 
-export const getHotBets = async () => {
-  return await http.get(BETS.HOT)
+export const getHotBets = async (payload: SearchBetsPayload) => {
+  if (!payload) { return console.warn("Payload is required");}
+
+  const stringRequestBody = Object.entries(payload).reduce((acc, [key, value]) => {
+    acc[key] = String(value);
+    return acc;
+  }, {} as Record<string, string>);
+
+  const requestUrl = BETS.HOT + "?" + new URLSearchParams(stringRequestBody).toString();
+
+  return await http.get(requestUrl)
   .then(res => {
     console.log(res, "res - getHotBets");
 
@@ -57,20 +84,23 @@ export const getBetById = async (betId) => {
   .then(res => {
     console.log(res, "res - getBetById");
 
-    return res.data;
+    const bet = res?.data?.data;
+
+    return bet;
   })
   .catch(e => console.error(e.message));
 };
 
-export const searchBet = async (payload: SearchBetPayload) => {
+export const searchBets = async (payload: SearchBetsPayload) => {
+  if (!payload) { return console.warn("Payload is required");}
 
-  return await http.post(BETS.SEARCH_BET, payload)
-  .then(res => {
-    console.log(res, "res - searchBet");
+  const { data: { data, success } } = await http.post(BETS.SEARCH_BET, payload)
+  console.log(data, 'data');
+  console.log(success, 'success');
 
-    return res.data;
-  })
-  .catch(e => console.error(e.message));
+  if (!success) { return false; }
+
+  return data?.bets
 };
 
 
@@ -80,7 +110,9 @@ export const createBet = async (payload: CreateBetPayload) => {
   .then(res => {
     console.log(res, "res - createBet");
 
-    return res.data;
+    const newBet = res?.data?.data;
+
+    return newBet;
   })
   .catch(e => console.error(e.message));
 };

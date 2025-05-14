@@ -1,4 +1,10 @@
 <script setup>
+import { navigateTo } from '@/helpers/navigate';
+import { footerMenuLinks } from "@/utils/datasets";
+
+const middle = Math.ceil(footerMenuLinks.length / 2);
+const links1 = footerMenuLinks.slice(0, middle);
+const links2 = footerMenuLinks.slice(middle);
 
 </script>
 
@@ -21,17 +27,23 @@
           <div class="footer__links">
             <div>
               <ul>
-                <li><a href="#">About</a></li>
+                <li v-for="link in links1" :key="link.id" @click="navigateTo(link.path)">
+                  <a>{{ link.name }}</a>
+                </li>
+                <!-- <li><a href="#">About</a></li>
                 <li><a href="#">Politics</a></li>
-                <li><a href="#">Rules</a></li>
+                <li><a href="#">Rules</a></li> -->
               </ul>
             </div>
 
             <div>
               <ul>
-                <li><a href="#">All Events</a></li>
+                <li v-for="link in links2" :key="link.id" @click="navigateTo(link.path)">
+                  <a>{{ link.name }}</a>
+                </li>
+                <!-- <li><a href="#">All Events</a></li>
                 <li><a href="#">Create own Event</a></li>
-                <li><a href="#">To Account</a></li>
+                <li><a href="#">To Account</a></li> -->
               </ul>
             </div>
           </div>
@@ -121,6 +133,10 @@
   &__links {
     display: flex;
     gap: 40px;
+
+    li {
+      cursor: pointer;
+    }
 
     & li:not(:last-child) {
       margin-bottom: 20px;

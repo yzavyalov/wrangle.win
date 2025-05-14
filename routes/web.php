@@ -13,6 +13,7 @@ use App\Http\Controllers\Auth\SocialController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Bet;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,8 +47,34 @@ Route::get('/register', function () {
     return Inertia::render('Register');
 });
 
-Route::get('/prediction', function () {
+Route::get('/prediction', function () {         // temp route
     return Inertia::render('Prediction');
+});
+
+Route::get('/about', function () {
+    return Inertia::render('About');
+});
+
+Route::get('/terms', function () {
+    return Inertia::render('Terms');
+});
+
+Route::get('/rules', function () {
+    return Inertia::render('Rules');
+});
+
+Route::get('/privacy_policy', function () {
+    return Inertia::render('PrivacyPolicy');
+});
+
+Route::get('/bet/{id}', function ($id) {
+    $bet = Bet::findOrFail($id);
+
+    return Inertia::render('Bet', [
+        'auth' => Auth::check(),
+        'user' => Auth::user(),
+        'bet' => $bet,
+    ]);
 });
 
 Route::get('/new_bet', function () {

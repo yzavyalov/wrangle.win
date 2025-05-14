@@ -5,6 +5,7 @@ import ProfileCardSmall from  '@/components/profile/ProfileCardSmall.vue';
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import { useUserStore } from "@/store/user";
 import { navigateTo } from '@/helpers/navigate';
+import { PAGE_ROUTES } from '@/utils/datasets';
 
 const APP_NAME = import.meta.env.VITE_APP_NAME;
 
@@ -26,18 +27,18 @@ const currentUser = computed(() => useUserStore().getUser);
         <div class="wellcome-section__section">
           <h3>Predict & Get Rewarded!</h3>
           <p>Make predictions on real-world events and earn rewards for accuracy.</p>
-          <ButtonBase v-if="!currentUser" @click="navigateTo('/login')">Login</ButtonBase>
-          <ButtonBase v-else @click="navigateTo('/profile')">Profile</ButtonBase>
+          <ButtonBase v-if="!currentUser" @click="navigateTo(PAGE_ROUTES.LOGIN)">Login</ButtonBase>
+          <ButtonBase v-else @click="navigateTo(PAGE_ROUTES.PROFILE)">Profile</ButtonBase>
         </div>
         <div class="wellcome-section__section">
           <h3>A Wide Range of Events</h3>
           <p>Sports, politics, entertainment, technology – choose from multiple categories and predict the hottest topics.</p>
-          <ButtonBase>View Events</ButtonBase>
+          <ButtonBase @click="navigateTo(PAGE_ROUTES.CATEGORIES)">View Events</ButtonBase>
         </div>
         <div class="wellcome-section__section">
           <h3>Fair Rules & Honest Payouts!</h3>
           <p>Transparent system, reliable payouts, and fair conditions – we ensure your security and comfort.</p>
-          <ButtonBase>Our Politics</ButtonBase>
+          <ButtonBase @click="navigateTo(PAGE_ROUTES.POLITICS)">Our Politics</ButtonBase>
         </div>
       </div>
     </div>

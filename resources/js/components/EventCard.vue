@@ -3,10 +3,10 @@ import { computed, nextTick, onMounted, ref } from 'vue';
 import { getTimeLeft, getDaysLeft } from '@/helpers/getTimeLeft';
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import { triggerOpenNewModal } from '@/composables';
+import { getCurrency } from '@/helpers/getCurrency';
 
 const props = defineProps({
   item: { type: Object, default: () => ({}) },
-  // isHot: { type: Boolean, default: false },
 })
 
 const maxTextLength = 40;
@@ -18,16 +18,16 @@ const shortTitle = computed(() => {
 });
 
 const dynamicHot = computed(() => {
-  console.log('getDaysLeft - dynamicHot', getDaysLeft(props.item.finish));
+  // console.log('getDaysLeft - dynamicHot', getDaysLeft(props.item.finish));
 
   return getDaysLeft(props.item.finish) < 1
 });
 
+const currencyName = getCurrency();
+
 const showMoreDetailsHandler = () => {
   triggerOpenNewModal('bet-modal', { 'updateModalContent': { currentBet: props.item } });
 };
-
-const testTags = ["tasdfsdfg1", "tasdfsdfg2", "tagsdf3", "tagdsf4"];
 
 </script>
 
@@ -54,7 +54,7 @@ const testTags = ["tasdfsdfg1", "tasdfsdfg2", "tagsdf3", "tagdsf4"];
         <p v-if="dynamicHot" class="event-card__time text-bold"><span class="hot-text">HOT!</span> Time left: {{ getTimeLeft(item.finish) }}</p>
         <p v-else class="event-card__time text-bold">Time left: {{ getTimeLeft(item.finish) }}</p>
 
-        <p class="event-card__bet">Bet amount: <b class="text-bold">{{ item.bet }}</b></p>
+        <p class="event-card__bet">Bet amount: <b class="text-bold">{{ item.budget }}{{ currencyName }}</b></p>
         <p v-if="item.tags?.length" class="event-card__tags">
           <span v-for="tag in item.tags.slice(0, 2)" :key="tag.id || tag">#{{ tag }}</span>
         </p>

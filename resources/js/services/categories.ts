@@ -30,7 +30,11 @@ export const createCategory = async (payload: CreateCategoryPayload) => {
   .then(res => {
     console.log(res, "res - createCategory");
 
-    return res.data;
+    const { category, user } = res.data.data;
+    console.log(category, "category");
+    console.log(user, "user");
+
+    return category;
   })
   .catch(e => console.error(e.message));
 };

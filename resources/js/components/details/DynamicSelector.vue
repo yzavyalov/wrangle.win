@@ -6,7 +6,11 @@ const props = defineProps({
   options: { type: Array, default: [] },
 })
 
+const emit = defineEmits(["update:model-value"]);
+
 const modelValue = defineModel();
+
+const updateHandler = (value) => emit("update:model-value", value);
 
 </script>
 
@@ -21,7 +25,8 @@ const modelValue = defineModel();
       :reserve-keyword="false"
       :options="options"
       :teleported="true"
-      >
+      @update:model-value="updateHandler"
+    >
     </el-select-v2>
   </div>
 </template>
