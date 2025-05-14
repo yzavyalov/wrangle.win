@@ -18,7 +18,7 @@ const shortTitle = computed(() => {
 });
 
 const dynamicHot = computed(() => {
-  console.log('getDaysLeft - dynamicHot', getDaysLeft(props.item.finish));
+  // console.log('getDaysLeft - dynamicHot', getDaysLeft(props.item.finish));
 
   return getDaysLeft(props.item.finish) < 1
 });

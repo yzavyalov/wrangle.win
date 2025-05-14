@@ -23,9 +23,13 @@ export const useFilters = () => {
   const sortBy = computed(() => useSettingsStore().getSortBy);
 
   const isDefualtFilters = computed(() => {
-    if (searchQuery.value !== '') { return false; }
-    if (selectedCategories.value.length) { return false; }
-    if (!isEqual(filters.value, defaultFilters)) { return false; }
+    if (
+      searchQuery.value !== '' ||
+      selectedCategories.value?.length > 0 ||
+      !isEqual(filters.value, defaultFilters)
+    ) {
+      return false;
+    }
 
     return true;
   });

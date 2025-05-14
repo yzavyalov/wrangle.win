@@ -1,11 +1,9 @@
 import { computed, nextTick, Ref, ref, watch } from "vue";
-import { getActualBets, getHotBets } from '@/services/bets';
+import { getActualBets, getHotBets, searchBets as apiSearchBets } from '@/services/bets';
 import { triggerOpenNewModal } from "@/composables";
 import { BetItem, SearchBetsPayload, UseBetsOptions } from "@/types/bets";
 import { useFilters } from "@/composables/useFilters";
 import { useLoading } from "@/composables/useLoading";
-import { searchBets as apiSearchBets } from "@/services/bets";
-
 
 export const useBets = (options: UseBetsOptions = {}) => {
 
@@ -19,9 +17,6 @@ export const useBets = (options: UseBetsOptions = {}) => {
   const pagination = ref({
     page: 1,
     per_page: 50,
-    // current_page: 1,
-    // next_exists: false,
-    // prev_exists: false,
   });
 
   const isFirstPage = computed(() => pagination.value.page === 1);
@@ -47,7 +42,7 @@ export const useBets = (options: UseBetsOptions = {}) => {
       sort_order: sortBy.value,
     }
 
-    filters.value?.finish?.length && (payload.sort_by = filters.value.finish);
+    // filters.value?.finish?.length && (payload.sort_by = filters.value.finish);
     searchQuery.value && (payload.title = searchQuery.value);
     selectedCategories.value.length && (payload.categories = selectedCategories.value.map(category => category.id));
 
@@ -63,6 +58,15 @@ export const useBets = (options: UseBetsOptions = {}) => {
       loadingStart();
 
       let betsHandler;
+
+      console.log("AAAAAAAAAAAAAAAAAAA");
+      console.log("AAAAAAAAAAAAAAAAAAA");
+
+      console.log(isDefualtFilters.value, 'isDefualtFilters.value');
+
+      console.log("AAAAAAAAAAAAAAAAAAA");
+      console.log("AAAAAAAAAAAAAAAAAAA");
+
 
       if (isDefualtFilters.value) {
         betsHandler = isHot ? getHotBets : getActualBets;
@@ -99,6 +103,8 @@ export const useBets = (options: UseBetsOptions = {}) => {
     console.log('fetchMoreBets');
 
     if (isLoading.value) {return console.warn("Loading, plese wait");}
+
+    pagination.value.page += 1;
 
     fetchBets();
   }

@@ -3,8 +3,6 @@ export default () => ({
 
   filters: {
     betAmount: 0,
-    thema: '',
-    tags: '',
     finish: '',
   },
 

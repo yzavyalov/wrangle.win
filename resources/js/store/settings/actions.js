@@ -1,3 +1,5 @@
+import { defaultFilters } from '@/utils/datasets'
+
 export default {
   toggleSortBy() {
     // desc | asc
@@ -51,11 +53,6 @@ export default {
 
     this.sortBy = 'desc';
 
-    this.filters = {
-      betAmount: 0,
-      thema: '',
-      tags: '',
-      finish: '',
-    };
+    this.filters = defaultFilters;
   },
 };
