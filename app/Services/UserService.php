@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Http\Resources\BalanceResource;
 use App\Models\User;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Http\Request;
 
 class UserService
 {
@@ -64,4 +66,22 @@ class UserService
             return false;
     }
 
+
+    public function getUserFromToken(Request $request)
+    {
+        $token = $request->bearerToken();
+
+        if (!$token) {
+            return null;
+        }
+
+        // Ищем токен в таблице `personal_access_tokens`
+        $accessToken = PersonalAccessToken::findToken($token);
+
+        if (!$accessToken) {
+            return null;
+        }
+
+        return $accessToken->tokenable; // Вернёт User модель
+    }
 }

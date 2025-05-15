@@ -2,12 +2,18 @@
 
 namespace App\Services;
 
+use App\Models\Deposit;
+use App\Models\Payment_log;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class CryptoProcessingService
 {
+    public function __construct(PaymentLogsService $paymentLogsService)
+    {
+        $this->paymentLogsService = $paymentLogsService;
+    }
     public function callAlphaPoApi(array $params, string $endpoint)
     {
         // Подготавливаем тело запроса
@@ -31,29 +37,6 @@ class CryptoProcessingService
         }
     }
 
-
-
-
-
-    public function deposit()
-    {
-        $params = [
-            'currency' => 'BTC',
-            'foreign_id' => '123456',
-        ];
-
-
-        $publicKey = 'your_public_key_here';
-        $secretKey = 'your_secret_key_here';
-        $endpoint = 'https://api.alphapo.com/v1/your-endpoint';
-
-        try {
-            $result = $this->callAlphaPoApi($params, $publicKey, $secretKey, $endpoint);
-            dd($result);
-        } catch (\Exception $e) {
-            dd($e->getMessage());
-        }
-    }
 
     public function currencyList()
     {
@@ -97,7 +80,7 @@ class CryptoProcessingService
     }
 
 
-    public function createDeposit($currency)
+    public function createDeposit(Deposit $deposit, $currency)
     {
         $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/addresses/take';
 
@@ -116,6 +99,8 @@ class CryptoProcessingService
             ];
 
             $response = $this->callAlphaPoApi($params, $url);
+
+            $this->paymentLogsService->createLog($deposit, json_encode($response));
 
             if (!is_array($response) || !array_key_exists('data', $response) || is_null($response['data'])) {
                 throw new \Exception('Ошибка получения данных из AlphaPo API');
@@ -161,7 +146,8 @@ class CryptoProcessingService
 
     protected function saveWallets(array $data, User $user)
     {
-        return $user->cryptoWallets()->create($data);
+        $wallet = $user->cryptoWallets()->create($data);
+        return collect([$wallet]);
     }
 
 

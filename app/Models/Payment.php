@@ -19,4 +19,10 @@ class Payment extends Model
         'logo',
         'link',
     ];
+
+
+    public function paymentLogs()
+    {
+        return $this->hasMany(Payment_log::class);
+    }
 }

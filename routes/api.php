@@ -46,6 +46,9 @@ Route::post('/search-category',[BetCategorySearchController::class,'searchCatego
 Route::get('/payments/in',[PaymnetsController::class,'allInPayments']);
 Route::get('/payments/out',[PaymnetsController::class,'allOutPayments']);
 
+//Вебхуки AlphaPo
+Route::post('/alphapo/callback', [AlphaPoController::class, 'handle']);
+//Route::post('/alphapo/signature', [AlphaPoController::class, 'generateSignatureExample']);
 
 Route::middleware(['auth:sanctum','baduser'])->group(function (){
     Route::get('/user', [AuthController::class, 'me']);
@@ -74,10 +77,6 @@ Route::middleware(['auth:sanctum','baduser'])->group(function (){
 
     Route::get('/payments/out',[PaymnetsController::class,'allOutPayments']);
 
-
-
-    //Вебхуки AlphaPo
-    Route::post('/alphapo/callback', [AlphaPoController::class, 'handle']);
 
 
 //    Route::post('payment/payout/cryptoprocessing',[PayOutController::class,'payoutCrypto']);

@@ -11,6 +11,7 @@ use App\Http\Resources\BetResource;
 use App\Http\Resources\CurrentUserResource;
 use App\Http\Resources\UserResource;
 use App\Models\Bet;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +19,10 @@ use Illuminate\Support\Facades\Validator;
 
 class BetSortController extends Controller
 {
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
     public function myBets(PaginateRequest $request)
     {
         $perPage = $request->input('per_page', 15); // по умолчанию 15
@@ -67,8 +72,10 @@ class BetSortController extends Controller
 
         $bets = BetResource::collection($bets);
 
-        if (Auth::check())
-            $user = CurrentUserResource::make(Auth::user());
+        $user = $this->userService->getUserFromToken($request);
+
+        if ($user)
+            $user = CurrentUserResource::make($user);
         else
             $user = null;
 
