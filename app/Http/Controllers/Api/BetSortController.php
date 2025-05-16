@@ -68,6 +68,7 @@ class BetSortController extends Controller
         $bets= Bet::filter($filter)
             ->where('status',BetStatusEnum::APPROVED)
             ->where('finish','>=',now())
+            ->orderBy('finish', 'asc')   // Добавляем сортировку по finish по возрастанию
             ->paginate($perPage, ['*'], 'page', $page);
 
         $bets = BetResource::collection($bets);
@@ -104,6 +105,7 @@ class BetSortController extends Controller
                 Carbon::today(),              // сегодня с 00:00:00
                 Carbon::tomorrow()->endOfDay() // завтра до 23:59:59
             ])
+            ->orderBy('finish', 'asc')   // Добавляем сортировку по finish по возрастанию
             ->paginate($perPage, ['*'], 'page', $page);
 
         $bets = BetResource::collection($bets);
