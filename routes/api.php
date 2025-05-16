@@ -33,11 +33,13 @@ Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkE
 Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 
 
+Route::get('/bets/carousel',[BetSortController::class,'carousel']);
 Route::get('/bets', [BetController::class,'index']);
 Route::get('/bets/{id}', [BetController::class,'show']);
 Route::get('/search-bet',[BetSortController::class,'searchBet']);
 Route::get('/finish-bets',[BetSortController::class,'finishBet']);
 Route::get('/hot-bets',[BetSortController::class,'hotBets']);
+
 
 Route::get('/bet-categories', [BetCategoryController::class,'index']);
 Route::get('/bet-categories/{id}', [BetCategoryController::class,'show']);
