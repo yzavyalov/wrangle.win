@@ -80,7 +80,7 @@ class BetFilter extends AbstractFilter
 
     public function finish(Builder $builder, $value)
     {
-        $builder->where('finish','>=',$value);
+        $builder->where('finish','<=',$value);
     }
 
     public function sortBy(Builder $builder, $value)
