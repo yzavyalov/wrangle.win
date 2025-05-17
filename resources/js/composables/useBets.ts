@@ -1,14 +1,16 @@
 import { computed, nextTick, Ref, ref, watch } from "vue";
 import { getActualBets, getHotBets, searchBets as apiSearchBets } from '@/services/bets';
-import { triggerOpenNewModal } from "@/composables";
+import { triggerOpenNewModal } from "@/composables/useModalsTriggers";
 import { BetItem, SearchBetsPayload, UseBetsOptions } from "@/types/bets";
 import { useFilters } from "@/composables/useFilters";
 import { useLoading } from "@/composables/useLoading";
+import { useUserStore } from "@/store/user";
 
 export const useBets = (options: UseBetsOptions = {}) => {
 
   const { isHot = false } = options;
 
+  const currentUser = computed(() => useUserStore().getUser);
   const { isLoading, loadingStart, loadingStop } = useLoading();
   const { searchQuery, filters, sortBy, selectedCategories, isDefualtFilters } = useFilters();
 
@@ -47,6 +49,20 @@ export const useBets = (options: UseBetsOptions = {}) => {
     selectedCategories.value.length && (payload.categories = selectedCategories.value.map(category => category.id));
 
     return payload;
+  }
+
+  const makeNewBit = async (option: number) => {
+    console.log(option, 'option - makeNewBit');
+
+    if (!currentUser.value?.id) {
+      return triggerOpenNewModal('login-or-register-modal')
+    }
+
+    if (!currentUser.value?.balance) {
+      return triggerOpenNewModal('propose-balance-modal')
+    }
+
+    console.warn('NO LOGIC YET');
   }
 
   const fetchBets = async () => {
@@ -125,6 +141,8 @@ export const useBets = (options: UseBetsOptions = {}) => {
 
     openBetModal,
     fetchBets,
-    fetchMoreBets
+    fetchMoreBets,
+
+    makeNewBit,
   };
 };

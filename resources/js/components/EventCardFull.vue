@@ -6,10 +6,13 @@ import { predictionDemoData } from '@/utils/dummyData';
 import { useModalsStore } from '@/store/modals';
 import BetOptionItem from '@/components/details/BetOptionItem.vue';
 import { getCurrency } from '@/helpers/getCurrency';
+import { useBets } from '@/composables/useBets';
 
-const currentBet = computed(() => useModalsStore().getModalContent?.currentBet || predictionDemoData);
+const { makeNewBit } = useBets();
 
 const maxTextLength = 50;
+
+const currentBet = computed(() => useModalsStore().getModalContent?.currentBet || predictionDemoData);
 
 const shortTitle = computed(() => {
   return currentBet.value.title?.length > maxTextLength
@@ -82,6 +85,7 @@ onMounted(() => {
           :option="item"
           class="event-card__option"
           :currency="currencyName"
+          @click="makeNewBit(item)"
         />
         <p v-if="!predictionDemoData.options?.length">No oprtions for prediction</p>
       </div>

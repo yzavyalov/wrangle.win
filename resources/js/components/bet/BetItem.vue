@@ -9,11 +9,13 @@ import BetOptionItem from "@/components/details/BetOptionItem.vue"
 import { getTimeLeft, getDaysLeft } from '@/helpers/getTimeLeft';
 import { getCurrency } from '@/helpers/getCurrency';
 import { useUserStore } from "@/store/user";
+import { useBets } from '@/composables/useBets';
 
 const props = defineProps({
   item: { type: Object, required: true, default: predictionDemoData }, // todo: remove demo data
 })
 
+const { makeNewBit } = useBets();
 
 const isShowSorces = ref(false);
 
@@ -40,7 +42,7 @@ onMounted(() => {
     <div class="p-item__details">
       <div class="p-item__content">
         <div class="p-item__details--header">
-          <div v-if="item.isHot" class="p-item__details--hot">#HOT!</div>
+          <div v-if="dynamicHot" class="p-item__details--hot">#HOT!</div>
         </div>
 
         <div class="p-item__details--main">
@@ -103,6 +105,7 @@ onMounted(() => {
           :key="index"
           :option="item"
           class="mb-10"
+          @click="makeNewBit(item)"
         />
 
       </div>
