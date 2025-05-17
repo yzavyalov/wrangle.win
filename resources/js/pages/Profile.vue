@@ -17,11 +17,13 @@ import { useUserStore } from "@/store/user";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import { useConfirm } from '@/composables';
 import { triggerOpenNewModal } from "@/composables/useModalsTriggers";
+import { getCurrency } from '@/helpers/getCurrency';
+
 
 const { confirm } = useConfirm();
 
 const currentUser = computed(() => useUserStore().getUser);
-const userBalance = ref(100)
+const currencyName = getCurrency();
 
 const testConfirm = async () => {
   const result = await confirm({
@@ -46,24 +48,12 @@ const testConfirm = async () => {
         <h1>WRANGLER.WIN</h1>
       </div>
 
-      <!-- <div class="profile__header--user">
-        <p class="profile__header--top">{{ currentUser?.name || 'Nickname Name' }}</p>
-        <ButtonBase class="min-width-80">Edit Profile</ButtonBase>
-        <p class="profile__header--bottom coin-decorator">
-          Balance: <b>{{ userBalance }}$</b>
-        </p>
-      </div>
-
-      <div class="profile__header--avatar">
-        <img :src="'/images/avatar-sample.svg'" alt="avatar">
-      </div> -->
-
       <div class="profile__user">
         <div class="profile__user--details">
           <p class="profile__user--top">{{ currentUser?.name || 'Nickname Name' }}</p>
           <ButtonBase class="min-width-80">Edit Profile</ButtonBase>
           <p class="coin-decorator">
-            Balance: <b>{{ userBalance }}$</b>
+            Balance: <b>{{ currentUser.balance || 0 }}{{ currencyName }}</b>
           </p>
         </div>
 

@@ -28,9 +28,9 @@ onBeforeUnmount(() => {
 
   <WelcomeSection />
 
-  <TopEventsSection :is-show-filters="true" />
+  <!-- <TopEventsSection :is-show-filters="true" /> -->
 
-  <ActiveEventsSection />
+  <ActiveEventsSection :is-show-filters="true"  />
 </template>
 
 <style scoped lang='scss'>

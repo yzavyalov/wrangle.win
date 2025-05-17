@@ -4,10 +4,10 @@ import { useUserStore } from "@/store/user";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import { navigateTo } from '@/helpers/navigate';
 import { PAGE_ROUTES } from '@/utils/datasets';
+import { getCurrency } from '@/helpers/getCurrency';
 
 const currentUser = computed(() => useUserStore().getUser);
-
-const userBalance = ref(100)
+const currencyName = getCurrency();
 
 </script>
 
@@ -17,7 +17,7 @@ const userBalance = ref(100)
     <div v-if="currentUser" class="profile-card__body auth">
       <div class="profile-card__body--left">
         <p class="text-center">{{ currentUser?.name || 'Nickname Name' }}</p>
-        <p class="coin-decorator">{{ userBalance }}$</p>
+        <p class="coin-decorator">{{ currentUser.balance || 0 }}{{ currencyName }}</p>
       </div>
       <div class="profile-card__body--right">
         <img v-if="currentUser" :src="'/images/avatar-sample-active.svg'" alt="avatar">
