@@ -7,12 +7,14 @@ const model = defineModel();
 
 const dynamicid = `${Math.random(100)}_isChecked`;
 
+const toggleModel = () => model.value = !model.value
+
 </script>
 
 <template>
   <div class="base_checkbox">
-    <input v-model="model" type="checkbox" :id="dynamicid">
-    <label :for="dynamicid" @click="model = !model">{{ label }}</label>
+    <input v-model="model" type="checkbox" :id="toggleModel">
+    <label :for="dynamicid" @click="toggleModel">{{ label }}</label>
   </div>
 </template>
 

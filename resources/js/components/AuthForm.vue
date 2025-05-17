@@ -8,10 +8,13 @@ import useVuelidate from '@vuelidate/core';
 import { required, sameAs, email, minLength } from '@vuelidate/validators';
 import { register, login, loginWithSocial } from '@/services/user';
 import { PAGE_ROUTES } from '@/utils/datasets';
+import { useInform } from "@/composables/useInform"
 
 const props = defineProps({
   isLoginVariant: { type: Boolean, default: true, },
 });
+
+const { inform } = useInform()
 
 const formData = reactive({
   name: '',
@@ -85,9 +88,20 @@ const registerHandle = async () => {
   const result = await register(paylaod);
   console.log(result, 'result - registerHandle');
 
-  if (!result) return console.warn('Register error');
+  if (!result) {
+    await inform({
+        title: 'Warning',
+        text: 'Something went wrong',
+    })
+    return console.warn('Register error');
+  }
 
-  navigateTo(PAGE_ROUTES.LOGIN);
+  await inform({
+      title: 'Congratulations',
+      text: 'Your Profile successfully created. You will be redirected to profile page',
+  })
+
+  navigateTo(PAGE_ROUTES.PROFILE);
 
 }
 
