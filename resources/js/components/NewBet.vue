@@ -5,11 +5,11 @@ import { createBet } from '@/services/bets';
 import { CreateBetPayload } from '@/types/bets';
 import { navigateTo } from '@/helpers/navigate';
 import { useLoading } from '@/composables/useLoading';
-import { cutTextLength } from '@/helpers/cutTextLength.ts';
+import { cutTextLength } from '@/helpers/cutTextLength';
 import { useCategories } from "@/composables/useCategories";
 import { register, login, loginWithSocial } from '@/services/user';
 import { predictionDemoData, demoBetDataPayload } from '@/utils/dummyData';
-import { required, sameAs, email, minLength, helpers, maxLength, forEach } from '@vuelidate/validators';
+import { required, sameAs, email, minLength, helpers, maxLength } from '@vuelidate/validators';
 import useVuelidate from '@vuelidate/core';
 import LoaderComponent from '@/components/LoaderComponent.vue';
 import NewCategory from "@/components/NewCategory.vue";
@@ -21,9 +21,11 @@ import DynamicSelector from "@/components/details/DynamicSelector.vue";
 import ButtonWithClose from "@/components/details/ButtonWithClose.vue";
 import InputWIthHelper from "@/components/details/InputWIthHelper.vue";
 import ButtonBaseWithIcon from '@/components/details/ButtonBaseWithIcon.vue';
+import { useInform } from "@/composables/useInform";;
 
 const { isLoading, loadingStart, loadingStop } = useLoading()
-const { categories, categoriesOptions, isLoading: isCategoiesLoading } = useCategories();
+const { categories, categoriesOptions, isLoading: isCategoiesLoading, selectedCategoryId } = useCategories();
+const { inform } = useInform();
 
 const maxViewedCategories = shallowRef(5);
 const isShowNewCategory = ref(false);
@@ -31,7 +33,7 @@ const isShowNewCategory = ref(false);
 const formData = reactive({
   title: '',
   description: '',
-  categories: [],
+  categories: [] as CategoryItem[],
   source1: '',
   source2: '',
   source3: '',
@@ -44,8 +46,8 @@ const formData = reactive({
 
 const rules = computed(() => {
   return {
-    title: { required, minLength: minLength(3), maxLength: maxLength(120) },
-    description: { required, minLength: minLength(3), maxLength: maxLength(1500) },
+    title: { required, minLength: minLength(10), maxLength: maxLength(120) },
+    description: { required, minLength: minLength(10), maxLength: maxLength(1500) },
     categories: { required, arrey: (v) => v.length >= 1 },
     source1: { required, url: helpers.regex(linkRegex) },
     source2: { url: helpers.regex(linkRegex) },
@@ -136,7 +138,7 @@ const handleCreateBet = async () => {
     formData.answers.forEach(item => {
       if (item.length < 1) {
         console.warn('Answer is required');
-        v$.value.answers.$commit(false)
+        v$.value.answers.$commit()
         v$.value.$touch();
         return;
       }
@@ -159,9 +161,13 @@ const handleCreateBet = async () => {
 
     if (!newBet) { return console.warn('Error creating bet'); }
 
-    newBet?.id && navigateTo(`/bet/${newBet.id}`);
+    // newBet?.id && navigateTo(`/bet/${newBet.id}`);
+    await inform({
+      title: 'Congratulations',
+      text: 'Your bet successfully created. You can see it in your profile. Bet need pass moderation',
+    })
 
-    // setDefaultValues();
+    setDefaultValues();
 
   } catch (error) {
     console.warn(error);
@@ -171,7 +177,7 @@ const handleCreateBet = async () => {
   }
 }
 
-const setDefaultValues = () => {
+const setDefaultValues = async () => {
   formData.title = '';
   formData.description = '';
   formData.categories = [];
@@ -180,10 +186,13 @@ const setDefaultValues = () => {
   formData.source3 = '';
   formData.answers = ['', ''];
   formData.finish = '';
+
+  selectedCategoryId.value = null;
   isShowNewCategory.value = false;
 
-  v$.value.$reset();
   v$.value.$touch();
+  await nextTick();
+  v$.value.$reset()
 }
 
 </script>
@@ -214,7 +223,7 @@ const setDefaultValues = () => {
           @update:model-value="addCategoryHandler"
         />
 
-        <ul v-if="formData.categories.length" class="new-bet__categories--list">
+        <ul v-if="formData.categories?.length" class="new-bet__categories--list">
           <transition-group name="fade">
             <li v-for="category in formData.categories.slice(0, maxViewedCategories)" :key="category.id">
               <ButtonWithClose is-active @click="toggleSelectedCategory(category)">
@@ -248,7 +257,7 @@ const setDefaultValues = () => {
         v-model="formData.finish"
         helperText="Input the bet's finish date *"
         placeholder="Finish date"
-        type="datetime-local"
+        type="date"
         :is-warning="v$.finish.$error"
       />
 
@@ -291,6 +300,7 @@ const setDefaultValues = () => {
     </div>
 
     <div class="new-bet__footer">
+      <ButtonBase @click="setDefaultValues">Reset form</ButtonBase>
       <ButtonBase @click="handleCreateBet">Submit form</ButtonBase>
     </div>
   </div>

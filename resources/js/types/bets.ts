@@ -13,6 +13,8 @@ export interface CreateBetPayload {
   description: string
   categories: number[]
   source1: string
+  source2?: string
+  source3?: string
   answers: string[]
   finish: Date | string
 }

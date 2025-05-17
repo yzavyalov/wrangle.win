@@ -11,15 +11,15 @@ const ESCAPE_KEY = magicKeys["Escape"];
 const DELAY_MILISECONDS = 100;
 
 const props = defineProps({
-  title: String,
-  text: String,
-  confirmText: { type: String || null, default: null },
+  title: { type: String, default: 'Inform you' },
+  text: { type: String, default: 'Inform text' },
+  informText: { type: String || null, default: null },
   cancelText: { type: String || null, default: null },
   absolute: { type: Boolean, default: false, },
   top: { type: Number, default: 0, },
 });
 
-const emit = defineEmits(["confirm", "cancel"]);
+const emit = defineEmits(["inform", "cancel"]);
 
 const active = ref(false);
 
@@ -29,12 +29,12 @@ const cancel = () => {
   setTimeout(() => emit("cancel"), DELAY_MILISECONDS);
 };
 
-const confirm = () => {
+const inform = () => {
   if (!active.value){ return; }
 
   active.value = false;
 
-  setTimeout(() => emit("confirm"), DELAY_MILISECONDS);
+  setTimeout(() => emit("inform"), DELAY_MILISECONDS);
 };
 
 const highlightText = (str) => str.replace(/##(.*?)##/g, "<b>$1</b>");
@@ -42,7 +42,7 @@ const highlightText = (str) => str.replace(/##(.*?)##/g, "<b>$1</b>");
 watch(
   () => [ ENTER_KEY.value, ESCAPE_KEY.value ],
   () => {
-    ENTER_KEY.value && confirm();
+    ENTER_KEY.value && inform();
     ESCAPE_KEY.value && cancel();
   }
 );
@@ -50,34 +50,30 @@ watch(
 onMounted(() => {
   active.value = true;
 
-  window.confirmModalState = true;
+  window.informModalState = true;
 });
 
 onUnmounted(() => {
-  window.confirmModalState = false;
+  window.informModalState = false;
 });
 </script>
 
 <template>
-  <div class="modal-confirm__wrapper">
-    <div class="modal-confirm">
-      <div class="modal-confirm__body">
-        <ButtonWithIcon icon="/images/cross.svg" class="modal-confirm__close" @click.stop.prevent="cancel" />
+  <div class="modal-inform__wrapper">
+    <div class="modal-inform">
+      <div class="modal-inform__body">
+        <ButtonWithIcon icon="/images/cross.svg" class="modal-inform__close" @click.stop.prevent="cancel" />
 
-        <div class="modal-confirm__header">
-          <p>{{ title || "Are you sure ?" }}</p>
+        <div class="modal-inform__header">
+          <p>{{ title }}</p>
         </div>
 
-        <div class="modal-confirm__text">
-          <p class="confirm_main-text" v-html="highlightText(text)"></p>
+        <div class="modal-inform__text">
+          <p class="inform_main-text" v-html="highlightText(text)"></p>
         </div>
 
-        <div class="modal-confirm__footer">
-          <ButtonBaseWithIcon v-if="confirmText" @click.stop.prevent="confirm" :text="confirmText" :alt="confirmText" />
-          <ButtonWithIcon v-else icon="/images/arrow-left.svg" @click.stop.prevent="confirm" />
-
-          <ButtonBaseWithIcon v-if="cancelText" @click.stop.prevent="cancel" :text="cancelText" :alt="cancelText" />
-          <ButtonWithIcon v-else icon="/images/arrow-right.svg" @click.stop.prevent="cancel" />
+        <div class="modal-inform__footer">
+          <ButtonBaseWithIcon @click.stop.prevent="inform" text="Ok" alt="ok" />
         </div>
       </div>
 
@@ -86,7 +82,7 @@ onUnmounted(() => {
 </template>
 
 <style scoped lang='scss'>
-.modal-confirm {
+.modal-inform {
 
   &__wrapper {
     position: fixed;
@@ -99,7 +95,7 @@ onUnmounted(() => {
     align-items: center;
     flex-direction: column;
     // background: var(--modal-bg-color);
-    // background: var(--modal-confirm-bg-color);
+    // background: var(--modal-inform-bg-color);
       backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px); /* для Safari */
     background-color: rgba(255, 255, 255, 0.2); /* напівпрозорий фон */
