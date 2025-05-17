@@ -28,7 +28,7 @@ onBeforeUnmount(() => {
 <template>
   <Head title="Hots" />
 
-  <!-- <CategoriesSection /> -->
+  <CategoriesSection />
 
   <TopEventsSection :is-show-filters="true" />
 
