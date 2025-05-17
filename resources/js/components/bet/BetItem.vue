@@ -19,10 +19,11 @@ const { makeNewBit } = useBets();
 
 const isShowSorces = ref(false);
 
-const betAmount = ref();
+const betAmount = ref(0);
 
-const dynamicHot = computed(() => getDaysLeft(currentBet.value.finish) <= 1);
+const dynamicHot = computed(() => getDaysLeft(props.item.finish) <= 1);
 const currentUser = computed(() => useUserStore().getUser);
+const userBalance = computed(() => currentUser.value?.balance?.balance || 0);
 
 const currencyName = getCurrency();
 const biggestProfit = Math.max(props.item.answers.map(item => item.profit || 0)).toFixed(2);
@@ -86,7 +87,7 @@ onMounted(() => {
         <h4 class="p-item__options--title">Make a prediction</h4>
         <div class="p-item__options--wallet">
           <p class="coin-decorator">
-            Your Wallet: <b>{{ currentUser?.balance || 0 }}{{ currencyName }}</b>
+            Your Wallet: <b>{{ userBalance }}{{ currencyName }}</b>
           </p>
           <div class="p-item__options--input">
             <span class="text-right font-italic">Amount:</span>

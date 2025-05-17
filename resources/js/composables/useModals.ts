@@ -47,25 +47,27 @@ export const useModals = (options: UseModalsOptions) => {
     modalName && openNewModalHandler(modalName, options);
   }
 
-  const closeModalEventhandler = (event) => {
+  const closeModalEventHandler = (event) => {
     const { modalName, options } = event.detail;
-    console.log(event.detail, "event.detail - closeModalEventhandler");
+    console.log(event.detail, "event.detail - closeModalEventHandler");
 
-    closeModalhandler(modalName, options);
+    const dynamicModalName = typeof modalName === "string" ? modalName : null;
+
+    closeModalhandler(dynamicModalName, options);
   }
 
   onMounted(() => {
     console.log(isLayout, "isLayout - onMounted");
 
     isLayout && window.addEventListener(OPEN_MODAL_EVENT_NAME, openNewModalEventHandler);
-    isLayout && window.addEventListener(CLOSE_MODAL_EVENT_NAME, closeModalEventhandler);
+    isLayout && window.addEventListener(CLOSE_MODAL_EVENT_NAME, closeModalEventHandler);
   })
 
   onUnmounted(() => {
     console.log(isLayout, "isLayout - onUnmounted");
 
     isLayout && window.removeEventListener(OPEN_MODAL_EVENT_NAME, openNewModalEventHandler);
-    isLayout && window.removeEventListener(CLOSE_MODAL_EVENT_NAME, closeModalEventhandler);
+    isLayout && window.removeEventListener(CLOSE_MODAL_EVENT_NAME, closeModalEventHandler);
   })
 
   return {

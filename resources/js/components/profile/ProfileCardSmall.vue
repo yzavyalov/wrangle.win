@@ -7,6 +7,7 @@ import { PAGE_ROUTES } from '@/utils/datasets';
 import { getCurrency } from '@/helpers/getCurrency';
 
 const currentUser = computed(() => useUserStore().getUser);
+const userBalance = computed(() => currentUser.value?.balance?.balance || 0);
 const currencyName = getCurrency();
 
 </script>
@@ -17,7 +18,7 @@ const currencyName = getCurrency();
     <div v-if="currentUser" class="profile-card__body auth">
       <div class="profile-card__body--left">
         <p class="text-center">{{ currentUser?.name || 'Nickname Name' }}</p>
-        <p class="coin-decorator">{{ currentUser?.balance || 0 }}{{ currencyName }}</p>
+        <p class="coin-decorator">{{ userBalance }}{{ currencyName }}</p>
       </div>
       <div class="profile-card__body--right">
         <img v-if="currentUser" :src="'/images/avatar-sample-active.svg'" alt="avatar">

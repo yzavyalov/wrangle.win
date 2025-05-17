@@ -25,6 +25,7 @@ export interface ToggleToFavoritePayload {
 
 export interface CreateBitPayload {
   sum: number
+  id: number
 }
 
 export interface BetItem {

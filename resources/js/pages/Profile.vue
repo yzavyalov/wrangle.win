@@ -23,6 +23,8 @@ import { getCurrency } from '@/helpers/getCurrency';
 const { confirm } = useConfirm();
 
 const currentUser = computed(() => useUserStore().getUser);
+const userBalance = computed(() => currentUser.value?.balance?.balance || 0);
+
 const currencyName = getCurrency();
 
 const testConfirm = async () => {
@@ -53,7 +55,7 @@ const testConfirm = async () => {
           <p class="profile__user--top">{{ currentUser?.name || 'Nickname Name' }}</p>
           <ButtonBase class="min-width-80">Edit Profile</ButtonBase>
           <p class="coin-decorator">
-            Balance: <b>{{ currentUser?.balance || 0 }}{{ currencyName }}</b>
+            Balance: <b>{{ userBalance }}{{ currencyName }}</b>
           </p>
         </div>
 

@@ -1,0 +1,50 @@
+
+// .vue-notification {
+//   display: grid;
+//   grid-template-columns: 1fr 5fr;
+//   gap: 5px;
+//   align-items: center;
+
+//   &-template--icon {
+//     display: grid !important;
+//     grid-template-columns: 1fr 5fr;
+//     gap: 5px;
+//     align-items: center;
+//   }
+// }
+// // notifySuccess, notifyWarning, notifyError, notifyPending, notifyUniversal
+// .vue-notification-group {
+//   .vue-notification-wrapper {
+//     .vue-notification-template.vue-notification.warn {
+//       background: var(--notify-bg-warn);
+//       border-left-color: var(--notify-border-color-warn);
+//       color: var(--notify-text-warn);
+
+//       min-height: 120px;
+//     }
+
+//     .vue-notification-template.vue-notification.success {
+//       background: var(--notify-bg-success);
+//       border-left-color: var(--notify-border-color-success);
+//       color: var(--notify-text-success);
+//     }
+
+//     .vue-notification-template.vue-notification.error {
+//       background: var(--notify-bg-error);
+//       border-left-color: var(--notify-border-color-error);
+//       color: var(--notify-text-error);
+//     }
+
+//     .vue-notification-template.vue-notification.custom {
+//       background: var(--notify-bg-custom);
+//       border-left-color: var(--notify-border-color-custom);
+//       color: var(--notify-text-custom);
+//     }
+
+//     .vue-notification-template.vue-notification.sort {
+//       background: var(--notify-bg-sort);
+//       border-left-color: var(--notify-border-color-sort);
+//       color: var(--notify-text-sort);
+//     }
+//   }
+// }

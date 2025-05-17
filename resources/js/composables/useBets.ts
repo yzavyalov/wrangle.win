@@ -1,10 +1,12 @@
 import { computed, nextTick, Ref, ref, watch } from "vue";
-import { getActualBets, getHotBets, searchBets as apiSearchBets } from '@/services/bets';
+import { getActualBets, getHotBets, searchBets as apiSearchBets, BET_OPTION_KEY } from '@/services/bets';
 import { triggerOpenNewModal } from "@/composables/useModalsTriggers";
 import { BetItem, SearchBetsPayload, UseBetsOptions } from "@/types/bets";
 import { useFilters } from "@/composables/useFilters";
 import { useLoading } from "@/composables/useLoading";
 import { useUserStore } from "@/store/user";
+import { useHistory } from "@/composables/useHistory";
+
 
 export const useBets = (options: UseBetsOptions = {}) => {
 
@@ -13,6 +15,7 @@ export const useBets = (options: UseBetsOptions = {}) => {
   const currentUser = computed(() => useUserStore().getUser);
   const { isLoading, loadingStart, loadingStop } = useLoading();
   const { searchQuery, filters, sortBy, selectedCategories, isDefualtFilters } = useFilters();
+  const { setQueryParam } = useHistory();
 
   const bets: Ref<BetItem[]> = ref([]);
 
@@ -51,18 +54,22 @@ export const useBets = (options: UseBetsOptions = {}) => {
     return payload;
   }
 
-  const makeNewBit = async (option: number) => {
+  const makeNewBit = async (option: any) => {
     console.log(option, 'option - makeNewBit');
 
-    if (!currentUser.value?.id) {
-      return triggerOpenNewModal('login-or-register-modal')
-    }
+    // if (!currentUser.value) {
+    //   return triggerOpenNewModal('login-or-register-modal')
+    // }
 
-    if (!currentUser.value?.balance) {
-      return triggerOpenNewModal('propose-balance-modal')
-    }
+    // if (!currentUser.value?.balance) {
+    //   return triggerOpenNewModal('propose-balance-modal')
+    // }
 
     console.warn('NO LOGIC YET');
+
+    setQueryParam(BET_OPTION_KEY, `${option.id}`)
+
+    triggerOpenNewModal('new-bit-modal');
   }
 
   const fetchBets = async () => {

@@ -23,8 +23,8 @@ const handleNavigate = async (url) => {
     <ModalConfirm :text="modalText" :title="modelTitle" @cancel="triggerCloseModal">
 
       <template #footer>
-        <ButtonBaseWithIcon text="Login" @click="handleNavigate(PAGE_ROUTES.LOGIN)" />
-        <ButtonBaseWithIcon text="Register" @click="handleNavigate(PAGE_ROUTES.REGISTER)" />
+        <ButtonBaseWithIcon text="Login" @click.stop.prevent="handleNavigate(PAGE_ROUTES.LOGIN)" />
+        <ButtonBaseWithIcon text="Register" @click.stop.prevent="handleNavigate(PAGE_ROUTES.REGISTER)" />
       </template>
     </ModalConfirm>
   </div>

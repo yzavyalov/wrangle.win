@@ -1,15 +1,29 @@
 <script setup>
+import { computed } from 'vue';
 import ModalConfirm from '@/components/modals/ModalConfirm.vue';
 import ButtonBaseWithIcon from "@/components/details/ButtonBaseWithIcon.vue";
-import { triggerCloseModal } from '@/composables/useModalsTriggers';
+import { triggerCloseModal, triggerOpenNewModal } from '@/composables/useModalsTriggers';
+// import { triggerCloseModal } from "@/composables";
 import { navigateTo } from '@/helpers/navigate';
 import { PAGE_ROUTES } from '@/utils/datasets';
 import { nextTick } from 'vue';
+import { useUserStore } from "@/store/user";
+import { getCurrency } from '@/helpers/getCurrency';
+
+defineOptions({ name: "ProposePopUpBalance" })
+
+const currentUser = computed(() => useUserStore().getUser);
+const userBalance = computed(() => currentUser.value?.balance?.balance || 0);
+
+const currencyName = getCurrency();
 
 const modelTitle = 'Attention !';
-const modalText = 'To perform this action, you need to pop up your balance';
+const modalText = `
+<p>To perform this action, you need to pop up your balance.</p>
+<p>Current balance: <b>${userBalance}${currencyName}</b></p>
+`;
 
-const popupHandler = () => {
+const popupHandler = async () => {
   console.log('popupHandler');
   console.warn("NO LOGIC YET");
 }
@@ -21,8 +35,8 @@ const popupHandler = () => {
     <ModalConfirm :text="modalText" :title="modelTitle" @cancel="triggerCloseModal">
 
       <template #footer>
-        <ButtonBaseWithIcon text="Pop up balance" @click="popupHandler" />
-        <ButtonBaseWithIcon text="Cancel" @click="triggerCloseModal" />
+        <ButtonBaseWithIcon text="Pop up balance" @click.stop.prevent="popupHandler" />
+        <ButtonBaseWithIcon text="Cancel" @click.stop.prevent="triggerCloseModal" />
       </template>
     </ModalConfirm>
   </div>

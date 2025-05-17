@@ -21,7 +21,7 @@ import DynamicSelector from "@/components/details/DynamicSelector.vue";
 import ButtonWithClose from "@/components/details/ButtonWithClose.vue";
 import InputWIthHelper from "@/components/details/InputWIthHelper.vue";
 import ButtonBaseWithIcon from '@/components/details/ButtonBaseWithIcon.vue';
-import { useInform } from "@/composables/useInform";;
+import { useInform } from "@/composables/useInform";import { notifySuccess } from '@/helpers/notify';
 
 const { isLoading, loadingStart, loadingStop } = useLoading()
 const { categories, categoriesOptions, isLoading: isCategoiesLoading, selectedCategoryId } = useCategories();
@@ -162,6 +162,8 @@ const handleCreateBet = async () => {
     if (!newBet) { return console.warn('Error creating bet'); }
 
     // newBet?.id && navigateTo(`/bet/${newBet.id}`);
+    notifySuccess('Bet successfully created');
+
     await inform({
       title: 'Congratulations',
       text: 'Your bet successfully created. You can see it in your profile. Bet need pass moderation',

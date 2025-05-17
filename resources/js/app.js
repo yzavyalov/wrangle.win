@@ -9,6 +9,8 @@ import vClickOutside from 'click-outside-vue3';
 import VirtualScroller from 'vue-virtual-scroller'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 
+import Notifications from '@kyvg/vue3-notification';
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
@@ -24,6 +26,7 @@ createInertiaApp({
       .use(pinia)
       .use(VirtualScroller)
       .use(vClickOutside)
+      .use(Notifications)
       .mount(el);
   },
 });
