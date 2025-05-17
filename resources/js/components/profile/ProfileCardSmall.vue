@@ -17,7 +17,7 @@ const currencyName = getCurrency();
     <div v-if="currentUser" class="profile-card__body auth">
       <div class="profile-card__body--left">
         <p class="text-center">{{ currentUser?.name || 'Nickname Name' }}</p>
-        <p class="coin-decorator">{{ currentUser.balance || 0 }}{{ currencyName }}</p>
+        <p class="coin-decorator">{{ currentUser?.balance || 0 }}{{ currencyName }}</p>
       </div>
       <div class="profile-card__body--right">
         <img v-if="currentUser" :src="'/images/avatar-sample-active.svg'" alt="avatar">

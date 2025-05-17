@@ -53,7 +53,7 @@ const testConfirm = async () => {
           <p class="profile__user--top">{{ currentUser?.name || 'Nickname Name' }}</p>
           <ButtonBase class="min-width-80">Edit Profile</ButtonBase>
           <p class="coin-decorator">
-            Balance: <b>{{ currentUser.balance || 0 }}{{ currencyName }}</b>
+            Balance: <b>{{ currentUser?.balance || 0 }}{{ currencyName }}</b>
           </p>
         </div>
 
