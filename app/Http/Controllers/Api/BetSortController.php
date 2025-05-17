@@ -6,18 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Enums\BetStatusEnum;
 use App\Http\Filters\BetFilter;
 use App\Http\Requests\BetSearchRequest;
+use App\Http\Requests\CarouselRequest;
 use App\Http\Requests\PaginateRequest;
 use App\Http\Resources\BetResource;
 use App\Http\Resources\CurrentUserResource;
-use App\Http\Resources\UserResource;
 use App\Models\Bet;
-use Illuminate\Http\Request;
+use App\Services\UserService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+
 
 class BetSortController extends Controller
 {
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
     public function myBets(PaginateRequest $request)
     {
         $perPage = $request->input('per_page', 15); // по умолчанию 15
@@ -63,12 +67,15 @@ class BetSortController extends Controller
         $bets= Bet::filter($filter)
             ->where('status',BetStatusEnum::APPROVED)
             ->where('finish','>=',now())
+            ->orderBy('finish', 'asc')   // Добавляем сортировку по finish по возрастанию
             ->paginate($perPage, ['*'], 'page', $page);
 
         $bets = BetResource::collection($bets);
 
-        if (Auth::check())
-            $user = CurrentUserResource::make(Auth::user());
+        $user = $this->userService->getUserFromToken($request);
+
+        if ($user)
+            $user = CurrentUserResource::make($user);
         else
             $user = null;
 
@@ -97,10 +104,60 @@ class BetSortController extends Controller
                 Carbon::today(),              // сегодня с 00:00:00
                 Carbon::tomorrow()->endOfDay() // завтра до 23:59:59
             ])
+            ->orderBy('finish', 'asc')   // Добавляем сортировку по finish по возрастанию
             ->paginate($perPage, ['*'], 'page', $page);
 
         $bets = BetResource::collection($bets);
 
         return $this->successJsonAnswer200('Bets',compact('bets'));
     }
+
+    public function carousel(CarouselRequest $request)
+    {
+        $data = $request->validated();
+
+        $currencyId = $data['currency_id'];
+
+        if ($data['direction'] === 'next')
+        {
+            $bet = Bet::query()
+                ->where('id', '>', $currencyId)
+                ->where('status',BetStatusEnum::APPROVED)
+                ->where('finish','>=', \Carbon\Carbon::make(now()))
+                ->orderBy('id', 'asc')
+                ->first();
+
+            if (!$bet)
+            {
+                // Если следующего нет — берем самый первый
+                $bet = Bet::query()
+                    ->where('status',BetStatusEnum::APPROVED)
+                    ->where('finish','>=', \Carbon\Carbon::make(now()))
+                    ->orderBy('id', 'asc')
+                    ->first();
+            }
+        }
+        else
+        {
+            $bet = Bet::query()
+                ->where('id', '<', $currencyId)
+                ->where('status',BetStatusEnum::APPROVED)
+                ->where('finish','>=', \Carbon\Carbon::make(now()))
+                ->orderBy('id', 'desc')
+                ->first();
+
+            if (!$bet) {
+                // Если предыдущего нет — берем самый последний
+                $bet = Bet::query()
+                    ->where('status',BetStatusEnum::APPROVED)
+                    ->where('finish','>=', \Carbon\Carbon::make(now()))
+                    ->orderBy('id', 'desc')
+                    ->first();
+            }
+        }
+
+        return $this->successJsonAnswer200($data['direction'].'bet',BetResource::make($bet));
+    }
+
+
 }

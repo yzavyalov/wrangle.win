@@ -2,11 +2,18 @@
 
 namespace App\Services;
 
+use App\Models\Deposit;
+use App\Models\Payment_log;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class CryptoProcessingService
 {
+    public function __construct(PaymentLogsService $paymentLogsService)
+    {
+        $this->paymentLogsService = $paymentLogsService;
+    }
     public function callAlphaPoApi(array $params, string $endpoint)
     {
         // Подготавливаем тело запроса
@@ -31,34 +38,21 @@ class CryptoProcessingService
     }
 
 
-
-
-
-    public function deposit()
-    {
-        $params = [
-            'currency' => 'BTC',
-            'foreign_id' => '123456',
-        ];
-
-
-        $publicKey = 'your_public_key_here';
-        $secretKey = 'your_secret_key_here';
-        $endpoint = 'https://api.alphapo.com/v1/your-endpoint';
-
-        try {
-            $result = $this->callAlphaPoApi($params, $publicKey, $secretKey, $endpoint);
-            dd($result);
-        } catch (\Exception $e) {
-            dd($e->getMessage());
-        }
-    }
-
     public function currencyList()
     {
         $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/currencies/list';
 
         $params = ['visible' => true ];
+
+        return $this->callAlphaPoApi($params,$url);
+    }
+
+
+    public function pare()
+    {
+        $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/currencies/pairs';
+
+        $params = [];
 
         return $this->callAlphaPoApi($params,$url);
     }
@@ -83,5 +77,96 @@ class CryptoProcessingService
         ];
 
         return $this->callAlphaPoApi($params, $url);
+    }
+
+
+    public function createDeposit(Deposit $deposit, $currency)
+    {
+        $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/addresses/take';
+
+        $user = Auth::user();
+
+        if ($user->cryptoWallets()->where('currency',$currency)->exists())
+        {
+            $wallets = $user->cryptoWallets()->where('currency',$currency)->get();
+        }
+        else
+        {
+            $params = [
+                'foreign_id' => str($user->id),
+                'currency' =>$currency,
+                'convert_to' => 'EUR',
+            ];
+
+            $response = $this->callAlphaPoApi($params, $url);
+
+            $this->paymentLogsService->createLog($deposit, json_encode($response));
+
+            if (!is_array($response) || !array_key_exists('data', $response) || is_null($response['data'])) {
+                throw new \Exception('Ошибка получения данных из AlphaPo API');
+            }
+
+            $wallets = $this->saveWallets($response['data'], $user);
+        }
+
+        return $wallets;
+    }
+
+
+    public function newAdres($currency)
+    {
+        $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/addresses/take';
+
+        $user = Auth::user();
+
+        $params = [
+            'foreign_id' => str($user->id),
+            'currency' =>$currency,
+            'convert_to' => 'EUR',
+        ];
+
+        $response = $this->callAlphaPoApi($params, $url);
+
+        if (!is_array($response) || !array_key_exists('data', $response) || is_null($response['data'])) {
+            throw new \Exception('Ошибка получения данных из AlphaPo API');
+        }
+
+
+        if ($user->cryptoWallets()->where('currency',$currency)->exists())
+        {
+            $wallet = $user->cryptoWallets()->updateOrCreate(
+                ['currency' => $currency],
+                $response['data']
+            );
+        }
+
+        return $wallet;
+    }
+
+
+    protected function saveWallets(array $data, User $user)
+    {
+        $wallet = $user->cryptoWallets()->create($data);
+        return collect([$wallet]);
+    }
+
+
+    public function rates($currencyFrom = null, $currencyTo = null)
+    {
+        $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/currencies/rates';
+
+        $params = [
+            'currency_from' => $currencyFrom,
+            'currency_to' =>$currencyTo,
+        ];
+
+        return $this->callAlphaPoApi($params, $url);
+    }
+
+    public function payOut()
+    {
+        $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/withdrawal/crypto';
+
+
     }
 }

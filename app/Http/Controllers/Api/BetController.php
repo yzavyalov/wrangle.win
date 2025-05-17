@@ -30,6 +30,7 @@ class BetController extends Controller
         $bets = Bet::query()
             ->where('status',BetStatusEnum::APPROVED)
             ->where('finish','>=',Carbon::make(now()))
+            ->orderBy('finish', 'asc')   // Добавляем сортировку по finish по возрастанию
             ->paginate($perPage, ['*'], 'page', $page);
 
         return $this->successJsonAnswer200('allbets',BetResource::collection($bets));

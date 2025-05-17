@@ -7,10 +7,16 @@ use App\Http\Filters\BetCategoryFilter;
 use App\Http\Requests\BetCategoryRequest;
 use App\Http\Resources\BetCategoryResource;
 use App\Models\BetCategory;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class BetCategorySearchController extends Controller
 {
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
 
     public function searchCategory(BetCategoryRequest $request)
     {

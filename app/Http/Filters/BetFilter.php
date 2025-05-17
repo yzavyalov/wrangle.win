@@ -14,6 +14,7 @@ class BetFilter extends AbstractFilter
     public const DESCRIPTION = 'description';
     public const FINISH = 'finish';
     public const CATEGORIES = 'categories';
+    public const AMOUNT='amount';
     public const SORT_BY = 'sort_by'; // Поле для сортировки
     public const SORT_ORDER = 'sort_order'; // Направление сортировки
 
@@ -28,6 +29,7 @@ class BetFilter extends AbstractFilter
             self::DESCRIPTION => [$this, 'description'],
             self::FINISH => [$this, 'finish'],
             self::CATEGORIES => [$this, 'categories'],
+            self::AMOUNT => [$this, 'amount'],
             self::SORT_BY => [$this, 'sortBy'],
         ];
     }
@@ -64,6 +66,13 @@ class BetFilter extends AbstractFilter
         });
     }
 
+    public function amount(Builder $builder, $value)
+    {
+        $builder->withSum('bits', 'sum')
+            ->having('bits_sum_sum', '>', $value);
+    }
+
+
     public function status(Builder $builder, $value)
     {
         $builder->where('status',$value);
@@ -71,7 +80,7 @@ class BetFilter extends AbstractFilter
 
     public function finish(Builder $builder, $value)
     {
-        $builder->where('finish','>=',$value);
+        $builder->where('finish','<=',$value);
     }
 
     public function sortBy(Builder $builder, $value)

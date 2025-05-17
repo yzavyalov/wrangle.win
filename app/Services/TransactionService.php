@@ -43,7 +43,7 @@ class TransactionService
             return $oldBalance;
     }
 
-    public function debit($userID, $sum, $comment = 'test', $method = TransactionMethodEnum::TEST)
+    public function debit($userID, $sum, $comment = 'test', $method = TransactionMethodEnum::TEST): Transaction
     {
         $transaction = new Transaction();
 
@@ -57,13 +57,15 @@ class TransactionService
 
         $transaction->sum = $sum;
 
-        $transaction->remaining = $this->calculationBalance($sum,TransactionOperationEnum::DEBET);
+        $transaction->remaining = $this->calculationBalance($sum,TransactionOperationEnum::DEBET,$userID);
 
         $transaction->comment = $comment;
 
         $transaction->save();
 
-        $this->balanceService->updateBalance($transaction->remaining);
+        $user = User::query()->find($userID);
+
+        $this->balanceService->updateBalance($transaction->remaining,$user);
 
         return $transaction;
     }
