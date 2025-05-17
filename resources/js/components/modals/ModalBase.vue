@@ -56,6 +56,10 @@ onUnmounted(() => {
 .modal {
   position: fixed;
   background: var(--modal-bg-color);
+  // backdrop-filter: blur(10px);
+  // -webkit-backdrop-filter: blur(10px); /* для Safari */
+  // background-color: rgba(255, 255, 255, 0.2); /* напівпрозорий фон */
+
   top: 0;
   right: 0;
   bottom: 0;

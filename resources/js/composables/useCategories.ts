@@ -27,7 +27,7 @@ export const useCategories = () => {
       loadingStart();
 
       const fetchedCategories = await getAllCtegories() || [];
-      console.log(fetchedCategories, "fetchedCategories");
+      // console.log(fetchedCategories, "fetchedCategories");
 
       fetchedCategories.length && setCategories(fetchedCategories);
 

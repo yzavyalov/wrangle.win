@@ -62,18 +62,24 @@ onUnmounted(() => {
   <div class="modal-inform__wrapper">
     <div class="modal-inform">
       <div class="modal-inform__body">
-        <ButtonWithIcon icon="/images/cross.svg" class="modal-inform__close" @click.stop.prevent="cancel" />
+        <slot name="close">
+          <ButtonWithIcon icon="/images/cross.svg" class="modal-inform__close" @click.stop.prevent="cancel" />
+        </slot>
 
-        <div class="modal-inform__header">
-          <p>{{ title }}</p>
-        </div>
+        <slot>
+          <div class="modal-inform__header">
+            <p>{{ title }}</p>
+          </div>
 
-        <div class="modal-inform__text">
-          <p class="inform_main-text" v-html="highlightText(text)"></p>
-        </div>
+          <div class="modal-inform__text">
+            <p class="inform_main-text" v-html="highlightText(text)"></p>
+          </div>
+        </slot>
 
         <div class="modal-inform__footer">
-          <ButtonBaseWithIcon @click.stop.prevent="inform" text="Ok" alt="ok" />
+          <slot name="footer">
+            <ButtonBaseWithIcon @click.stop.prevent="inform" text="Ok" alt="ok" />
+          </slot>
         </div>
       </div>
 
@@ -96,7 +102,7 @@ onUnmounted(() => {
     flex-direction: column;
     // background: var(--modal-bg-color);
     // background: var(--modal-inform-bg-color);
-      backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px); /* для Safari */
     background-color: rgba(255, 255, 255, 0.2); /* напівпрозорий фон */
     z-index: 10;

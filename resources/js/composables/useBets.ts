@@ -59,13 +59,13 @@ export const useBets = (options: UseBetsOptions = {}) => {
 
       let betsHandler;
 
-      console.log("AAAAAAAAAAAAAAAAAAA");
-      console.log("AAAAAAAAAAAAAAAAAAA");
+      // console.log("AAAAAAAAAAAAAAAAAAA");
+      // console.log("AAAAAAAAAAAAAAAAAAA");
 
       console.log(isDefualtFilters.value, 'isDefualtFilters.value');
 
-      console.log("AAAAAAAAAAAAAAAAAAA");
-      console.log("AAAAAAAAAAAAAAAAAAA");
+      // console.log("AAAAAAAAAAAAAAAAAAA");
+      // console.log("AAAAAAAAAAAAAAAAAAA");
 
 
       if (isDefualtFilters.value) {
@@ -78,7 +78,7 @@ export const useBets = (options: UseBetsOptions = {}) => {
       const payload = await makeSearchPayload();
 
       const fetchedBets = await betsHandler(payload) || [];
-      console.log(fetchedBets, 'fetchedBets - getActualBets');
+      // console.log(fetchedBets, 'fetchedBets - getActualBets');
 
       if (!fetchedBets.length) {return console.warn("No fetchedBets");}
 
@@ -89,7 +89,7 @@ export const useBets = (options: UseBetsOptions = {}) => {
         bets.value = [...bets.value, ...fetchedBets];
       }
 
-      console.log(bets.value, 'bets.value - fetchBets');
+      // console.log(bets.value, 'bets.value - fetchBets');
 
     } catch (error) {
       console.warn(error);

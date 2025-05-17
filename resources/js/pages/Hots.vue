@@ -10,24 +10,28 @@ export default {
 
 
 <script setup>
-import WelcomeSection from '@/components/WelcomeSection.vue';
-import ActiveEventsSection from '@/components/ActiveEventsSection.vue';
 import { Head } from "@inertiajs/vue3";
-import { onBeforeUnmount } from 'vue';
+import { ref, onBeforeUnmount } from "vue";
+import TopEventsSection from '@/components/TopEventsSection.vue';
+import CategoriesSection from "@/components/CategoriesSection.vue";
 import { useFilters } from '@/composables/useFilters';
+
+defineOptions({ name: "Hots" })
+
+const items = ref([]);
 
 onBeforeUnmount(() => {
   useFilters().resetFilters();
 })
-
 </script>
 
 <template>
-  <Head title="Home" />
+  <Head title="Hots" />
 
-  <WelcomeSection />
+  <!-- <CategoriesSection /> -->
 
-  <ActiveEventsSection :is-show-filters="true"  />
+  <TopEventsSection :is-show-filters="true" />
+
 </template>
 
 <style scoped lang='scss'>
