@@ -163,10 +163,20 @@ class CryptoProcessingService
         return $this->callAlphaPoApi($params, $url);
     }
 
-    public function payOut()
+    public function payOut($amount,$currency,$address,$tag=null)
     {
         $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/withdrawal/crypto';
 
+        $params = [
+            'foreign_id' =>  Auth::id(),
+            'amount' => $amount,
+            'currency' => env('CURRENT_CURRENCY'),
+            'convert_to' => $currency,
+            'address' => $address,
+            'tag' => $tag,
+//            'amount_to' => ,
+        ];
 
+        return $this->callAlphaPoApi($params, $url);
     }
 }

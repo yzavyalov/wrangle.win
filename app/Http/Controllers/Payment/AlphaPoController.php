@@ -60,15 +60,15 @@ class AlphaPoController extends Controller
         // Вычисляем подпись
         $calculatedSignature = hash_hmac('sha512', $rawPayload, $secretKey);
 
-        // Проверка подписи
-//        if ($receivedKey !== $publicKey || !hash_equals($calculatedSignature, $receivedSignature)) {
-//            Log::warning('AlphaPo callback failed signature check', [
-//                'received_key' => $receivedKey,
-//                'received_signature' => $receivedSignature,
-//                'calculated_signature' => $calculatedSignature,
-//            ]);
-//            return response('Invalid signature', 403);
-//        }
+//         Проверка подписи
+        if ($receivedKey !== $publicKey || !hash_equals($calculatedSignature, $receivedSignature)) {
+            Log::warning('AlphaPo callback failed signature check', [
+                'received_key' => $receivedKey,
+                'received_signature' => $receivedSignature,
+                'calculated_signature' => $calculatedSignature,
+            ]);
+            return response('Invalid signature', 403);
+        }
 
         // Декодируем тело запроса
         $data = json_decode($rawPayload, true);

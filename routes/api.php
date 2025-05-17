@@ -45,8 +45,6 @@ Route::get('/bet-categories', [BetCategoryController::class,'index']);
 Route::get('/bet-categories/{id}', [BetCategoryController::class,'show']);
 Route::post('/search-category',[BetCategorySearchController::class,'searchCategory']);
 
-Route::get('/payments/in',[PaymnetsController::class,'allInPayments']);
-Route::get('/payments/out',[PaymnetsController::class,'allOutPayments']);
 
 //Вебхуки AlphaPo
 Route::post('/alphapo/callback', [AlphaPoController::class, 'handle']);
@@ -72,6 +70,9 @@ Route::middleware(['auth:sanctum','baduser'])->group(function (){
     Route::post('/payment/in/cryptoprocessing/new-deposit-adres',[DepositController::class,'alphaNewDepositAdres']);
 
     Route::get('/payment/deposit/cryptoprocessing/invoice/create',[DepositController::class,'cryptoInvoiceCreate']);
+
+    Route::get('/payments/out',[PaymnetsController::class,'allOutPayments']);
+    Route::get('/payments/out/cryptoprocessing/payout',[PayOutController::class,'payoutCrypto']);
 
     Route::get('/payment/deposit/cryptoprocessing/currency-list',[AlphaPoController::class,'cryptoList']);
     Route::get('/payment/deposit/cryptoprocessing/pare',[AlphaPoController::class,'pare']);
