@@ -48,3 +48,9 @@ export interface BetItem {
 export interface UseBetsOptions {
   isHot?: boolean
 }
+
+export interface BetCaruselPayload {
+  currency_id?: number  // fix after API fix
+  current_id: number
+  direction: "next" | "previous"
+}

@@ -9,7 +9,7 @@ import { predictionDemoData } from '@/utils/dummyData';
 import BetOptionItem from "@/components/details/BetOptionItem.vue"
 
 const props = defineProps({
-  item: { type: Object, required: true, default: predictionDemoData }, // todo: remove demo data
+  item: { type: Object, required: true, default: {} }, // todo: remove demo data
 })
 
 

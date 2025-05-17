@@ -16,7 +16,7 @@ export const useBets = (options: UseBetsOptions = {}) => {
 
   const pagination = ref({
     page: 1,
-    per_page: 50,
+    per_page: 20,
   });
 
   const isFirstPage = computed(() => pagination.value.page === 1);

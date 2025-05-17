@@ -1,6 +1,7 @@
 import { http } from "@/api/http";
 import { BETS } from "@/api/enpoints";
-import { CreateBetPayload, CreateBitPayload, SearchBetsPayload, ToggleToFavoritePayload } from "@/types/bets";
+import { BetCaruselPayload, CreateBetPayload, CreateBitPayload, SearchBetsPayload, ToggleToFavoritePayload } from "@/types/bets";
+import { da } from "element-plus/es/locale";
 
 export const getActualBets = async (payload: SearchBetsPayload) => {
   if (!payload) { return console.warn("Payload is required");}
@@ -138,3 +139,24 @@ export const createBit = async (payload: CreateBitPayload) => {
   })
   .catch(e => console.error(e.message));
 };
+
+export const betCarusel = async (payload: BetCaruselPayload) => {
+
+  // currency_id=47&direction=next
+
+  const stringRequestBody = Object.entries(payload).reduce((acc, [key, value]) => {
+    acc[key] = String(value);
+    return acc;
+  }, {} as Record<string, string>);
+
+  const requestUrl = BETS.CARUSEL + "?" + new URLSearchParams(stringRequestBody).toString();
+
+
+  return await http.get(requestUrl)
+  .then(res => {
+    console.log(res, "res - betCarusel");
+
+    return res?.data?.data;
+  })
+  .catch(e => console.error(e.message));
+}

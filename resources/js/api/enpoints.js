@@ -19,7 +19,8 @@ export const BETS = {
   GET_OWN: "/api/own-bets",
   GET_FAVORITE: "/api/favorite-bets",
   BIT: "/api/bit/",
-  HOT: "/api/hot-bets"
+  HOT: "/api/hot-bets",
+  CARUSEL: "/api/bets/carousel",
 }
 
 export const CATEGORIES = {
