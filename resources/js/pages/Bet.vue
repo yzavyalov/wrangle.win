@@ -14,13 +14,14 @@ import { Head, usePage } from "@inertiajs/vue3";
 import { useLoading } from '@/composables/useLoading';
 import { navigateTo } from '@/helpers/navigate';
 import { useFilters } from '@/composables/useFilters';
-import { getBetById } from '@/services/bets';
+import { betCarusel, getBetById } from '@/services/bets';
 import { PAGE_ROUTES } from '@/utils/datasets';
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import BetItem from "@/components/bet/BetItem.vue";
 import LoaderComponent from '@/components/LoaderComponent.vue';
+import { router } from "@inertiajs/vue3";
 
 const props = defineProps({
   bet: { type: Object, default: () => ({}) },
@@ -29,6 +30,34 @@ const props = defineProps({
 const { isLoading, loadingStart, loadingStop } = useLoading();
 
 const betFullData = ref(null);
+
+const betCaruselHandler = async ( direction ) => {
+
+  if (isLoading.value) return;
+
+  try {
+      const payload = {
+        currency_id: betFullData.value?.id,      // remove after API will be ready
+        current_id: betFullData.value?.id,
+        direction: direction, // "next" | "previous"
+      }
+
+      const newBet = await betCarusel(payload)
+      if (!newBet) { return; }
+
+      betFullData.value = newBet
+
+      const { pathname } = window.location
+      const newPathName = pathname.replace(props.bet.id, newBet.id);
+      router.replace(newPathName);
+
+  } catch (error) {
+    console.warn(error);
+
+  } finally {
+    loadingStop();
+  }
+}
 
 const getFullBetData = async () => {
   console.log('getFullBetData - start');
@@ -82,9 +111,9 @@ onMounted(() => {
     </div>
 
     <div v-if="betFullData" class="bet__footer">
-      <ButtonWithIcon :icon="'/images/arrow-left.svg'" />
+      <ButtonWithIcon @click="betCaruselHandler('previous')" :icon="'/images/arrow-left.svg'" />
       <ButtonBase>To other Events</ButtonBase>
-      <ButtonWithIcon :icon="'/images/arrow-right.svg'" />
+      <ButtonWithIcon @click="betCaruselHandler('next')" :icon="'/images/arrow-right.svg'" />
     </div>
 
   </PageWrapperMain>

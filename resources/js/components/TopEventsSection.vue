@@ -24,7 +24,7 @@ onMounted(() => {
 <template>
   <div class="active_events">
 
-    <SectionHeader :title="'Top Events'">
+    <SectionHeader :title="'Hot Events'">
 
       <LoaderComponent v-if="isLoading" />
 

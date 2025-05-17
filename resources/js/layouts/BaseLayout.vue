@@ -26,6 +26,34 @@ onMounted(() => {
 
         <slot></slot>
 
+        <notifications position="bottom left" group="bottom-left">
+          <template #body="props">
+            <div
+              @click="closeNotifyHandle"
+              :class="[
+                'vue-notification-template',
+                props.class,
+                {
+                  'vue-notification-template--icon':
+                    'icon' in props?.item?.data,
+                },
+              ]"
+            >
+              <div class="notification-icon" v-if="props?.item?.data?.icon">
+                <img
+                  :src="props?.item?.data?.icon"
+                  :alt="props.item.title"
+                  width="50"
+                />
+              </div>
+              <div>
+                <div class="notification-title">{{ props.item.title }}</div>
+                <div class="notification-content">{{ props.item.text }}</div>
+              </div>
+            </div>
+          </template>
+        </notifications>
+
       </div>
     </div>
 

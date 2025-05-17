@@ -3,12 +3,17 @@ import { ref, computed, onMounted, onBeforeUnmount, reactive, watch, inject, onB
 import { getModalComponent } from "@/composables/useModalComponets";
 import { useModalsStore } from "@/store/modals";
 import { triggerCloseModal } from "@/composables";
-import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import { toggleBodyScroll } from "@/helpers/toggleBodyScroll";
+import { useMagicKeys } from "@vueuse/core";
+import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
+
 
 const props = defineProps({
   idx: { type: Number || undefined, default: undefined, },
 });
+
+const magicKeys = useMagicKeys();
+const ESCAPE_KEY = magicKeys["Escape"];
 
 const modals = computed(() => useModalsStore().modals);
 
@@ -20,11 +25,20 @@ const modalName = computed(() => {
   return modals.value[props.idx];
 });
 
+const isTopLevelModal = computed(() => props.idx === modals.value.length - 1);
+
 const dynamicModalComponent = computed(() => getModalComponent(modalName));
 
 const closeCurrentModalHandler = () => {
   triggerCloseModal(modalName.value);
 }
+
+watch(
+  () => [ ESCAPE_KEY.value ],
+  () => {
+    isTopLevelModal.value&& ESCAPE_KEY.value && closeCurrentModalHandler();
+  }
+);
 
 onMounted(() => {
   if (props.idx === 0) {
@@ -40,11 +54,11 @@ onUnmounted(() => {
 
 </script>
 <template>
-  <div class="modal">
+  <div class="modal" >
     <ButtonWithIcon :icon="'/images/cross.svg'" class="modal__button" @click="closeCurrentModalHandler" />
 
     <div class="modal__wrapper">
-      <div class="modal__body" v-click-outside="() => closeCurrentModalHandler()">
+      <div class="modal__body">
         <component :is="dynamicModalComponent" />
       </div>
     </div>
@@ -56,6 +70,10 @@ onUnmounted(() => {
 .modal {
   position: fixed;
   background: var(--modal-bg-color);
+  // backdrop-filter: blur(10px);
+  // -webkit-backdrop-filter: blur(10px); /* для Safari */
+  // background-color: rgba(255, 255, 255, 0.2); /* напівпрозорий фон */
+
   top: 0;
   right: 0;
   bottom: 0;

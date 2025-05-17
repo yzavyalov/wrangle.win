@@ -4,7 +4,7 @@ export const PAGE_ROUTES = {
   POLITICS: "/terms",
   RULES: "/rules",
   PRIVACY: "/privacy_policy",
-  EVENTS: "/events",            // no page
+  HOTS: "/hots",
   PROFILE: "/profile",
   CATEGORIES: "/categories",
   NEW_BET: "/new_bet",
@@ -12,6 +12,7 @@ export const PAGE_ROUTES = {
   REGISTER: "/register",
   BET: "/bet",
 
+  EVENTS: "/events",            // no page
   POPULAR: "/popular",          // no page
   PREDICTION: "/prediction",    // temp page
 }
@@ -27,8 +28,8 @@ export const sideBarLinks = [
 
 export const headerLinks = [
   { id: 'categories', name: "All categories", path: PAGE_ROUTES.CATEGORIES },
-  { id: 'popular', name: "Popular", path: PAGE_ROUTES.POPULAR },
-  { id: 'prediction', name: "Prediction", path: PAGE_ROUTES.PREDICTION },
+  // { id: 'popular', name: "Popular", path: PAGE_ROUTES.POPULAR },
+  { id: 'hots', name: "Hots", path: PAGE_ROUTES.HOTS },
   { id: 'new_bet', name: "New bet", path: PAGE_ROUTES.NEW_BET },
 ];
 

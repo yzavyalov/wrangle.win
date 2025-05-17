@@ -7,11 +7,18 @@ export const register = async (payload: RegisterPayload) => {
   return await http.post(AUTH.URL_REGISTER, payload)
   .then(res => {
     console.log(res, "res - register");
-    const { data: { data }, success } = res;
+    if (!res?.data?.data) { return false; }
 
-    if (!success) { return false; }
+    const user = res.data.data;
 
-    return data;
+    const { token } = user;
+
+    token && localStorage.setItem("access_token", token);
+
+    useUserStore().updateUser(user);
+
+    return user;
+
   })
   .catch(e => console.error(e.message));
 }

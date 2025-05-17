@@ -28,12 +28,12 @@ const inputModel = defineModel()
 
     <div class="input-h__wrapper">
       <img v-if="isShowClose" :src="'/images/cross.svg'" class="input-h__close" @click="emit('close:click')" />
-      <input v-if="inputType === 'input'" :type="type" v-model="inputModel" :placeholder="placeholder"  :class="{'with-close': isShowClose}">
       <textarea v-if="inputType === 'textarea'" name="description" cols="30" rows="5" v-model="inputModel" :placeholder="placeholder" :class="{'with-close': isShowClose}"></textarea>
+      <input v-else :type="type" v-model="inputModel" :placeholder="placeholder"  :class="{'with-close': isShowClose}">
     </div>
 
     <slot name="warning">
-      <span v-if="isWarning" class="text-danger">This field is required</span>
+      <span v-if="isWarning" class="text-danger">{{ warningText || 'This field is required' }}</span>
     </slot>
   </div>
 </template>

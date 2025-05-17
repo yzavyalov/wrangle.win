@@ -8,6 +8,7 @@ import LoaderComponent from "@/components/LoaderComponent.vue";
 import DynamicSelector from "@/components/details/DynamicSelector.vue";
 import ButtonWithClose from "@/components/details/ButtonWithClose.vue";
 import { useCategories } from "@/composables/useCategories";
+import { triggerOpenNewModal } from "@/composables/useModalsTriggers";
 
 const {
   categories,

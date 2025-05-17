@@ -13,6 +13,8 @@ export interface CreateBetPayload {
   description: string
   categories: number[]
   source1: string
+  source2?: string
+  source3?: string
   answers: string[]
   finish: Date | string
 }
@@ -23,6 +25,7 @@ export interface ToggleToFavoritePayload {
 
 export interface CreateBitPayload {
   sum: number
+  id: number
 }
 
 export interface BetItem {
@@ -45,4 +48,10 @@ export interface BetItem {
 
 export interface UseBetsOptions {
   isHot?: boolean
+}
+
+export interface BetCaruselPayload {
+  currency_id?: number  // fix after API fix
+  current_id: number
+  direction: "next" | "previous"
 }

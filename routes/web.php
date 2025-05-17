@@ -89,6 +89,10 @@ Route::get('/categories', function () {
     return Inertia::render('Categories');
 });
 
+Route::get('/hots', function () {
+    return Inertia::render('Hots');
+});
+
 Route::get('/404', function () {
     return Inertia::render('Page404');
 });

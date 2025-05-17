@@ -1,17 +1,36 @@
 <script setup>
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, computed, ref } from "vue";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import PageCloudDecorator from '@/components/details/PageCloudDecorator.vue';
-import { getTimeLeft } from '@/helpers/getTimeLeft';
 import { predictionDemoData } from '@/utils/dummyData';
 import BetOptionItem from "@/components/details/BetOptionItem.vue"
+import { getTimeLeft, getDaysLeft } from '@/helpers/getTimeLeft';
+import { getCurrency } from '@/helpers/getCurrency';
+import { useUserStore } from "@/store/user";
+import { useBets } from '@/composables/useBets';
 
 const props = defineProps({
   item: { type: Object, required: true, default: predictionDemoData }, // todo: remove demo data
 })
 
+const { makeNewBit } = useBets();
+
+const isShowSorces = ref(false);
+
+const betAmount = ref();
+
+const dynamicHot = computed(() => getDaysLeft(currentBet.value.finish) <= 1);
+const currentUser = computed(() => useUserStore().getUser);
+const userBalance = computed(() => currentUser.value?.balance?.balance || 0);
+
+const currencyName = getCurrency();
+const biggestProfit = Math.max(props.item.answers.map(item => item.profit || 0)).toFixed(2);
+
+const toggleIsShowSorces = () => {
+  isShowSorces.value = !isShowSorces.value;
+}
 
 onMounted(() => {
   console.log(props.item, 'props.item - onMounted');
@@ -24,7 +43,7 @@ onMounted(() => {
     <div class="p-item__details">
       <div class="p-item__content">
         <div class="p-item__details--header">
-          <div v-if="item.isHot" class="p-item__details--hot">#HOT!</div>
+          <div v-if="dynamicHot" class="p-item__details--hot">#HOT!</div>
         </div>
 
         <div class="p-item__details--main">
@@ -34,19 +53,31 @@ onMounted(() => {
 
           <div class="p-item__details--body">
             <ul class="p-item__details--info">
-              <p class="color-red"><b>Time left: {{ getTimeLeft(item.date) }}</b></p>
-              <li><p>Bet amount: <b>{{ item.betAmount }}</b></p></li>
-              <li><p>Total bets: <b>{{ item.totalBets }}</b></p></li>
-              <li><p>Max. profit from 1€: <b>{{ item.maxProfitPer1Euro }}</b></p></li>
+              <p class="color-red"><b>Time left: {{ getTimeLeft(item.finish) }}</b></p>
+              <li><p>Bet amount: <b>{{ item.betAmount || '--:--' }}</b></p></li>
+              <li><p>Total bets: <b>{{ item.budget }}{{ currencyName }}</b></p></li>
+              <li><p>Max. profit from 1€: <b>{{ biggestProfit }}{{ currencyName }}</b></p></li>
             </ul>
 
-            <ul class="p-item__details--info">
+            <ul v-if="item.tags" class="p-item__details--info">
               <p><b>Tags:</b></p>
               <li v-for="(tag, index) in item.tags" :key="index">{{ tag }}</li>
             </ul>
+            <ul v-else class="p-item__details--info">
+              <p><b>No tags...</b></p>
+            </ul>
           </div>
 
-          <ButtonBase class="p-item__details--btn">Sources:</ButtonBase>
+          <ButtonBase class="p-item__details--btn" :is-active="isShowSorces" @click="toggleIsShowSorces">Sources</ButtonBase>
+
+          <transition name="fade">
+            <ul v-if="isShowSorces">
+              <li v-if="item.source1">1: {{ item.source1 }}</li>
+              <li v-if="item.source2">2: {{ item.source2 }}</li>
+              <li v-if="item.source3">3: {{ item.source3 }}</li>
+              <li v-else>No sources...</li>
+            </ul>
+          </transition>
         </div>
       </div>
     </div>
@@ -56,19 +87,26 @@ onMounted(() => {
         <h4 class="p-item__options--title">Make a prediction</h4>
         <div class="p-item__options--wallet">
           <p class="coin-decorator">
-            Your Wallet: <b>{{ predictionDemoData.wallet }}</b>
+            Your Wallet: <b>{{ userBalance }}{{ currencyName }}</b>
           </p>
           <div class="p-item__options--input">
             <span class="text-right font-italic">Amount:</span>
-            <input class="text-right" type="number" min="0" step="1">
+            <!-- <input v-model="betAmount" class="text-right" type="number" min="0" step="1"> -->
+            <input v-model="betAmount"
+              class="text-right"
+              type="number"
+              :min="1"
+              :step="0.01"
+            >
           </div>
         </div>
         <h4 class="p-item__options--title">Сhoose option</h4>
 
-        <BetOptionItem v-for="(item, index) in predictionDemoData.options"
+        <BetOptionItem v-for="(item, index) in item.answers"
           :key="index"
           :option="item"
           class="mb-10"
+          @click="makeNewBit(item)"
         />
 
       </div>
@@ -84,6 +122,7 @@ onMounted(() => {
   }
 
   &__wrapper {
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(2, 50%);
     overflow: hidden;
@@ -144,6 +183,7 @@ onMounted(() => {
     &--info {
       font-size: 20px;
       margin-top: 10px;
+      margin-bottom: auto;
 
       &:last-child {
         display: flex;
