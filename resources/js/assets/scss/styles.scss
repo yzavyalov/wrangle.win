@@ -28,6 +28,7 @@ body {
   font-weight: normal;
 
   background: url('/images/sky.svg') no-repeat center -100px fixed, var(--bg-color-main);
+  overflow-x: hidden;
 }
 
 .container {
