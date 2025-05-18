@@ -54,25 +54,27 @@ export const loginWithSocial = async (social: SocialLoginType) => {
 
   const baseUrl = `/api/auth/${social}/redirect`;
 
-  return await http.get(baseUrl)
-  .then(res => {
-    console.log(res, "res - loginWithSocial");
-    if (!res?.data?.data) { return false; }
+  window.location.href = baseUrl;
 
-    const user = res.data.data;
+  // return await http.get(baseUrl)
+  // .then(res => {
+  //   console.log(res, "res - loginWithSocial");
+  //   if (!res?.data?.data) { return false; }
 
-    const { token } = user;
+  //   const user = res.data.data;
 
-    token && localStorage.setItem("access_token", token);
+  //   const { token } = user;
 
-    useUserStore().updateUser(user);
+  //   token && localStorage.setItem("access_token", token);
 
-    return user;
-  })
-  .catch(e => {
-    notifyWarning(e?.response?.data?.message || e?.message);
-    console.error(e?.response?.data?.message || e?.message);
-  });
+  //   useUserStore().updateUser(user);
+
+  //   return user;
+  // })
+  // .catch(e => {
+  //   notifyWarning(e?.response?.data?.message || e?.message);
+  //   console.error(e?.response?.data?.message || e?.message);
+  // });
 };
 
 export const logout = async () => {

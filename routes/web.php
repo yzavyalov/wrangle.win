@@ -26,13 +26,13 @@ use App\Models\Bet;
 |
 */
 
-Route::fallback(function () {
-    if(Auth()->id()==null)
+// Route::fallback(function () {
+//     if(Auth()->id()==null)
 
-    // return redirect()->to('/');
+//     // return redirect()->to('/');
 
-    return redirect()->to('/404');
-});
+//     return redirect()->to('/404');
+// });
 
 Route::get('/', function () {
     return Inertia::render('Home');
