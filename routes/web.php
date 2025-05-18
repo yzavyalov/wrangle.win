@@ -77,13 +77,7 @@ Route::get('/bet/{id}', function ($id) {
     ]);
 });
 
-Route::get('/new_bet', function () {
-    return Inertia::render('NewBet');
-});
 
-Route::get('/profile', function () {
-    return Inertia::render('Profile', ['auth' => Auth::check(), 'user' => Auth::user(), 'session' => session()->all()]);
-});
 
 Route::get('/categories', function () {
     return Inertia::render('Categories');
@@ -102,10 +96,19 @@ Route::get('/form-reset-password', function (){dd('form here');});
 Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.post');
 
-
 Route::get('/auth/{provider}/redirect',[SocialController::class,'redirect'])->name('social.redirect');
 Route::get('/auth/{provider}/callback',[SocialController::class,'callback'])->name('social.callback');
 
+Route::middleware('authentication')->group(function (){
+    Route::get('/profile', function () {
+        return Inertia::render('Profile', ['auth' => Auth::check(), 'user' => Auth::user(), 'session' => session()->all()]);
+    })->name('profile');
+
+    Route::get('/new_bet', function () {
+        return Inertia::render('NewBet');
+    });
+
+});
 
 Route::middleware('moderator')->prefix('/admin-panel')->group(function (){
     Route::post('/check-code',[AdminTwoFactorAuthController::class, 'checkCode'])->name('check-code');

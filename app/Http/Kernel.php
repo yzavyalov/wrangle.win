@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\AdminTwoFactorAuthMiddleware;
+use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\BadUserMiddleware;
 use App\Http\Middleware\ModeratorMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -92,5 +93,6 @@ class Kernel extends HttpKernel
         'moderator' => ModeratorMiddleware::class,
         'twofactor' => AdminTwoFactorAuthMiddleware::class,
         'baduser' => BadUserMiddleware::class,
+        'authentication' => AuthMiddleware::class,
     ];
 }

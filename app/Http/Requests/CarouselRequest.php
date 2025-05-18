@@ -22,7 +22,7 @@ class CarouselRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'currency_id' => 'required|integer|exists:bets,id',
+            'current_id' => 'required|integer|exists:bets,id',
             'direction' => 'required|string|in:next,previous',
         ];
     }

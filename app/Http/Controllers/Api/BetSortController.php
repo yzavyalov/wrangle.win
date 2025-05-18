@@ -116,7 +116,7 @@ class BetSortController extends Controller
     {
         $data = $request->validated();
 
-        $currencyId = $data['currency_id'];
+        $currencyId = $data['current_id'];
 
         if ($data['direction'] === 'next')
         {

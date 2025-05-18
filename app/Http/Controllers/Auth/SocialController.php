@@ -33,7 +33,9 @@ class SocialController extends Controller
         {
             $user = $socialAccount->user;
 
-            return $this->successJsonAnswer200('User',AuthResource::make($user));
+//            return $this->successJsonAnswer200('User',AuthResource::make($user));
+            auth()->login($user);
+            return redirect()->route('profile');
         }
         else
         {
@@ -65,12 +67,17 @@ class SocialController extends Controller
                         'provider_id' => $socialUser->getId(),
                     ]);
 
-                    return $this->successJsonAnswer200('User',AuthResource::make($user));
+//                    return $this->successJsonAnswer200('User',AuthResource::make($user));
+                    \auth()->login($user);
+                    return redirect()->route('profile');
                 }
             }
             else
             {
-                return $this->successJsonAnswer200('User',AuthResource::make($user));
+                Auth::login($user);
+
+                return redirect()->route('profile');
+//                return $this->successJsonAnswer200('User',AuthResource::make($user));
             }
         }
 
