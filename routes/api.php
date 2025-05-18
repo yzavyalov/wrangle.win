@@ -82,7 +82,7 @@ Route::middleware(['auth:sanctum','baduser'])->group(function (){
 
 
 
-//    Route::post('payment/payout/cryptoprocessing',[PayOutController::class,'payoutCrypto']);
+    Route::post('payment/payout/cryptoprocessing',[PayOutController::class,'payoutCrypto']);
 });
 
 

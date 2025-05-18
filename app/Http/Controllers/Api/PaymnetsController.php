@@ -42,6 +42,4 @@ class PaymnetsController extends Controller
 
         return $answer;
     }
-
-
 }
