@@ -52,7 +52,7 @@ export const login = async (payload: LoginPayload) => {
 
 export const loginWithSocial = async (social: SocialLoginType) => {
 
-  const baseUrl = `/api/auth/${social}/redirect`;
+  const baseUrl = `/auth/${social}/redirect`;
 
   window.location.href = baseUrl;
 
