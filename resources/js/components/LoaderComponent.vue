@@ -10,15 +10,6 @@
 
 <style scoped lang='scss'>
 .loader {
-
-  &__wrapper {
-    position: absolute;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
   position: absolute;
   width: 50px;
   padding: 8px;
@@ -33,6 +24,14 @@
   -webkit-mask-composite: source-out;
           mask-composite: subtract;
   animation: l3 1s infinite linear;
+
+  &__wrapper {
+    position: absolute;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 @keyframes l3 {to{transform: rotate(1turn)}}
 </style>

@@ -9,6 +9,7 @@ import { required, sameAs, email, minLength } from '@vuelidate/validators';
 import { register, login, loginWithSocial } from '@/services/user';
 import { PAGE_ROUTES } from '@/utils/datasets';
 import { useInform } from "@/composables/useInform"
+import { notifyWarning } from '@/helpers/notify';
 
 const props = defineProps({
   isLoginVariant: { type: Boolean, default: true, },
@@ -67,7 +68,10 @@ const loginWithSocialHandler = async (socialName) => {
   const result = await loginWithSocial(socialName);
   console.log(result, 'result - loginWithSocialHandler');
 
-  if (!result) return console.warn('loginWithSocialHandler error');
+  if (!result) {
+    notifyWarning(`Login with ${socialName} error. Please try again later`);
+    return console.warn('loginWithSocialHandler error');
+  }
 
   navigateTo(PAGE_ROUTES.PROFILE);
 }
