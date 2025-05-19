@@ -26,6 +26,7 @@ use App\Models\Bet;
 |
 */
 
+
 Route::fallback(function () {
     if(Auth()->id()==null)
 
@@ -101,7 +102,7 @@ Route::get('/auth/{provider}/callback',[SocialController::class,'callback'])->na
 
 Route::middleware('authentication')->group(function (){
     Route::get('/profile', function () {
-        return Inertia::render('Profile', ['auth' => Auth::check(), 'user' => Auth::user(), 'session' => session()->all()]);
+        return Inertia::render('Profile', ['auth' => Auth::check()]);
     })->name('profile');
 
     Route::get('/new_bet', function () {

@@ -6,6 +6,8 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use SocialiteProviders\Manager\SocialiteWasCalled;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,5 +30,13 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Paginator::useBootstrap();
+
+        Inertia::share([
+            'auth' => function () {
+                return [
+                    'user' => Auth::user(),
+                ];
+            },
+        ]);
     }
 }

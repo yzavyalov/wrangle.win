@@ -6,13 +6,23 @@ import { useModals } from '@/composables';
 import { onBeforeMount, onMounted } from 'vue';
 import { getUserData } from '@/services/user';
 import { useSettingsStore } from "@/store/settings";
+import { usePage } from '@inertiajs/vue3';
+import { useUserStore } from "@/store/user";
 
 
 const { modals } = useModals({ isLayout: true });
 
+const userDatahandler = () => {
+  const user = usePage().props?.auth?.user || null;
+  // console.log(user, 'user - userDatahandler');
+  user && useUserStore().updateUser(user);
+
+  getUserData();
+}
+
 onMounted(() => {
   // fetch user data from server
-  getUserData();
+  userDatahandler();
 })
 
 </script>
