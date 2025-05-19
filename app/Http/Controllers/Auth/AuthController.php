@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -37,7 +38,7 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-//        $token = $user->createToken('auth-token')->plainTextToken;
+        //        $token = $user->createToken('auth-token')->plainTextToken;
         auth()->login($user);
 
         $this->userService->putInSession($user);
@@ -48,6 +49,10 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
+        // Auth::logout();
+        Auth::guard('web')->logout(); // ← критично
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return response()->json(['message' => 'Logged out']);
     }
 
