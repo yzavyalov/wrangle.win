@@ -68,11 +68,11 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Password::min(8)
-        ->mixedCase()     // минимум одна заглавная и одна строчная буква
+//        ->mixedCase()     // минимум одна заглавная и одна строчная буква
         ->letters()       // хотя бы одна буква
         ->numbers()       // хотя бы одна цифра
         ->symbols()       // хотя бы один символ
-        ->uncompromised() // не был скомпрометирован (проверка через HaveIBeenPwned API)
+//        ->uncompromised() // не был скомпрометирован (проверка через HaveIBeenPwned API)
     ],
         ]);
 
