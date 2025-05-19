@@ -7,16 +7,14 @@ import { toggleBodyScroll } from "@/helpers/toggleBodyScroll";
 import { navigateTo } from '@/helpers/navigate';
 import { logout } from '@/services/user';
 
-defineOptions({
-  name: "ProfileMenu"
-})
+defineOptions({ name: "ProfileMenu" })
 
 const emit = defineEmits(["close"]);
 
 const emitClose = () => emit("close");
 
-const logOutHandle = () => {
-  logout();
+const logOutHandle = async () => {
+  await logout();
 
   navigateTo(PAGE_ROUTES.LOGIN);
 }

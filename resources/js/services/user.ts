@@ -3,6 +3,9 @@ import { AUTH } from "@/api/enpoints";
 import { useUserStore } from "@/store/user";
 import { HTTPResponse } from "@/types/http";
 import { notifyWarning } from "@/helpers/notify";
+import { lo } from "element-plus/es/locale";
+
+const AUTH_ACCESS_TOKEN_KEY = "access_token";
 
 export const register = async (payload: RegisterPayload) => {
   return await http.post(AUTH.URL_REGISTER, payload)
@@ -14,7 +17,7 @@ export const register = async (payload: RegisterPayload) => {
 
     const { token } = user;
 
-    token && localStorage.setItem("access_token", token);
+    token && localStorage.setItem(AUTH_ACCESS_TOKEN_KEY, token);
 
     useUserStore().updateUser(user);
 
@@ -38,7 +41,7 @@ export const login = async (payload: LoginPayload) => {
 
     const { token } = user;
 
-    token && localStorage.setItem("access_token", token);
+    token && localStorage.setItem(AUTH_ACCESS_TOKEN_KEY, token);
 
     useUserStore().updateUser(user);
 
@@ -85,7 +88,7 @@ export const logout = async () => {
 
     useUserStore().logout();
 
-    localStorage.removeItem("access_token")
+    localStorage.removeItem(AUTH_ACCESS_TOKEN_KEY)
 
     return ;
   })
