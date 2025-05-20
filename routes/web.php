@@ -102,7 +102,7 @@ Route::get('/auth/{provider}/callback',[SocialController::class,'callback'])->na
 
 Route::middleware('authentication')->group(function (){
     Route::get('/profile', function () {
-        return Inertia::render('Profile', ['auth' => Auth::check()]);
+        return Inertia::render('Profile');
     })->name('profile');
 
     Route::get('/new_bet', function () {
