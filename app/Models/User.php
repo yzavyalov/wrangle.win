@@ -99,4 +99,9 @@ class User extends Authenticatable
         return $this->hasMany(AlphaPoWallet::class);
     }
 
+    public function deposits()
+    {
+        return $this->hasMany(Deposit::class);
+    }
+
 }

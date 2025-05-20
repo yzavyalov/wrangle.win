@@ -6,6 +6,7 @@ use App\Http\Enums\DepositStatusEnum;
 use App\Http\Enums\TransactionMethodEnum;
 use App\Models\Deposit;
 use App\Models\User;
+use App\Services\DepositService;
 use App\Services\PaymentLogsService;
 use App\Services\TransactionService;
 use Illuminate\Support\Facades\Log;
@@ -23,9 +24,13 @@ class AlphaPoService
         try {
             $userId = $response['crypto_address']['foreign_id'] ?? null;
             $amount = $response['currency_received']['amount_minus_fee'] ?? null;
+            $currency = $response['crypto_address']['currency'] ?? null;
 
-            if($userId & $amount){
-                $deposit = Deposit::where('user_id', $userId)->orderByDesc('id')->first();
+            if($userId & $amount)
+            {
+                $user = User::query()->findOrFail($userId);
+
+                $deposit = DepositService::checkDepositStatus($user,$amount, $currency);
 
                 if ($deposit){
                     $deposit->status = DepositStatusEnum::PAYED;

@@ -24,4 +24,9 @@ class Deposit extends Model
     {
         return $this->morphMany(Payment_log::class,'payment_logtable');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
