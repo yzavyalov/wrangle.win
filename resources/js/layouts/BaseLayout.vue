@@ -17,7 +17,7 @@ const userDatahandler = () => {
   // console.log(user, 'user - userDatahandler');
   user && useUserStore().updateUser(user);
 
-  getUserData();
+  user && getUserData();
 }
 
 onMounted(() => {
