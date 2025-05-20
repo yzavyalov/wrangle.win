@@ -13,7 +13,7 @@ const handleNavigate = async (url) => {
   navigateTo(url);
 
   await nextTick(() => window.scrollTo(0, 0));
-  triggerCloseModal();
+  triggerCloseModal('all');
 }
 
 </script>

@@ -14,7 +14,7 @@ export const triggerOpenNewModal = async (modalName: string, options: OpenNewMod
 };
 
 
-export const triggerCloseModal = async (modalName: string, options: any = {}) => {
+export const triggerCloseModal = async (modalName: string | null = null, options: any = {}) => {
   console.log("triggerCloseModal");
 
   const event = new CustomEvent(CLOSE_MODAL_EVENT_NAME, {

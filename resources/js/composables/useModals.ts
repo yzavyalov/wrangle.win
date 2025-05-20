@@ -11,6 +11,7 @@ export const useModals = (options: UseModalsOptions) => {
   const {
     newModal,
     closeModal,
+    closeAllModals,
     updateModalContent,
     setModalContent,
     clearModalContent
@@ -37,6 +38,12 @@ export const useModals = (options: UseModalsOptions) => {
   }
 
   const closeModalhandler = (modalName, options = {}) => {
+    if (!modalName) {
+      const lastModalName = modals.value[modals.value.length - 1];
+      closeModal(lastModalName);
+      return;
+    }
+
     closeModal(modalName);
   }
 
@@ -52,6 +59,11 @@ export const useModals = (options: UseModalsOptions) => {
     console.log(event.detail, "event.detail - closeModalEventHandler");
 
     const dynamicModalName = typeof modalName === "string" ? modalName : null;
+
+    if (modalName === 'all') {
+      closeAllModals();
+      return;
+    }
 
     closeModalhandler(dynamicModalName, options);
   }

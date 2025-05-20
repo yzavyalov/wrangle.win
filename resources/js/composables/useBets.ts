@@ -1,6 +1,6 @@
 import { computed, nextTick, Ref, ref, watch } from "vue";
 import { getActualBets, getHotBets, searchBets as apiSearchBets, BET_OPTION_KEY } from '@/services/bets';
-import { triggerOpenNewModal } from "@/composables/useModalsTriggers";
+import { triggerCloseModal, triggerOpenNewModal } from "@/composables/useModalsTriggers";
 import { BetItem, SearchBetsPayload, UseBetsOptions } from "@/types/bets";
 import { useFilters } from "@/composables/useFilters";
 import { useLoading } from "@/composables/useLoading";
@@ -57,15 +57,14 @@ export const useBets = (options: UseBetsOptions = {}) => {
   const makeNewBit = async (option: any) => {
     console.log(option, 'option - makeNewBit');
 
-    // if (!currentUser.value) {
-    //   return triggerOpenNewModal('login-or-register-modal')
-    // }
+    if (!currentUser.value) {
+      return triggerOpenNewModal('login-or-register-modal')
+    }
 
-    // if (!currentUser.value?.balance) {
-    //   return triggerOpenNewModal('propose-balance-modal')
-    // }
-
-    console.warn('NO LOGIC YET');
+    if (!currentUser.value?.balance) {
+      triggerOpenNewModal('propose-balance-modal')
+      return
+    }
 
     setQueryParam(BET_OPTION_KEY, `${option.id}`)
 
@@ -82,14 +81,7 @@ export const useBets = (options: UseBetsOptions = {}) => {
 
       let betsHandler;
 
-      // console.log("AAAAAAAAAAAAAAAAAAA");
-      // console.log("AAAAAAAAAAAAAAAAAAA");
-
       console.log(isDefualtFilters.value, 'isDefualtFilters.value');
-
-      // console.log("AAAAAAAAAAAAAAAAAAA");
-      // console.log("AAAAAAAAAAAAAAAAAAA");
-
 
       if (isDefualtFilters.value) {
         betsHandler = isHot ? getHotBets : getActualBets;
