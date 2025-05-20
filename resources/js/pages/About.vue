@@ -29,7 +29,7 @@ const pageText = `
   </p>
 
   <p style="margin-bottom: 20px;">
-  That’s why we partner with https://iafs.info/ludo-system, a platform where individuals struggling with gambling addiction can register themselves to limit their spending and take back control.
+  That’s why we partner with <a href="https://iafs.info/ludo-system" alt="Ludo system">https://iafs.info/ludo-system</a>, a platform where individuals struggling with gambling addiction can register themselves to limit their spending and take back control.
    </p>
 </div>
 `;

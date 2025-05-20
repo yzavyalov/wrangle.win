@@ -45,9 +45,9 @@ const pageText = `
 
   <p style="margin-top: 20px;"><b>Contact</b></p>
   <p style="margin-bottom: 20px;">For questions or concerns, contact us:</p>
-  <p style="margin: 0;">Nikita and Ko</p>
-  <p>Ontario, Canada</p>
-  <p><a href="mailto:support@wrangle.win" style="color: #0066cc;">support@wrangle.win</a></p>
+  <p style="margin: 0;">DADORI CAPITAL INC.</p>
+  <p>British Virgin Islands</p>
+  <p><a href="mailto:wrangle@wrangle.win" style="color: #0066cc;">wrangle@wrangle.win</a></p>
 </div>
 `;
 </script>
