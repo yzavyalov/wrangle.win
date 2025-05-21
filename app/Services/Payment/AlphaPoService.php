@@ -70,4 +70,18 @@ class AlphaPoService
         }
     }
 
+
+    public function getCallBackWithdrawal(array $response)
+    {
+        try {
+
+        }
+        catch (\Exception $e) {
+            Log::error('Ошибка в getCallBackDeposit', [
+                'message' => $e->getMessage(),
+                'response' => $response,
+            ]);
+        }
+    }
+
 }

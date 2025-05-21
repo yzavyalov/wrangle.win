@@ -89,8 +89,10 @@ class AlphaPoController extends Controller
             return response('Missing required parameters', 400);
         }
 
-        // Найти депозит, сохранить
-        $this->alphaPoService->getCallBackDeposit($data);
+
+        if ($data['type'] == 'deposit')
+            $this->alphaPoService->getCallBackDeposit($data);
+        elseif ($data['type'] == 'withdrawal')
 
 
         // Order::where('id', $data['order_id'])->update([...]);
