@@ -24,6 +24,7 @@ class PaginateRequest extends FormRequest
         return [
             'page' => 'nullable|integer',
             'per_page' => 'nullable|integer',
+            'sort_order' => 'nullable|string|in:desc,asc'
         ];
     }
 }
