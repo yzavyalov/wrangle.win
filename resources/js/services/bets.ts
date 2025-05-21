@@ -97,15 +97,32 @@ export const getBetById = async (betId) => {
 };
 
 export const searchBets = async (payload: SearchBetsPayload) => {
-  if (!payload) { return console.warn("Payload is required");}
+  if (!payload) {
+    console.warn("Payload is required");
+    return;
+  }
 
-  const { data: { data, success } } = await http.post(BETS.SEARCH_BET, payload)
+  console.log(payload, 'payload - searchBets');
+
+  const params = new URLSearchParams();
+
+  Object.entries(payload).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach(v => params.append(`${key}[]`, String(v)));
+    } else {
+      params.append(key, String(value));
+    }
+  });
+
+  const requestUrl = BETS.SEARCH_BET + "?" + params.toString();
+
+  const { data: { data, success } } = await http.get(requestUrl);
   console.log(data, 'data');
   console.log(success, 'success');
 
-  if (!success) { return false; }
+  if (!success) return false;
 
-  return data?.bets
+  return data?.bets;
 };
 
 

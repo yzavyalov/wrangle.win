@@ -1,4 +1,4 @@
-import { computed, nextTick, Ref, ref, watch } from "vue";
+import { computed, nextTick, Ref, ref, watch, watchEffect } from "vue";
 import { getActualBets, getHotBets, searchBets as apiSearchBets, BET_OPTION_KEY } from '@/services/bets';
 import { triggerCloseModal, triggerOpenNewModal } from "@/composables/useModalsTriggers";
 import { BetItem, SearchBetsPayload, UseBetsOptions } from "@/types/bets";
@@ -6,6 +6,8 @@ import { useFilters } from "@/composables/useFilters";
 import { useLoading } from "@/composables/useLoading";
 import { useUserStore } from "@/store/user";
 import { useHistory } from "@/composables/useHistory";
+import { useDebounceFn } from "@vueuse/core";
+import { sortArr } from "@/helpers/sortArr"
 
 
 export const useBets = (options: UseBetsOptions = {}) => {
@@ -27,9 +29,11 @@ export const useBets = (options: UseBetsOptions = {}) => {
   const isFirstPage = computed(() => pagination.value.page === 1);
 
   const dynamicBets = computed(() => {
-    if (!searchQuery.value?.trim()) {return bets.value;}
+    if (!bets.value?.length) {return [];}
+    // if (!searchQuery.value?.trim()) {return bets.value;}
 
-    return bets.value.filter(bet => bet.title.toLowerCase().includes(searchQuery.value.toLowerCase() || bet.description.toLowerCase().includes(searchQuery.value.toLowerCase())));
+    // return bets.value.filter(bet => bet.title.toLowerCase().includes(searchQuery.value.toLowerCase() || bet.description.toLowerCase().includes(searchQuery.value.toLowerCase())));
+    return sortArr(bets.value, sortBy, 'finish');
   });
 
   const openBetModal = () => {
@@ -44,6 +48,7 @@ export const useBets = (options: UseBetsOptions = {}) => {
       page: pagination.value.page,
       per_page: pagination.value.per_page,
 
+      sort_by: "finish",
       sort_order: sortBy.value,
     }
 
@@ -123,6 +128,21 @@ export const useBets = (options: UseBetsOptions = {}) => {
 
     fetchBets();
   }
+
+  const newFetchDebounced = useDebounceFn(() => {
+    fetchBets();
+  }, 500)
+
+
+  watch(
+    () => [ filters.value, searchQuery.value, selectedCategories.value ],
+    () => {
+      console.log('filters.value, searchQuery.value, selectedCategories.value - watch');
+
+      nextTick(() => newFetchDebounced())
+    },
+    { deep: true }
+  )
 
   watch(
     () => filters.value,
