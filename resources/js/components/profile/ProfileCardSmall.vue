@@ -7,7 +7,7 @@ import { PAGE_ROUTES } from '@/utils/datasets';
 import { getCurrency } from '@/helpers/getCurrency';
 
 const currentUser = computed(() => useUserStore().getUser);
-const userBalance = computed(() => currentUser.value?.balance?.balance || 0);
+const userBalance = computed(() => Number(currentUser.value?.balance?.balance || 0)?.toFixed(2) || 0);
 const currencyName = getCurrency();
 
 </script>

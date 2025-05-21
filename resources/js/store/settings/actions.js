@@ -57,6 +57,6 @@ export default {
     this.filters = defaultFilters;
 
     const sortByFromLocalStore = getFromLocalStorage('sortBy');
-    this.sortBy = sortByFromLocalStore || 'desc';
+    this.sortBy = sortByFromLocalStore || 'asc';
   },
 };

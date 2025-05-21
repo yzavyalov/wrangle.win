@@ -6,6 +6,7 @@ import { profileMenuLinks, PAGE_ROUTES } from "@/utils/datasets";
 import { toggleBodyScroll } from "@/helpers/toggleBodyScroll";
 import { navigateTo } from '@/helpers/navigate';
 import { logout } from '@/services/user';
+import { notifyWarning } from "@/helpers/notify";
 
 defineOptions({ name: "ProfileMenu" })
 
@@ -28,6 +29,7 @@ const linkActionHandle = (link) => {
       break;
 
     default:
+      notifyWarning("this feature is comming soon...");
       console.warn(`No handle for this action - '${link.action}'`);
       break;
   }

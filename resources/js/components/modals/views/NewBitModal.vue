@@ -24,7 +24,7 @@ const bitAmount = ref(1);
 const currencyName = getCurrency();
 
 const currentUser = computed(() => getUser);
-const userBalance = computed(() => currentUser.value?.balance?.balance || 0);
+const userBalance = computed(() => Number(currentUser.value?.balance?.balance || 0)?.toFixed(2) || 0);
 
 const rules = computed(() => {
   return {

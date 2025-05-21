@@ -8,7 +8,7 @@ import { useLoading } from '@/composables/useLoading';
 import { cutTextLength } from '@/helpers/cutTextLength';
 import { useCategories } from "@/composables/useCategories";
 import { register, login, loginWithSocial } from '@/services/user';
-import { predictionDemoData, demoBetDataPayload } from '@/utils/dummyData';
+// import { predictionDemoData, demoBetDataPayload } from '@/utils/dummyData';
 import { required, sameAs, email, minLength, helpers, maxLength } from '@vuelidate/validators';
 import useVuelidate from '@vuelidate/core';
 import LoaderComponent from '@/components/LoaderComponent.vue';
