@@ -1,10 +1,13 @@
-import { defaultFilters } from '@/utils/datasets'
+import { defaultFilters } from '@/utils/datasets';
+import { getFromLocalStorage, setToLocalStorage } from '@/helpers/localStorage';
 
 export default {
   toggleSortBy() {
     // desc | asc
     const newState = this.sortBy === 'asc' ? 'desc' : 'asc';
     this.sortBy = newState;
+
+    setToLocalStorage('sortBy', newState);
   },
 
   setFilters(filters) {
@@ -51,8 +54,9 @@ export default {
 
     this.selectedCategories = [];
 
-    this.sortBy = 'desc';
-
     this.filters = defaultFilters;
+
+    const sortByFromLocalStore = getFromLocalStorage('sortBy');
+    this.sortBy = sortByFromLocalStore || 'desc';
   },
 };
