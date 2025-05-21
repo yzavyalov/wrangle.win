@@ -52,7 +52,11 @@ Route::post('/alphapo/callback', [AlphaPoController::class, 'handle']);
 
 Route::middleware(['auth:sanctum','baduser'])->group(function (){
     Route::get('/user', [AuthController::class, 'me']);
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('web');;
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('web');
+    Route::put('/update-profile',[UserDataController::class,'updateProfile']);
+    Route::put('/user/password', [UserDataController::class,'changeUserPassword']);
+
+
 
     Route::post('/bet-categories',[BetCategoryController::class,'store']);
     Route::post('/bets',[BetController::class,'store']);

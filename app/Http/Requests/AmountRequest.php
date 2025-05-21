@@ -25,6 +25,7 @@ class AmountRequest extends FormRequest
         return [
             'amount' => ['nullable', 'numeric'],
             'currency' => 'required|string|max:10|min:3',
+            'tag' => 'nullable|string',
         ];
     }
 }
