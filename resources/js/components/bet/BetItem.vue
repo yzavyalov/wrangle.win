@@ -26,7 +26,10 @@ const currentUser = computed(() => useUserStore().getUser);
 const userBalance = computed(() => currentUser.value?.balance?.balance || 0);
 
 const currencyName = getCurrency();
-const biggestProfit = Math.max(props.item.answers.map(item => item.profit || 0)).toFixed(2);
+const biggestProfit = computed(() => {
+  if (!props.item.answers.length) return 0.00;
+  return Math.max(...props.item.answers.map(item => item.profit)).toFixed(2)
+});
 
 const toggleIsShowSorces = () => {
   isShowSorces.value = !isShowSorces.value;
