@@ -52,7 +52,11 @@ Route::post('/alphapo/callback', [AlphaPoController::class, 'handle']);
 
 Route::middleware(['auth:sanctum','baduser'])->group(function (){
     Route::get('/user', [AuthController::class, 'me']);
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('web');;
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('web');
+    Route::put('/update-profile',[UserDataController::class,'updateProfile']);
+    Route::put('/user/password', [UserDataController::class,'changeUserPassword']);
+
+
 
     Route::post('/bet-categories',[BetCategoryController::class,'store']);
     Route::post('/bets',[BetController::class,'store']);
@@ -72,13 +76,13 @@ Route::middleware(['auth:sanctum','baduser'])->group(function (){
     Route::get('/payment/deposit/cryptoprocessing/invoice/create',[DepositController::class,'cryptoInvoiceCreate']);
 
     Route::get('/payments/out',[PaymnetsController::class,'allOutPayments']);
-    Route::get('/payments/out/cryptoprocessing/payout',[PayOutController::class,'payoutCrypto']);
 
     Route::get('/payment/deposit/cryptoprocessing/currency-list',[AlphaPoController::class,'cryptoList']);
     Route::get('/payment/deposit/cryptoprocessing/pare',[AlphaPoController::class,'pare']);
     Route::post('/payment/deposit/cryptoprocessing/rates',[AlphaPoController::class,'rates']);
 
     Route::get('/payments/out',[PaymnetsController::class,'allOutPayments']);
+    Route::post('/payments/out/cryptoprocessing/payout',[PayOutController::class,'payoutCrypto']);
 
 
 

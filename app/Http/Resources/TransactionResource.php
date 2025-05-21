@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources;
 
-use App\Enum\TransactionMethodEnum;
-use App\Enum\TransactionOperationEnum;
-use App\Enum\TransactionStatusEnum;
+
+use App\Http\Enums\TransactionMethodEnum;
+use App\Http\Enums\TransactionOperationEnum;
+use App\Http\Enums\TransactionStatusEnum;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

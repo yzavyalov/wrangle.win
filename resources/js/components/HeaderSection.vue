@@ -130,7 +130,7 @@ onUnmounted(() => {
       </nav>
 
       <div class="search hide_on_mobile">
-        <input type="text" :value="searchQuery" placeholder="Search Markets" @input="updateSearchQuery" />
+        <input type="text" :value="searchQuery" placeholder="Search Events" @input="updateSearchQuery" />
       </div>
 
       <div class="auth">

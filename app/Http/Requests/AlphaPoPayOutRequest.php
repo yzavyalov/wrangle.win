@@ -24,7 +24,7 @@ class AlphaPoPayOutRequest extends FormRequest
     {
         return [
             'amount' => 'required|numeric',
-            'convert_to' => 'required|string|min:2|max:7',
+            'convert_to' => 'required|string|min:2|max:10',
             'address' => 'required|string',
             'tag' => 'nullable|string',
         ];
