@@ -16,6 +16,16 @@ class PayOutController extends Controller
 
     public function payoutCrypto(AlphaPoPayOutRequest $request)
     {
-        return $this->outsidePaymentService->cryptoProcessingService->payOut($request->validated());
+        $data = $request->validated();
+
+        $amount = $data['amount'];
+
+        $currency = $data['convert_to'];
+
+        $address = $data['address'];
+
+        $tag = $data['tag'] ?? null;
+
+        return $this->outsidePaymentService->cryptoProcessingService->payOut($amount,$currency,$address,$tag);
     }
 }
