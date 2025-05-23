@@ -35,7 +35,7 @@ export const headerLinks = [
 
 export const profileMenuLinks = [
   { id: 1, name: "Upload Profile picture", action: "change_avatar" },
-  { id: 2, name: "Change username", action: "change_username" },
+  { id: 2, name: "Change username", action: "update_profile" },
   { id: 3, name: "Change Password", action: "change_password" },
   { id: 4, name: "Delete Account", action: "delete_account" },
   { id: 5, name: "Logout", action: "logout" },

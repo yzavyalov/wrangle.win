@@ -1,9 +1,10 @@
 import PredictionComp from "@/components/bet/PredictionComp.vue";
 import EventCardFull from "@/components/EventCardFull.vue";
 import LoginOrRegister from "@/components/modals/views/LoginOrRegister.vue";
-import ProposePopUpBalance from "@/components/modals/views/ProposePopUpBalance.vue"
-import NewBitModal from "@/components/modals/views/NewBitModal.vue"
-import UpdatePassword from "@/components/modals/views/UpdatePassword.vue"
+import ProposePopUpBalance from "@/components/modals/views/ProposePopUpBalance.vue";
+import NewBitModal from "@/components/modals/views/NewBitModal.vue";
+import UpdatePassword from "@/components/modals/views/UpdatePassword.vue";
+import UpdateProfile from "@/components/modals/views/UpdateProfile.vue";
 
 export const getModalComponent = modalName => {
   const dynamicModalName = modalName?.value ? modalName.value : modalName;
@@ -26,6 +27,9 @@ export const getModalComponent = modalName => {
 
     case "update-password-modal":
       return UpdatePassword;
+
+    case "update-profile-modal":
+      return UpdateProfile;
 
     default:
       console.warn(`No handle for such modal name - ${modalName}`);
