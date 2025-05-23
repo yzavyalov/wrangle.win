@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\Auth;
 
 class DepositService
 {
-    public function createDeposit($amount, $currency)
+    public function createDeposit($amount, $currency, $payment_id)
     {
         $deposit = new Deposit();
 
         $deposit->user_id = Auth::id();
 
-        $deposit->payment_id = Payment::query()->where('name','AlphaPo')->first()->id;
+        $deposit->payment_id = $payment_id;
 
         $deposit->sum = $amount;
 
@@ -31,12 +31,12 @@ class DepositService
 
 
 
-    public static function checkDepositStatus(User $user, $amount, $currency)
+    public static function checkDepositStatus(User $user, $amount, $currency, $payment_id)
     {
         $lastdeposit = $user->deposits()->orderByDesc('id')->first();
 
         if ($lastdeposit->status === DepositStatusEnum::PAYED || $lastdeposit->status === DepositStatusEnum::CANCELED)
-            return (new DepositService)->createDeposit($amount, $currency);
+            return (new DepositService)->createDeposit($amount, $currency, $payment_id);
         else
             return $lastdeposit;
     }

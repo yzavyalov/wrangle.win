@@ -26,6 +26,6 @@ class PayOutController extends Controller
 
         $tag = $data['tag'] ?? null;
 
-        return $this->outsidePaymentService->cryptoProcessingService->payOut($amount,$currency,$address,$tag);
+        return $this->outsidePaymentService->createAlphaPoPayOut($amount, $currency, $address, $tag);
     }
 }

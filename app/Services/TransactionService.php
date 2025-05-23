@@ -38,7 +38,12 @@ class TransactionService
         if ($operation == TransactionOperationEnum::DEBET)
             return $oldBalance+$sum;
         elseif ($operation == TransactionOperationEnum::CREDIT)
-            return $oldBalance-$sum;
+        {
+            if ($oldBalance >= $sum)
+                return $oldBalance-$sum;
+            else
+                return 0;
+        }
         else
             return $oldBalance;
     }
@@ -82,6 +87,32 @@ class TransactionService
         $transaction->status = TransactionStatusEnum::PROCESSED;
 
         $transaction->method = TransactionMethodEnum::BIT;
+
+        $transaction->sum = $sum;
+
+        $transaction->remaining = $this->calculationBalance($sum,TransactionOperationEnum::CREDIT);
+
+        $transaction->comment = $comment;
+
+        $transaction->save();
+
+        $this->balanceService->updateBalance($transaction->remaining);
+
+        return $transaction;
+    }
+
+
+    public function creditWithdraw($userId,$sum,$comment = 'Withdraw')
+    {
+        $transaction = new Transaction();
+
+        $transaction->user_id = $userId;
+
+        $transaction->operation = TransactionOperationEnum::CREDIT;
+
+        $transaction->status = TransactionStatusEnum::CREATED;
+
+        $transaction->method = TransactionMethodEnum::CRYPTO;
 
         $transaction->sum = $sum;
 

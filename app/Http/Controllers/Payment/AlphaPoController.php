@@ -93,6 +93,8 @@ class AlphaPoController extends Controller
         if ($data['type'] == 'deposit')
             $this->alphaPoService->getCallBackDeposit($data);
         elseif ($data['type'] == 'withdrawal')
+            $this->alphaPoService->getCallBackWithdrawal($data);
+
 
 
         // Order::where('id', $data['order_id'])->update([...]);

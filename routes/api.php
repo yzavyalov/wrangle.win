@@ -56,8 +56,6 @@ Route::middleware(['auth:sanctum','baduser'])->group(function (){
     Route::put('/update-profile',[UserDataController::class,'updateProfile']);
     Route::put('/user/password', [UserDataController::class,'changeUserPassword']);
 
-
-
     Route::post('/bet-categories',[BetCategoryController::class,'store']);
     Route::post('/bets',[BetController::class,'store']);
     Route::post('/favorites/{betId}', [FavoriteController::class, 'toggleFavorite'])->name('favorites.toggle');

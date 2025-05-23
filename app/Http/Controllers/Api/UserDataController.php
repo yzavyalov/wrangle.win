@@ -7,6 +7,7 @@ use App\Http\Resources\UserDataResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 
 
@@ -35,20 +36,28 @@ class UserDataController extends Controller
     {
         $user = $request->user();
 
-        $request->validate([
-            'current_password' => 'required',
+        $validator = Validator::make($request->all(), [
+            'current_password' => ['nullable'], // базовое правило, позже переопределим условие
             'new_password' => [
                 'required',
                 Password::min(8)
-                    ->mixedCase()     // минимум одна заглавная и одна строчная буква
-                    ->letters()       // хотя бы одна буква
-                    ->numbers()       // хотя бы одна цифра
-                    ->symbols(),      // хотя бы один символ
+                    ->mixedCase()
+                    ->letters()
+                    ->numbers()
+                    ->symbols(),
             ],
         ]);
 
-        if (!Hash::check($request->current_password, $user->password)) {
-           return $this->errorJsonAnswer403('The current password is incorrect.');
+        $validator->sometimes('current_password', 'required|current_password', function () use ($user) {
+            return !empty($user->password); // если у пользователя есть пароль в БД
+        });
+
+        $validator->validate();
+
+        if (!empty($user->password)){
+            if (!Hash::check($request->current_password, $user->password)) {
+                return $this->errorJsonAnswer403('The current password is incorrect.');
+            }
         }
 
         $user->update([
