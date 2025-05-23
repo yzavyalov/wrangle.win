@@ -8,7 +8,9 @@ export const AUTH = {
   URL_LOGIN_GOOGLE: "/api/auth/google/redirect",
   URL_LOGIN_FACEBOOK: "/api/auth/facebook/redirect",
   URL_LOGIN_FACEBOOK: "/api/auth/telegram/redirect",
+
   URL_USER: "/api/user",
+  URL_PASSWORD: "/api/user/password",
 };
 
 export const BETS = {
@@ -26,4 +28,9 @@ export const BETS = {
 export const CATEGORIES = {
   URL_CATEGORIES: "/api/bet-categories",
   SEARCH_CATEGORY: "/api/search-category",
+}
+
+export const USER = {
+  URL_USER: "/api/user",
+  URL_PASSWORD: "/api/user/password",
 }

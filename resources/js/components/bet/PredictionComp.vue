@@ -4,7 +4,7 @@ import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import PageCloudDecorator from '@/components/details/PageCloudDecorator.vue';
-import { predictionDemoData } from '@/utils/dummyData';
+// import { predictionDemoData } from '@/utils/dummyData';
 import BetOptionItem from "@/components/details/BetOptionItem.vue"
 import { getTimeLeft, getDaysLeft } from '@/helpers/getTimeLeft';
 import { getCurrency } from '@/helpers/getCurrency';
@@ -12,7 +12,7 @@ import { useUserStore } from "@/store/user";
 import { useBets } from '@/composables/useBets';
 
 const props = defineProps({
-  item: { type: Object, required: true, default: predictionDemoData }, // todo: remove demo data
+  item: { type: Object, required: true },
 })
 
 const { makeNewBit } = useBets();
@@ -23,7 +23,7 @@ const betAmount = ref();
 
 const dynamicHot = computed(() => getDaysLeft(currentBet.value.finish) <= 1);
 const currentUser = computed(() => useUserStore().getUser);
-const userBalance = computed(() => currentUser.value?.balance?.balance || 0);
+const userBalance = computed(() => Number(currentUser.value?.balance?.balance || 0)?.toFixed(2) || 0);
 
 const currencyName = getCurrency();
 const biggestProfit = computed(() => {

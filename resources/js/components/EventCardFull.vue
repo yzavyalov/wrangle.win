@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { getTimeLeft, getDaysLeft } from '@/helpers/getTimeLeft';
 import ButtonBase from '@/components/details/ButtonBase.vue';
-import { predictionDemoData } from '@/utils/dummyData';
+// import { predictionDemoData } from '@/utils/dummyData';
 import { useModalsStore } from '@/store/modals';
 import BetOptionItem from '@/components/details/BetOptionItem.vue';
 import { getCurrency } from '@/helpers/getCurrency';
@@ -12,7 +12,7 @@ const { makeNewBit } = useBets();
 
 const maxTextLength = 50;
 
-const currentBet = computed(() => useModalsStore().getModalContent?.currentBet || predictionDemoData);
+const currentBet = computed(() => useModalsStore().getModalContent?.currentBet || {});
 
 const shortTitle = computed(() => {
   return currentBet.value.title?.length > maxTextLength
@@ -87,7 +87,7 @@ onMounted(() => {
           :currency="currencyName"
           @click="makeNewBit(item)"
         />
-        <p v-if="!predictionDemoData.options?.length">No oprtions for prediction</p>
+        <p v-if="!currentBet.answers?.length">No answers for prediction</p>
       </div>
     </div>
   </div>

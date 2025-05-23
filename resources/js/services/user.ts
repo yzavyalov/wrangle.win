@@ -1,9 +1,8 @@
 import { http } from "@/api/http";
-import { AUTH } from "@/api/enpoints";
+import { AUTH, USER } from "@/api/enpoints";
 import { useUserStore } from "@/store/user";
 import { HTTPResponse } from "@/types/http";
 import { notifyWarning } from "@/helpers/notify";
-import { lo } from "element-plus/es/locale";
 
 const AUTH_ACCESS_TOKEN_KEY = "access_token";
 
@@ -100,13 +99,31 @@ export const logout = async () => {
 
 export const getUserData = async () => {
 
-  return await http.get(AUTH.URL_USER)
+  return await http.get(USER.URL_USER)
   .then(res => {
     console.log(res, "res - getUserData");
 
     const user = res?.data?.data;
 
     user && useUserStore().updateUser(user);
+
+    return res.data;
+  })
+  .catch(e => {
+    notifyWarning(e?.response?.data?.message || e?.message);
+    console.error(e?.response?.data?.message || e?.message);
+  });
+};
+
+export const changeUserPassword = async (payload) => {
+
+  return await http.put(USER.URL_PASSWORD, payload)
+  .then(res => {
+    console.log(res, "res - changeUserPassword");
+
+    // const user = res?.data?.data;
+
+    // user && useUserStore().updateUser(user);
 
     return res.data;
   })

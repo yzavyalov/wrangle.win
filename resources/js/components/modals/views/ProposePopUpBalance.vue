@@ -13,7 +13,7 @@ import { getCurrency } from '@/helpers/getCurrency';
 defineOptions({ name: "ProposePopUpBalance" })
 
 const currentUser = computed(() => useUserStore().getUser);
-const userBalance = computed(() => currentUser.value?.balance?.balance || 0);
+const userBalance = computed(() => Number(currentUser.value?.balance?.balance || 0)?.toFixed(2) || 0);
 
 const currencyName = getCurrency();
 

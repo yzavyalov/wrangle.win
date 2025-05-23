@@ -11,6 +11,6 @@ export default () => ({
   categories: [],
   selectedCategories: [],
 
-  sortBy: 'desc', // desc | asc
+  sortBy: 'asc', // desc | asc
 
 });
