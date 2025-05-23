@@ -19,6 +19,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'token' => $this->createToken('auth-token')->plainTextToken,
             'balance' => BalanceResource::make($this->balance),
+            'social' => !empty($this->password) ? 1 : 0,
         ];
     }
 }

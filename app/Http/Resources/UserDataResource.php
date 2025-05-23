@@ -20,6 +20,7 @@ class UserDataResource extends JsonResource
             'balance' => BalanceResource::make($this->balance),
             'transactions' => TransactionResource::collection($this->transactions),
             'bits' => BitResource::collection($this->bits),
+            'social' => !empty($this->password) ? 1 : 0,
         ];
     }
 }
