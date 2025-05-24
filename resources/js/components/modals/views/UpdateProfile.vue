@@ -13,8 +13,7 @@ import InputWIthHelper from '@/components/details/InputWIthHelper.vue';
 import InputPasswordWIthHelper from '@/components/details/InputPasswordWIthHelper.vue';
 import ButtonBaseWithIcon from "@/components/details/ButtonBaseWithIcon.vue";
 import { useInform } from '@/composables/useInform';
-import { passwordRegex } from '@/utils/regex';
-import { changeUserPassword } from '@/services/user';
+import { updateUserProfile } from '@/services/user';
 import { useLoading } from '@/composables/useLoading';
 
 defineOptions({ name: "UpdatePassword" })
@@ -24,30 +23,16 @@ const { isLoading, loadingStart, loadingStop } = useLoading();
 const { inform } = useInform();
 
 const formData = reactive({
-  currentPassword: '',
-  newPassword: '',
-  newPasswordRepeat: '',
-
-  isShowPassword: false,
+  userName: '',
 })
 
 const currentUser = computed(() => getUser);
-const isUserHasPassword = computed(() => currentUser.value?.social === 1);
-
-const passwordRequirmentText = 'Password must be at least 8 characters long, contain at least one uppercase and one lowercase letter, one digit, and one special character'
 
 const rules = computed(() => {
   return {
-    currentPassword: {
-      required: isUserHasPassword.value ? helpers.withMessage('This field is required', required) : false,
-      minLength: helpers.withMessage('Minimum 8 characters required', minLength(8)),
-    },
-    newPassword: {
+    userName: {
       required: helpers.withMessage('This field is required', required),
-      strongPassword: helpers.withMessage( passwordRequirmentText, (value) => passwordRegex.test(value)),
-    },
-    newPasswordRepeat: {
-      sameAs: helpers.withMessage('Passwords do not match', sameAs(formData.newPassword))
+      minLength: helpers.withMessage('Minimum 3 characters required', minLength(3)),
     },
   };
 });
@@ -73,20 +58,19 @@ const submitFormHandler = async () => {
     loadingStart();
 
     const paylaod = {
-      current_password: formData.currentPassword,
-      new_password: formData.newPassword,
+      name: formData.userName,
     };
 
     console.log(paylaod, 'paylaod - submitFormHandler');
 
-    const success = await changeUserPassword(paylaod);
-    console.log(success, 'success - changeUserPassword');
+    const success = await updateUserProfile(paylaod);
+    console.log(success, 'success - updateUserProfile');
 
-    success && notifySuccess("Your password has been changed!");
+    success && notifySuccess("Your parofile has been updated!");
 
     const informed = await inform({
       title: 'Success',
-      text: 'Your password has been changed!',
+      text: 'Your parofile has been updated!',
     })
 
     informed && triggerCloseModal();
@@ -109,41 +93,18 @@ const submitFormHandler = async () => {
 
       <div class="bit-modal__header">
         <h3 class="bit-modal__title">WRANGLER.WIN</h3>
-        <h3 class="bit-modal__title">Change password form</h3>
+        <h3 class="bit-modal__title">Change your name form</h3>
+        <h4 class="bit-modal__title">Current name - '{{ currentUser.name }}'</h4>
       </div>
 
       <div class="bit-modal__body">
-        <InputPasswordWIthHelper v-if="isUserHasPassword"
-          v-model="formData.currentPassword"
-          helper-text="Enter current password*"
-          placeholder="Enter current password*"
-          :type="formData.isShowPassword ? 'text' : 'password'"
-          :is-warning="v$.currentPassword.$error"
-          :warning-text="v$.currentPassword.$error ? v$.currentPassword.$errors[0]?.$message : 'Enter current password'"
-          @showPassToogle="toggleShowPassword"
-        />
-
-
-        <p>Requirments for new password:</p>
-        <p>{{ passwordRequirmentText }}</p>
-
-        <InputPasswordWIthHelper
-          v-model="formData.newPassword"
-          helper-text="Enter new password*"
-          placeholder="Enter new password*"
-          :type="formData.isShowPassword ? 'text' : 'password'"
-          :is-warning="v$.newPassword.$error"
-          :warning-text="v$.newPassword.$error ? v$.newPassword.$errors[0]?.$message : 'Enter new password'"
-          @showPassToogle="toggleShowPassword"
-        />
-
-        <InputPasswordWIthHelper
-          v-model="formData.newPasswordRepeat"
-          helper-text="Repeat new password*"
-          placeholder="Repeat new password*"
-          :type="formData.isShowPassword ? 'text' : 'password'"
-          :is-warning="v$.newPasswordRepeat.$error"
-          :warning-text="v$.newPasswordRepeat.$error ? v$.newPasswordRepeat.$errors[0]?.$message : 'Repeat new password'"
+        <InputWIthHelper
+          v-model="formData.userName"
+          helper-text="Enter your new name*"
+          placeholder="Enter your new name*"
+          type="text"
+          :is-warning="v$.userName.$error"
+          :warning-text="v$.userName.$error ? v$.userName.$errors[0]?.$message : 'Enter your new name'"
           @showPassToogle="toggleShowPassword"
         />
 
@@ -177,7 +138,7 @@ const submitFormHandler = async () => {
   }
 
   &__header {
-    h3 {
+    h3, h4 {
       text-align: center;
       margin-bottom: 10px;
     }

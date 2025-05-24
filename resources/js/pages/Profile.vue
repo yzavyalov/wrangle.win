@@ -1,5 +1,6 @@
 <script>
 import BaseLayout from "@/layouts/BaseLayout.vue";
+import { getUserData } from "@/services/user";
 
 export default {
   layout: (h, page) => {
@@ -11,7 +12,7 @@ export default {
 
 <script setup>
 import { Head } from "@inertiajs/vue3";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import { useUserStore } from "@/store/user";
 import ButtonBase from "@/components/details/ButtonBase.vue";
@@ -37,6 +38,16 @@ const testConfirm = async () => {
 
   console.log(result , 'result');
 }
+
+const userBalanceHandler = () => {
+  if (!userBalance.value) {
+    getUserData();
+  }
+}
+
+onMounted(() => {
+  userBalanceHandler();
+})
 
 </script>
 

@@ -132,3 +132,21 @@ export const changeUserPassword = async (payload) => {
     console.error(e?.response?.data?.message || e?.message);
   });
 };
+
+export const updateUserProfile = async (payload) => {
+
+  return await http.put(USER.URL_PROFILE, payload)
+  .then(res => {
+    console.log(res, "res - updateUserProfile");
+
+    const user = res?.data?.data;
+
+    user && useUserStore().updateUser(user);
+
+    return user;
+  })
+  .catch(e => {
+    notifyWarning(e?.response?.data?.message || e?.message);
+    console.error(e?.response?.data?.message || e?.message);
+  });
+};

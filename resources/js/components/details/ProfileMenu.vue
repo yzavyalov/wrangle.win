@@ -33,6 +33,10 @@ const linkActionHandle = (link) => {
       triggerOpenNewModal('update-password-modal');
       break;
 
+    case "update_profile":
+      triggerOpenNewModal('update-profile-modal');
+      break;
+
     default:
       notifyWarning("this feature is comming soon...");
       console.warn(`No handle for this action - '${link.action}'`);

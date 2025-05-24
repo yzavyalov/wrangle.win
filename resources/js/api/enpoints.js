@@ -33,4 +33,5 @@ export const CATEGORIES = {
 export const USER = {
   URL_USER: "/api/user",
   URL_PASSWORD: "/api/user/password",
+  URL_PROFILE: "/api/update-profile",
 }
