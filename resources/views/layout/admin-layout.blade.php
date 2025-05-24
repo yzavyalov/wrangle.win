@@ -202,6 +202,18 @@
                                     <p>All transactions</p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('search-form-transactions') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Search transactions</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('payment-logs') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Paymnets' logs</p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
 
@@ -220,8 +232,8 @@
                                     <p>All payments</p>
                                 </a>
                             </li>
-                        </ul>
-                        <ul class="nav nav-treeview">
+
+
                             <li class="nav-item">
                                 <a href="{{ route('create-payment') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>

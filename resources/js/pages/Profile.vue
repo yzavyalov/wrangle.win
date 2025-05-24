@@ -47,7 +47,7 @@ const testConfirm = async () => {
     <div class="profile__header">
       <div class="profile__header--welcome">
         <h3>Welcome to</h3>
-        <h1>WRANGLER.WIN</h1>
+        <h1>WRANGLE.WIN</h1>
       </div>
 
       <div class="profile__user">
