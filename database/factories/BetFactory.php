@@ -19,7 +19,7 @@ class BetFactory extends Factory
         return [
             'user_id' => random_int(3, 55),
             'title' => fake()->text(190),
-            'image' => 'storage/images/' . fake()->unique()->uuid . '.jpg', // Путь к изображению
+            'image' => fake()->imageUrl(200, 200, 'business', true, 'Logo'), // Путь к изображению
             'status' => random_int(1, 5),
             'source1' => fake()->url(), // Случайная ссылка
             'source2' => fake()->url(), // Случайная ссылка

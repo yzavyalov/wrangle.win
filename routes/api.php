@@ -10,7 +10,6 @@ use App\Http\Controllers\Api\PaymnetsController;
 use App\Http\Controllers\Api\UserDataController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
-use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\Payment\AlphaPoController;
 use App\Http\Controllers\Payment\DepositController;
 use App\Http\Controllers\Payment\PayOutController;

@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(BetSeeder::class);
         $this->call(BitSeeder::class);
         $this->call(TransactionSeeder::class);
+        $this->call(PaymentSeeder::class);
     }
 }
