@@ -53,7 +53,7 @@ class SocialController extends Controller
 
                 if ($check === true )
                 {
-                    return $this->errorJsonAnswer403('Sorry but we can\'t register you, try again later!');
+                    return $this->errorJsonAnswer403('Sorry but we can\'t register you!');
                 }
                 else
                 {

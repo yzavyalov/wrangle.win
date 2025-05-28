@@ -133,6 +133,11 @@ Route::middleware('moderator')->prefix('/admin-panel')->group(function (){
 
     Route::get('/all-transactions',[TransactionController::class,'allTransactions'])->name('all-transactions');
     Route::post('/transaction-change-status/{id}',[TransactionController::class,'changeStatus'])->name('transaction-change-status');
+    Route::get('/search-form-transactions',[TransactionController::class,'formSearchTransactions'])->name('search-form-transactions');
+    Route::get('/search-transaction',[TransactionController::class,'search'])->name('search-transaction');
+
+    Route::get('/payment-logs',[PaymentController::class,'allPaymentLogs'])->name('payment-logs');
+    Route::get('/payment-logs/search',[PaymentController::class,'searchPaymentLogs'])->name('search-logs');
 
     Route::get('/all-users',[UserController::class,'allUsers'])->name('all-users');
     Route::get('/block-user/{id}',[UserController::class,'blockUser'])->name('block-user');

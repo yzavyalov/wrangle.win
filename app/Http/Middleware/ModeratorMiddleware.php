@@ -17,6 +17,7 @@ class ModeratorMiddleware
 
         return redirect()->route('admin.login');
     }
+
 }
 
 

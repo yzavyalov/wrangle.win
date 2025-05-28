@@ -4,7 +4,9 @@ namespace App\Http\Controllers\AdminPanel;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaymentRequest;
+use App\Http\Requests\PaymnetLogsSearchRequest;
 use App\Models\Payment;
+use App\Models\Payment_log;
 use App\Services\PaymentService;
 use Illuminate\Http\Request;
 
@@ -56,5 +58,21 @@ class PaymentController extends Controller
         $this->paymentService->delBet($id);
 
         return redirect()->route('all-payments');
+    }
+
+    public function allPaymentLogs()
+    {
+        $logs = Payment_log::paginate(15);
+
+        return view('admin-panel.transactions.payments-logs-table',compact('logs'));
+    }
+
+    public function searchPaymentLogs(PaymnetLogsSearchRequest $request)
+    {
+        $data = $request->validated();
+
+        $logs = Payment_log::query()->where('response','like','%'.$data['response'].'%')->paginate(15);
+
+        return view('admin-panel.transactions.payments-logs-table',compact('logs'));
     }
 }
