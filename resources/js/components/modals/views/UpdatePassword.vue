@@ -31,15 +31,15 @@ const formData = reactive({
   isShowPassword: false,
 })
 
-const currentUser = computed(() => getUser);
-const isUserHasPassword = computed(() => currentUser.value?.social === 1);
+// const currentUser = computed(() => getUser);
+// const isUserHasPassword = computed(() => currentUser.value?.social === 1);
 
 const passwordRequirmentText = 'Password must be at least 8 characters long, contain at least one uppercase and one lowercase letter, one digit, and one special character'
 
 const rules = computed(() => {
   return {
     currentPassword: {
-      required: isUserHasPassword.value ? helpers.withMessage('This field is required', required) : false,
+      required: helpers.withMessage('This field is required', required),
       minLength: helpers.withMessage('Minimum 8 characters required', minLength(8)),
     },
     newPassword: {
@@ -113,7 +113,7 @@ const submitFormHandler = async () => {
       </div>
 
       <div class="bit-modal__body">
-        <InputPasswordWIthHelper v-if="isUserHasPassword"
+        <InputPasswordWIthHelper
           v-model="formData.currentPassword"
           helper-text="Enter current password*"
           placeholder="Enter current password*"
@@ -147,6 +147,7 @@ const submitFormHandler = async () => {
           @showPassToogle="toggleShowPassword"
         />
 
+        <p>!!!! == додати кнопку скинути пароль == !!!!</p>
       </div>
 
       <div class="bit-modal__footer">
