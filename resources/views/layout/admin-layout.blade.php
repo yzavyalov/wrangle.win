@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Dashboard 3</title>
+    <title>Admin-panel | Wrangle.win</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -88,7 +88,7 @@
         <!-- Brand Logo -->
         <a href="{{route('admin-panel')}}" class="brand-link">
             <img src="{{asset('admin-layout/dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-            <span class="brand-text font-weight-light">AdminLTE 3</span>
+            <span class="brand-text font-weight-light">Wrangle.win</span>
         </a>
 
         <!-- Sidebar -->
@@ -240,6 +240,28 @@
                                     <p>Create payment</p>
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('all-methods') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>All methods</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('create-method-form') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Create payment method</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('cascade-setup') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Cascade setup</p>
+                                </a>
+                            </li>
+
                         </ul>
                     </li>
 

@@ -13,6 +13,7 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Payment\AlphaPoController;
 use App\Http\Controllers\Payment\DepositController;
 use App\Http\Controllers\Payment\PayOutController;
+use App\Http\Controllers\Payment\WintecaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,8 +26,10 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::post('/register', [AuthController::class, 'register'])->middleware('web');
-Route::post('/login', [AuthController::class, 'login'])->name('login')->middleware('web');
+//Route::post('/register', [AuthController::class, 'register'])->middleware('web');
+Route::post('/register', [AuthController::class, 'register']);
+//Route::post('/login', [AuthController::class, 'login'])->name('login')->middleware('web');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
 Route::post('/reset-password', [PasswordResetController::class, 'reset']);
@@ -47,6 +50,7 @@ Route::post('/search-category',[BetCategorySearchController::class,'searchCatego
 
 //Вебхуки AlphaPo
 Route::post('/alphapo/callback', [AlphaPoController::class, 'handle']);
+Route::post('/winteca/callback', [WintecaController::class, 'handle']);
 //Route::post('/alphapo/signature', [AlphaPoController::class, 'generateSignatureExample']);
 
 Route::middleware(['auth:sanctum','baduser'])->group(function (){

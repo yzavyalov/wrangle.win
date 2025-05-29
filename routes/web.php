@@ -7,8 +7,10 @@ use App\Http\Controllers\AdminPanel\BetController;
 use App\Http\Controllers\AdminPanel\BitController;
 use App\Http\Controllers\AdminPanel\PageController;
 use App\Http\Controllers\AdminPanel\PaymentController;
+use App\Http\Controllers\AdminPanel\PaymentMethodsController;
 use App\Http\Controllers\AdminPanel\TransactionController;
 use App\Http\Controllers\AdminPanel\UserController;
+use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\SocialController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -92,7 +94,7 @@ Route::get('/404', function () {
     return Inertia::render('Page404');
 });
 
-Route::get('/form-reset-password', function (){dd('form here');});
+Route::get('/form-reset-password',[PasswordResetController::class,'resetForm'] );
 
 Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.post');
@@ -150,4 +152,13 @@ Route::middleware('moderator')->prefix('/admin-panel')->group(function (){
     Route::get('/show-payment/{id}',[PaymentController::class,'showEditForm'])->name('payment-show');
     Route::put('/update-payment/{id}',[PaymentController::class,'updatePaymnet'])->name('payment-update');
     Route::get('/del-payment/{id}',[PaymentController::class,'delPaymnet'])->name('payment-del');
+
+    Route::get('/all-methods',[PaymentMethodsController::class,'all'])->name('all-methods');
+    Route::get('/method/create',[PaymentMethodsController::class,'create'])->name('create-method-form');
+    Route::post('method/store',[PaymentMethodsController::class,'store'])->name('store-method');
+    Route::get('/method/{id}',[PaymentMethodsController::class,'show'])->name('method-show');
+    Route::put('/method/{id}/update',[PaymentMethodsController::class,'update'])->name('method-update');
+    Route::get('/method/{id}/del',[PaymentMethodsController::class,'delete'])->name('method-del');
+
+    Route::get('/cascade-setup',[PaymentMethodsController::class,'cascadeSet'])->name('cascade-setup');
 });

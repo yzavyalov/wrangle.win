@@ -27,9 +27,9 @@ export const sideBarLinks = [
 ];
 
 export const headerLinks = [
-  { id: 'categories', name: "All categories", path: PAGE_ROUTES.CATEGORIES },
+  { id: 'categories', name: "All Events", path: PAGE_ROUTES.CATEGORIES },
   // { id: 'popular', name: "Popular", path: PAGE_ROUTES.POPULAR },
-  { id: 'hots', name: "Hots", path: PAGE_ROUTES.HOTS },
+  { id: 'hots', name: "Top Events", path: PAGE_ROUTES.HOTS },
   { id: 'new_bet', name: "New bet", path: PAGE_ROUTES.NEW_BET },
 ];
 
@@ -43,11 +43,11 @@ export const profileMenuLinks = [
 
 export const footerMenuLinks = [
   { id: 'about', name: "About", path: PAGE_ROUTES.ABOUT },
-  { id: 'politics', name: "Politics", path: PAGE_ROUTES.POLITICS },
-  { id: 'rules', name: "Rules", path: PAGE_ROUTES.RULES },
+  { id: 'politics', name: "Policies", path: PAGE_ROUTES.POLITICS },
+  { id: 'rules', name: "Code of Conduct", path: PAGE_ROUTES.RULES },
   { id: 'events', name: "All Events", path: PAGE_ROUTES.CATEGORIES },
   { id: 'new_bet', name: "New bet", path: PAGE_ROUTES.NEW_BET },
-  { id: 'account', name: "To Account", path: PAGE_ROUTES.PROFILE },
+  { id: 'account', name: "Account", path: PAGE_ROUTES.PROFILE },
 ];
 
 export const defaultFilters = {

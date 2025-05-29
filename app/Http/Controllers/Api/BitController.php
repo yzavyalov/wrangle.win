@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TopUpBalanceRequest;
+use App\Http\Resources\BetResource;
 use App\Models\Answers;
 use App\Services\BalanceService;
 use App\Services\BetService;
@@ -47,7 +48,7 @@ class BitController extends Controller
 
         $this->transactionService->creditBit($sum, 'You placed a bet on bet id = ' . $bit->bet_id);
 
-        return $this->successJsonAnswer204('Your bet has been accepted!');
+        return $this->successJsonAnswer200('Your bet has been accepted!', BetResource::make($bit->bet));
     }
 
 }
