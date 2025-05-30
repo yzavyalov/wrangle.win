@@ -227,6 +227,20 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
+                                <a href="{{ route('all-methods') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>All methods</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('create-method-form') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Create payment method</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
                                 <a href="{{ route('all-payments') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>All payments</p>
@@ -238,20 +252,6 @@
                                 <a href="{{ route('create-payment') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Create payment</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ route('all-methods') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>All methods</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ route('create-method-form') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Create payment method</p>
                                 </a>
                             </li>
 

@@ -80,7 +80,21 @@
                         </div>
                     @endif
 
-                    <div class="row mt-2 justify-content-center" id="block-button">
+                    <div class="row mt-2 justify-content-center">
+                        <div class="col-auto">
+                            <a
+                                href="{{ $payment->conditions ? route('payment-conditions-edit', $payment->id) : route('form-payment-conditions', $payment->id) }}"
+                                class="btn btn-info text-center px-4"
+                                style="min-width: 380px; margin-left: 5px;"
+                            >
+                                {{ $payment->conditions ? 'Update trust conditions' : 'Add trust conditions' }}
+                            </a>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row mt-2 ml-1 justify-content-center" id="block-button">
                         <button type="submit" class="btn" id="btn-create-bet">Update payment</button>
                     </div>
                 </div>

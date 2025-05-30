@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminPanel\BitController;
 use App\Http\Controllers\AdminPanel\PageController;
 use App\Http\Controllers\AdminPanel\PaymentController;
 use App\Http\Controllers\AdminPanel\PaymentMethodsController;
+use App\Http\Controllers\AdminPanel\PaymentTrustConditionsController;
 use App\Http\Controllers\AdminPanel\TransactionController;
 use App\Http\Controllers\AdminPanel\UserController;
 use App\Http\Controllers\Auth\PasswordResetController;
@@ -152,6 +153,10 @@ Route::middleware('moderator')->prefix('/admin-panel')->group(function (){
     Route::get('/show-payment/{id}',[PaymentController::class,'showEditForm'])->name('payment-show');
     Route::put('/update-payment/{id}',[PaymentController::class,'updatePaymnet'])->name('payment-update');
     Route::get('/del-payment/{id}',[PaymentController::class,'delPaymnet'])->name('payment-del');
+    Route::get('/payment/{id}/conditions/create',[PaymentTrustConditionsController::class,'create'])->name('form-payment-conditions');
+    Route::post('/payment/conditions/save',[PaymentTrustConditionsController::class,'save'])->name('payment-conditions-save');
+    Route::get('/payment/{id}/conditions/edit',[PaymentTrustConditionsController::class,'edit'])->name('payment-conditions-edit');
+    Route::put('/payment/conditions/update',[PaymentTrustConditionsController::class,'update'])->name('payment-conditions-update');
 
     Route::get('/all-methods',[PaymentMethodsController::class,'all'])->name('all-methods');
     Route::get('/method/create',[PaymentMethodsController::class,'create'])->name('create-method-form');

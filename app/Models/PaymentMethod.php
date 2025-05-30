@@ -23,6 +23,7 @@ class PaymentMethod extends Model
 
     public function payments()
     {
-        return $this->belongsToMany(Payment::class,'payments_payments_methods_table','payment_method_id','payment_id');
+        return $this->belongsToMany(Payment::class,'payments_payments_methods_table','payment_method_id','payment_id')
+            ->withPivot(['FTD', 'FTD_limits', 'STD', 'STD_limits', 'order_by']);
     }
 }
