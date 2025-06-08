@@ -70,7 +70,10 @@ Route::middleware(['auth:sanctum','baduser'])->group(function (){
 
     //Payments
     Route::get('/payments/in',[PaymnetsController::class,'allInPayments']);
-    Route::get('/payments/in/{id}',[PaymnetsController::class,'showIn']);
+    Route::get('/payments/in/method/{id}',[PaymnetsController::class,'showMethod']);
+    Route::get('/payments/in/deposit/{id}',[PaymnetsController::class,'deposit']);
+
+
     Route::post('/payment/in/cryptoprocessing/deposit',[DepositController::class,'alphaPoDeposit']);
     Route::post('/payment/in/cryptoprocessing/new-deposit-adres',[DepositController::class,'alphaNewDepositAdres']);
 

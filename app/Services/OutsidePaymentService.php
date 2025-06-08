@@ -26,10 +26,8 @@ class OutsidePaymentService
     }
 
 
-    public function createAlphaPoDeposit($amount,$currency)
+    public function createAlphaPoDeposit($amount,$currency,$payment_id)
     {
-        $payment_id = Payment::query()->where('name','AlphaPo')->first()->id;
-
         $deposit = $this->depositService->createDeposit($amount, $currency, $payment_id);
 
         return $this->cryptoProcessingService->createDeposit($deposit,$currency);

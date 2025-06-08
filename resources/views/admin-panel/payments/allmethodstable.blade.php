@@ -12,9 +12,8 @@
             <tr>
                 <th>id</th>
                 <th>title</th>
+                <th>category</th>
                 <th>logo</th>
-                <th>comission</th>
-                <th>fixfee</th>
                 <th></th>
             </tr>
             </thead>
@@ -23,6 +22,7 @@
                 <tr>
                     <td>{{ $method->id }}</td>
                     <td>{{ $method->title }}</td>
+                    <td>{{ \App\Http\Enums\PaymentCategoryEnum::from($method->category)->label() }}</td>
 {{--                    <td><img src="{{ asset('storage/' . $method->logo) }}" style="width: 80px; height: auto"></td>--}}
                     <td>
                         @if(file_exists(public_path('storage/' . $method->logo)))
@@ -31,8 +31,6 @@
                             <span>Image not found: {{ $method->logo }}</span>
                         @endif
                     </td>
-                    <td>{{ $method->comission }}</td>
-                    <td>{{ $method->fixfee }}</td>
                     <td>
                         <button class="btn btn-info" onclick="window.location.href='{{ route('method-show',$method->id) }}'">EDIT</button>
                         <button class="btn btn-danger"

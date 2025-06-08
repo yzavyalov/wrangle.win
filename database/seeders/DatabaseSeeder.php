@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call(BitSeeder::class);
         $this->call(TransactionSeeder::class);
         $this->call(PaymentSeeder::class);
+        $this->call(PaymentAlphaPoSeeder::class);
     }
 }
