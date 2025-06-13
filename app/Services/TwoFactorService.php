@@ -35,4 +35,21 @@ class TwoFactorService
 
         return $code;
     }
+
+
+    public static function verify($inputCode)
+    {
+        $user = Auth::user();
+        $cacheName = 'code' . $user->id;
+
+        $cachedCode = Cache::get($cacheName);
+
+        if ($cachedCode && $inputCode === $cachedCode) {
+            // Удалим код после успешной проверки для безопасности
+            Cache::forget($cacheName);
+            return true;
+        }
+
+        return false;
+    }
 }

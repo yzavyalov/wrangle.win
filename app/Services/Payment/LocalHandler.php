@@ -2,7 +2,9 @@
 
 namespace App\Services\Payment;
 
-class LocalHandler
+use App\Contracts\PaymentDepositInterface;
+
+class LocalHandler implements PaymentDepositInterface
 {
 
 }

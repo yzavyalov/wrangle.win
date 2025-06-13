@@ -2,7 +2,9 @@
 
 namespace App\Services\Payment;
 
-class P2PHandler
+use App\Contracts\PaymentDepositInterface;
+
+class P2PHandler implements PaymentDepositInterface
 {
 
 }

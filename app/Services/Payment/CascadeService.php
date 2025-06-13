@@ -6,6 +6,7 @@ use App\Http\Enums\PaymentCategoryEnum;
 use App\Http\Enums\PaymentTypeEnum;
 use App\Http\Filters\PaymentMethodFilter;
 use App\Models\PaymentMethod;
+use App\Models\Payout;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use mysql_xdevapi\Collection;
@@ -90,5 +91,23 @@ class CascadeService
         $method = $this->selectPayments($data,PaymentCategoryEnum::IN);
 
         return $method;
+    }
+
+    public function payoutsMethods()
+    {
+        $methods = PaymentMethod::query()->where('category',PaymentCategoryEnum::OUT)
+                                ->whereHas('payments')->get();
+
+        return $methods;
+    }
+
+    public function payoutShowMethod($id)
+    {
+        $method = PaymentMethod::query()->findOrFail($id);
+
+        if ($method->category === PaymentCategoryEnum::OUT->value)
+            return $method;
+        else
+            return false;
     }
 }

@@ -5,6 +5,8 @@
                 <div>
                     <img src="{{ asset('storage/' . $method->logo) }}" style="height: 40px;" class="me-2">
                     <strong>{{ $method->title }}</strong>
+                    <strong>Category - {{ \App\Http\Enums\PaymentCategoryEnum::from($method->category)->label() }}</strong>
+                    <strong>Type - {{ \App\Http\Enums\PaymentTypeEnum::from($method->type)->label() }}</strong>
                 </div>
                 <button wire:click="save({{ $method->id }})" class="btn btn-sm btn-success">Save</button>
             </div>
@@ -20,7 +22,7 @@
                                 >
                                     <option value="">-- Select --</option>
                                     @foreach ($allPayments as $payment)
-                                        <option value="{{ $payment->id }}">{{ $payment->name }}</option>
+                                        <option value="{{ $payment->id }}">{{ $payment->name }} || category - {{ \App\Http\Enums\PaymentCategoryEnum::from($payment->category)->label() }} || type - {{ \App\Http\Enums\PaymentTypeEnum::from($payment->type)->label() }}</option>
                                     @endforeach
                                 </select>
                                 @error('selectedPayments.' . $method->id . '.' . $index . '.payment_id')

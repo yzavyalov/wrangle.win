@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Payment;
 use App\Models\Payout;
 use App\Models\Transaction;
+use App\Services\Payment\Acquiring\WintecaService;
 use App\Services\Payment\AlphaPoService;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,6 +15,7 @@ class OutsidePaymentService
                                 DepositService $depositService,
                                 PayOutService $payOutService,
                                 AlphaPoService $alphaPoService,
+                                WintecaService $wintecaService,
                                 )
     {
         $this->cryptoProcessingService = $cryptoProcessingService;
@@ -23,6 +25,8 @@ class OutsidePaymentService
         $this->payOutService = $payOutService;
 
         $this->alphaPoService = $alphaPoService;
+
+        $this->wintecaService = $wintecaService;
     }
 
 
@@ -69,5 +73,31 @@ class OutsidePaymentService
             'status' => 'false',
             'message' => 'We are unable to exchange for this currency.',
         ], 500);
+    }
+
+    public function payoutCreate(Payment $payment, array $data)
+    {
+        $sum = $data['amount'];
+
+        $currency = $data['currency'];
+
+        $payout = $this->payOutService->createPayOut($payment->id, $sum, $currency, Auth::id());
+
+
+
+    }
+
+    protected function selectPayment(Payment $payment, $sum, $currency)
+    {
+        switch ($payment->id)
+        {
+            //изменить на реальные ид из БД
+            case 1:
+                break;
+            case 2
+            $this->alphaPoService->cryptoProcessingService->
+
+        }
+
     }
 }

@@ -79,18 +79,21 @@ Route::middleware(['auth:sanctum','baduser'])->group(function (){
 
     Route::get('/payment/deposit/cryptoprocessing/invoice/create',[DepositController::class,'cryptoInvoiceCreate']);
 
-    Route::get('/payments/out',[PaymnetsController::class,'allOutPayments']);
 
     Route::get('/payment/deposit/cryptoprocessing/currency-list',[AlphaPoController::class,'cryptoList']);
     Route::get('/payment/deposit/cryptoprocessing/pare',[AlphaPoController::class,'pare']);
     Route::post('/payment/deposit/cryptoprocessing/rates',[AlphaPoController::class,'rates']);
 
-    Route::get('/payments/out',[PaymnetsController::class,'allOutPayments']);
+    Route::get('/payments/out',[PayOutController::class,'allOutPayments']);
+    Route::get('/payments/out/method/{id}',[PayOutController::class,'showMethod']);
+    Route::get('/payments/out/payout/{id}',[PayOutController::class,'payOutPayment']);
+    Route::post('/payments/out/payout/{id}/check-code',[PayOutController::class,'checkCodeAndPayOut']);
+
+    Route::post('payment/payout/cryptoprocessing',[PayOutController::class,'payoutCrypto']);
     Route::post('/payments/out/cryptoprocessing/payout',[PayOutController::class,'payoutCrypto']);
 
 
-
-    Route::post('payment/payout/cryptoprocessing',[PayOutController::class,'payoutCrypto']);
+    Route::post('/winteca/check',[WintecaController::class, 'check']);
 });
 
 

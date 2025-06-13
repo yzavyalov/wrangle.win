@@ -142,7 +142,7 @@ class CryptoProcessingService
                 throw new \Exception('Ошибка получения данных из AlphaPo API');
             }
 
-            $wallets = $this->saveWallets($response['data'], $user);
+            $wallets = $this->saveWallets($response['data']['data'], $user);
         }
 
         return $wallets;

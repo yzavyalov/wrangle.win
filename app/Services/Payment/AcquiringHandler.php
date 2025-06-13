@@ -2,7 +2,9 @@
 
 namespace App\Services\Payment;
 
-class AcquiringHandler
+use App\Contracts\PaymentDepositInterface;
+
+class AcquiringHandler implements PaymentDepositInterface
 {
 
 }

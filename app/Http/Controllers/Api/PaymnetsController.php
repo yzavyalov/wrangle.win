@@ -10,14 +10,17 @@ use App\Http\Resources\PaymentMethodsResource;
 use App\Http\Resources\PaymentResource;
 use App\Models\Payment;
 use App\Models\PaymentMethod;
+use App\Services\OutsidePaymentService;
 use App\Services\Payment\CascadeService;
 use Illuminate\Http\Request;
 
 class PaymnetsController extends Controller
 {
-    public function __construct(CascadeService $cascadeService)
+    public function __construct(CascadeService $cascadeService, OutsidePaymentService $outsidePaymentService)
     {
         $this->cascadeService = $cascadeService;
+
+        $this->outsidePaymentService = $outsidePaymentService;
     }
     public function allInPayments()
     {
@@ -26,19 +29,25 @@ class PaymnetsController extends Controller
         return PaymentMethodsResource::collection($methods);
     }
 
-    public function allOutPayments()
-    {
-        $payments = Payment::query()->where('category',PaymentCategoryEnum::OUT)->get();
-
-        return PaymentResource::collection($payments);
-    }
 
 
     public function showMethod($id)
     {
         $method = $this->cascadeService->showMethod($id);
 
-        return PaymentMethodsResource::collection($method);
+        foreach ($method as $item)
+        {
+            if ($item->title == 'Bitcoin')
+                $cryptocourses = $this->outsidePaymentService->alphaPoService->exchange(env('CURRENT_CURRENCY'),'BTC',1);
+            elseif ($item->title == 'USDTE')
+                $cryptocourses = $this->outsidePaymentService->alphaPoService->exchange(env('CURRENT_CURRENCY'),'USDTE',1);
+        }
+
+        $method = PaymentMethodsResource::collection($method);
+
+        $answer = ['method' => $method, 'course' => $cryptocourses ?? null];
+
+        return $this->successJsonAnswer200('Your methods', $answer);
     }
 
     public function deposit(SelectPaymentRequest $request,$id)
