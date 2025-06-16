@@ -4,6 +4,7 @@ import { BetCaruselPayload, CreateBetPayload, CreateBitPayload, SearchBetsPayloa
 import { da } from "element-plus/es/locale";
 import { notifyError } from "@/helpers/notify";
 
+export const UPDATE_BET_EVENT_NAME = "update_bet";
 export const CURRENT_BET_KEY = "current_bet";
 export const BET_OPTION_KEY = "bet_option";
 
@@ -186,3 +187,12 @@ export const betCarusel = async (payload: BetCaruselPayload) => {
   })
   .catch(e => console.error(e.message));
 }
+
+export const triggerUpdateBet = async (betData: any) => {
+  console.log("triggerUpdateBet");
+
+  const event = new CustomEvent(UPDATE_BET_EVENT_NAME, {
+    detail: { betData }
+  });
+  window.dispatchEvent(event);
+};

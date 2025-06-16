@@ -10,6 +10,7 @@ import { register, login, loginWithSocial } from '@/services/user';
 import { PAGE_ROUTES } from '@/utils/datasets';
 import { useInform } from "@/composables/useInform"
 import { notifyWarning } from '@/helpers/notify';
+import { triggerOpenNewModal } from '@/composables/useModalsTriggers';
 
 const props = defineProps({
   isLoginVariant: { type: Boolean, default: true, },
@@ -133,6 +134,10 @@ const formActionHandler = (action) => {
     case 'facebook':
     case 'telegram':
     loginWithSocialHandler(action);
+      break;
+
+    case "forgot_password":
+      triggerOpenNewModal('forgot-password-modal');
       break;
 
     default:

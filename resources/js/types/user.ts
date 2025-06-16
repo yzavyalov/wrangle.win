@@ -11,3 +11,9 @@ interface LoginPayload {
 }
 
 type SocialLoginType = "google" | "facebook" | "telegram"
+
+interface ResetUserPassword {}
+
+interface ForgotUserPassword {
+  email: string
+}

@@ -11,6 +11,8 @@ export const AUTH = {
 
   URL_USER: "/api/user",
   URL_PASSWORD: "/api/user/password",
+  RESET_PASSWORD: "/api/reset-password",
+  FORGOT_PASSWORD: "/api/forgot-password"
 };
 
 export const BETS = {

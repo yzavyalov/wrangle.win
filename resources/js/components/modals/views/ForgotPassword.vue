@@ -10,15 +10,15 @@ import { notifyError, notifySuccess, notifyWarning } from '@/helpers/notify';
 import { required, sameAs, email, minLength, helpers, maxLength } from '@vuelidate/validators';
 import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import InputWIthHelper from '@/components/details/InputWIthHelper.vue';
-import InputPasswordWIthHelper from '@/components/details/InputPasswordWIthHelper.vue';
 import ButtonBaseWithIcon from "@/components/details/ButtonBaseWithIcon.vue";
 import { useInform } from '@/composables/useInform';
 import { passwordRegex } from '@/utils/regex';
-import { changeUserPassword } from '@/services/user';
+import { changeUserPassword, forgotUserPassword } from '@/services/user';
 import { useLoading } from '@/composables/useLoading';
 import { useConfirm } from '@/composables/useConfirm';
+import InputBase from '@/components/details/InputBase.vue';
 
-defineOptions({ name: "UpdatePassword" })
+defineOptions({ name: "ForgotPassword" })
 
 const { getUser } = useUserStore();
 const { isLoading, loadingStart, loadingStop } = useLoading();
@@ -26,39 +26,17 @@ const { inform } = useInform();
 const { confirm } = useConfirm();
 
 const formData = reactive({
-  currentPassword: '',
-  newPassword: '',
-  newPasswordRepeat: '',
-
-  isShowPassword: false,
+  email: '',
 })
-
-// const currentUser = computed(() => getUser);
-// const isUserHasPassword = computed(() => currentUser.value?.social === 1);
-
-const passwordRequirmentText = 'Password must be at least 8 characters long, contain at least one uppercase and one lowercase letter, one digit, and one special character'
 
 const rules = computed(() => {
   return {
-    currentPassword: {
-      required: helpers.withMessage('This field is required', required),
-      minLength: helpers.withMessage('Minimum 8 characters required', minLength(8)),
-    },
-    newPassword: {
-      required: helpers.withMessage('This field is required', required),
-      strongPassword: helpers.withMessage( passwordRequirmentText, (value) => passwordRegex.test(value)),
-    },
-    newPasswordRepeat: {
-      sameAs: helpers.withMessage('Passwords do not match', sameAs(formData.newPassword))
-    },
+    email: { required, email },
   };
 });
 
 const v$ = useVuelidate(rules, formData);
 
-const toggleShowPassword = () => {
-  formData.isShowPassword = !formData.isShowPassword;
-}
 
 const submitFormHandler = async () => {
   console.log('submitFormHandler');
@@ -75,20 +53,19 @@ const submitFormHandler = async () => {
     loadingStart();
 
     const paylaod = {
-      current_password: formData.currentPassword,
-      new_password: formData.newPassword,
+      email: formData.email,
     };
 
     console.log(paylaod, 'paylaod - submitFormHandler');
 
-    const success = await changeUserPassword(paylaod);
-    console.log(success, 'success - changeUserPassword');
+    const success = await forgotUserPassword(paylaod);
+    console.log(success, 'success - forgotUserPassword');
 
-    success && notifySuccess("Your password has been changed!");
+    success && notifySuccess("Your request has been sent!");
 
     const informed = await inform({
       title: 'Success',
-      text: 'Your password has been changed!',
+      text: 'Your request has been sent!',
     })
 
     informed && triggerCloseModal();
@@ -102,26 +79,6 @@ const submitFormHandler = async () => {
   }
 }
 
-const requestResetPassword = async () => {
-  console.log('requestResetPassword');
-
-  const result = await confirm({
-    title: 'Are you sure?',
-    text: 'Reset your password ?',
-    confirmText: 'Confirm',
-    cancelText: 'Cancel'
-  })
-
-  if (!result) return
-
-  console.log(result , 'result');
-
-  notifyWarning('Reset your password');
-  notifyWarning('No logic yet...');
-  console.warn('No logic yet...');
-
-}
-
 </script>
 
 <template>
@@ -131,45 +88,24 @@ const requestResetPassword = async () => {
 
       <div class="bit-modal__header">
         <h3 class="bit-modal__title">WRANGLER.WIN</h3>
-        <h3 class="bit-modal__title">Change password form</h3>
+        <h3 class="bit-modal__title">Forgot password form</h3>
       </div>
 
       <div class="bit-modal__body">
-        <InputPasswordWIthHelper
-          v-model="formData.currentPassword"
-          helper-text="Enter current password*"
-          placeholder="Enter current password*"
-          :type="formData.isShowPassword ? 'text' : 'password'"
-          :is-warning="v$.currentPassword.$error"
-          :warning-text="v$.currentPassword.$error ? v$.currentPassword.$errors[0]?.$message : 'Enter current password'"
-          @showPassToogle="toggleShowPassword"
+
+        <InputWIthHelper
+        v-model="formData.email"
+        helper-text="Enter email*"
+        placeholder="Email"
+        :is-warning="v$.email.$error"
         />
 
+        <!-- <InputBase v-model="formData.email" :placeholder="'Email address'" type="email" class="form__input" />
+        <span v-if="v$.email?.$error" class="error">
+          <span v-if="v$.email?.required?.$invalid">Email is required</span>
+          <span v-else-if="v$.email?.email?.$invalid">Email is invalid</span>
+        </span> -->
 
-        <p>Requirments for new password:</p>
-        <p>{{ passwordRequirmentText }}</p>
-
-        <InputPasswordWIthHelper
-          v-model="formData.newPassword"
-          helper-text="Enter new password*"
-          placeholder="Enter new password*"
-          :type="formData.isShowPassword ? 'text' : 'password'"
-          :is-warning="v$.newPassword.$error"
-          :warning-text="v$.newPassword.$error ? v$.newPassword.$errors[0]?.$message : 'Enter new password'"
-          @showPassToogle="toggleShowPassword"
-        />
-
-        <InputPasswordWIthHelper
-          v-model="formData.newPasswordRepeat"
-          helper-text="Repeat new password*"
-          placeholder="Repeat new password*"
-          :type="formData.isShowPassword ? 'text' : 'password'"
-          :is-warning="v$.newPasswordRepeat.$error"
-          :warning-text="v$.newPasswordRepeat.$error ? v$.newPasswordRepeat.$errors[0]?.$message : 'Repeat new password'"
-          @showPassToogle="toggleShowPassword"
-        />
-
-        <p class="text-underline" @click.stop.prevent="requestResetPassword">Reset password</p>
       </div>
 
       <div class="bit-modal__footer">
@@ -235,6 +171,13 @@ const requestResetPassword = async () => {
     width: 20px;
     height: 20px;
     z-index: 1;
+  }
+
+  .error {
+    font-size: 12px;
+    color: red;
+    margin-top: -6px;
+    margin-bottom: 6px;
   }
 }
 </style>
