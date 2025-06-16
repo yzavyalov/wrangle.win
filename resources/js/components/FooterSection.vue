@@ -50,7 +50,7 @@ const links2 = footerMenuLinks.slice(middle);
 
           <div class="footer__contact">
             <p>Contact us:</p>
-            <p class="footer__contact--email">Wrangle@wrangle.win</p>
+            <p class="footer__contact--email">wrangle@wrangle.win</p>
 <!--            <p>012312312313</p>-->
           </div>
         </div>

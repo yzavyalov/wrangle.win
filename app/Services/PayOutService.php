@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Auth;
 
 class PayOutService
 {
+    public function __construct(TransactionService $transactionService)
+    {
+        $this->transactionService = $transactionService;
+    }
 
     public function createPayOut($payment_id, $amount, $currency, $userId)
     {
@@ -25,6 +29,8 @@ class PayOutService
         $payout->status = DepositStatusEnum::CREATED;
 
         $payout->save();
+
+        $this->transactionService->creditWithdraw($userId,$amount,'Withdrow');
 
         return $payout;
     }

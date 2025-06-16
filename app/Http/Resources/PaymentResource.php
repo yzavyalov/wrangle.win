@@ -26,6 +26,7 @@ class PaymentResource extends JsonResource
             'commission' => $this->commission,
             'logo' => $this->logo,
             'link' => $this->link,
+            'order_by' => optional($this->pivot)->order_by,
         ];
     }
 }

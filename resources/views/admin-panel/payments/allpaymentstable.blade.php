@@ -1,7 +1,7 @@
 @extends('layout.admin-layout')
 
 @section('title')
-    All payments methods.
+    All payments.
 @endsection
 
 @section('content')
@@ -17,6 +17,7 @@
                 <th>commission</th>
                 <th>logo</th>
                 <th>link</th>
+                <th>conditions</th>
                 <th></th>
             </tr>
             </thead>
@@ -30,9 +31,10 @@
                     <td>{{ $payment->commission }}</td>
                     <td>{{ $payment->logo }}</td>
                     <td>{{ $payment->link }}</td>
+                    <td>{{ $payment->conditions ? 'Yes' : 'No' }}</td>
                     <td>
-                        <button onclick="window.location.href='{{ route('payment-show',$payment->id) }}'">EDIT</button>
-                        <button
+                        <button class="btn btn-info" onclick="window.location.href='{{ route('payment-show',$payment->id) }}'">EDIT</button>
+                        <button class="btn btn-danger"
                             onclick="if (confirm('Are you shure?')) window.location.href='{{ route('payment-del',$payment->id) }}'">
                             DELETE
                         </button>

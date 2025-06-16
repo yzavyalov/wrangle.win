@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\FormResetPasswordRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -10,6 +11,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Password as PasswordFacade;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
+use Inertia\Inertia;
 
 class PasswordResetController extends Controller
 {
@@ -37,7 +39,6 @@ class PasswordResetController extends Controller
                 ->letters()       // хотя бы одна буква
                 ->numbers()       // хотя бы одна цифра
                 ->symbols()       // хотя бы один символ
-                ->uncompromised() // не был скомпрометирован (проверка через HaveIBeenPwned API)
             ],
         ]);
 
@@ -56,5 +57,17 @@ class PasswordResetController extends Controller
         return $status === PasswordFacade::PASSWORD_RESET
             ? $this->successJsonAnswer204('Password reset successfully.')
             : $this->errorJsonAnswer400(__($status));
+    }
+
+
+    public function resetForm(FormResetPasswordRequest $request)
+    {
+        $data = $request->validated();
+
+        $token = $data['token'];
+
+        $email = $data['email'];
+
+        return Inertia::render('NewPasswordForm', compact('token','email'));
     }
 }

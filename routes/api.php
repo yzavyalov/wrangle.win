@@ -13,6 +13,7 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Payment\AlphaPoController;
 use App\Http\Controllers\Payment\DepositController;
 use App\Http\Controllers\Payment\PayOutController;
+use App\Http\Controllers\Payment\WintecaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,8 +26,10 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::post('/register', [AuthController::class, 'register'])->middleware('web');
-Route::post('/login', [AuthController::class, 'login'])->name('login')->middleware('web');
+//Route::post('/register', [AuthController::class, 'register'])->middleware('web');
+Route::post('/register', [AuthController::class, 'register']);
+//Route::post('/login', [AuthController::class, 'login'])->name('login')->middleware('web');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
 Route::post('/reset-password', [PasswordResetController::class, 'reset']);
@@ -47,6 +50,7 @@ Route::post('/search-category',[BetCategorySearchController::class,'searchCatego
 
 //Вебхуки AlphaPo
 Route::post('/alphapo/callback', [AlphaPoController::class, 'handle']);
+Route::post('/winteca/callback', [WintecaController::class, 'handle']);
 //Route::post('/alphapo/signature', [AlphaPoController::class, 'generateSignatureExample']);
 
 Route::middleware(['auth:sanctum','baduser'])->group(function (){
@@ -66,24 +70,30 @@ Route::middleware(['auth:sanctum','baduser'])->group(function (){
 
     //Payments
     Route::get('/payments/in',[PaymnetsController::class,'allInPayments']);
-    Route::get('/payments/in/{id}',[PaymnetsController::class,'showIn']);
+    Route::get('/payments/in/method/{id}',[PaymnetsController::class,'showMethod']);
+    Route::get('/payments/in/deposit/{id}',[PaymnetsController::class,'deposit']);
+
+
     Route::post('/payment/in/cryptoprocessing/deposit',[DepositController::class,'alphaPoDeposit']);
     Route::post('/payment/in/cryptoprocessing/new-deposit-adres',[DepositController::class,'alphaNewDepositAdres']);
 
     Route::get('/payment/deposit/cryptoprocessing/invoice/create',[DepositController::class,'cryptoInvoiceCreate']);
 
-    Route::get('/payments/out',[PaymnetsController::class,'allOutPayments']);
 
     Route::get('/payment/deposit/cryptoprocessing/currency-list',[AlphaPoController::class,'cryptoList']);
     Route::get('/payment/deposit/cryptoprocessing/pare',[AlphaPoController::class,'pare']);
     Route::post('/payment/deposit/cryptoprocessing/rates',[AlphaPoController::class,'rates']);
 
-    Route::get('/payments/out',[PaymnetsController::class,'allOutPayments']);
+    Route::get('/payments/out',[PayOutController::class,'allOutPayments']);
+    Route::get('/payments/out/method/{id}',[PayOutController::class,'showMethod']);
+    Route::get('/payments/out/payout/{id}',[PayOutController::class,'payOutPayment']);
+    Route::post('/payments/out/payout/{id}/check-code',[PayOutController::class,'checkCodeAndPayOut']);
+
+    Route::post('payment/payout/cryptoprocessing',[PayOutController::class,'payoutCrypto']);
     Route::post('/payments/out/cryptoprocessing/payout',[PayOutController::class,'payoutCrypto']);
 
 
-
-    Route::post('payment/payout/cryptoprocessing',[PayOutController::class,'payoutCrypto']);
+    Route::post('/winteca/check',[WintecaController::class, 'check']);
 });
 
 

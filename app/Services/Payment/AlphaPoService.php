@@ -13,6 +13,7 @@ use App\Services\PaymentLogsService;
 use App\Services\PayOutService;
 use App\Services\TransactionService;
 use Illuminate\Support\Facades\Log;
+use function Composer\Autoload\includeFile;
 
 class AlphaPoService
 {
@@ -122,12 +123,15 @@ class AlphaPoService
 
     public function exchange(string $fromCurrency, $toCurrency, float $amount)
     {
+
         $list = $this->cryptoProcessingService->pare();
 
         $ammount = $this->convertCurrency($list,$fromCurrency,$toCurrency,$amount);
 
-        if ($ammount)
+        if ($ammount !== null)
+        {
             return round($ammount, 2);
+        }
         else
             return null;
     }
