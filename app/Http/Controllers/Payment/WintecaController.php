@@ -18,4 +18,10 @@ class WintecaController extends Controller
 
         return $this->wintecaService->wintecaPayoutPrerequest($data['currency'], $data['amount']);
     }
+
+
+    public function handle(Request $request)
+    {
+        dd($request);
+    }
 }

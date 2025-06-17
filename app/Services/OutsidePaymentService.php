@@ -16,6 +16,7 @@ class OutsidePaymentService
                                 PayOutService $payOutService,
                                 AlphaPoService $alphaPoService,
                                 WintecaService $wintecaService,
+                                TransactionService $transactionService,
                                 )
     {
         $this->cryptoProcessingService = $cryptoProcessingService;
@@ -27,6 +28,8 @@ class OutsidePaymentService
         $this->alphaPoService = $alphaPoService;
 
         $this->wintecaService = $wintecaService;
+
+        $this->transactionService = $transactionService;
     }
 
 

@@ -4,9 +4,11 @@ namespace App\Services\Payment\Acquiring;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use function PHPUnit\Framework\stringContains;
 
 class WintecaService
 {
+    protected string $myUrl;
     protected string $baseUrl;
     protected string $publicKey;
     protected string $privatKey;
@@ -23,6 +25,8 @@ class WintecaService
         $this->authorization = 'Basic ' . base64_encode(
                 config('services.winteca.api_account') . ':' . config('services.winteca.api_key')
             );
+
+        $this->myUrl = env('APP_URL');
     }
 
     protected function callWintecaApiPrivatPost(array $params, string $endpoint)
@@ -101,19 +105,24 @@ class WintecaService
     }
 
 
-    public function paymentInvoice($currency, $amount, $description = null)
+    public function createWintecaPaymentInvoice($currency, $amount, $reference_id, $description = null)
     {
         $endpoint = 'payment-invoices';
 
-        $userId = Auth::id();
+        $user = Auth::user();
 
         $params = [
-            'reference_id' => (string)$userId,
+            'reference_id' => (string)$reference_id,
             'service' => 'payment_card_usd_hpp',
             'currency' => $currency,
             'amount' => $amount,
             'test_mode' => true,
-
+            'customer' => [
+                'reference_id' => (string)$user->id,
+                'email' => $user->email,
+            ],
+            'return_url' => $this->myUrl,
+            'callback_url' => $this->myUrl.'/winteca/callback',
         ];
 
         $response = $this->callWintecaApiPrivatPost($params,$endpoint);
