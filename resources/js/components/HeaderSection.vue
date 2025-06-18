@@ -129,7 +129,7 @@ onUnmounted(() => {
         </button>
       </nav>
 
-      <div class="search hide_on_mobile">
+      <div v-if="currentUser" class="search hide_on_mobile">
         <input type="text" :value="searchQuery" placeholder="Search Events" @input="updateSearchQuery" />
       </div>
 

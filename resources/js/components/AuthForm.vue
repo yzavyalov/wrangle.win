@@ -255,11 +255,11 @@ const formActionHandler = (action) => {
     z-index: 1;
 
     &__wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-width: 350px;
-      margin: 0 auto;
+      // display: flex;
+      // flex-direction: column;
+      // gap: 10px;
+      // max-width: 350px;
+      // margin: 0 auto;
     }
 
     &__header {
