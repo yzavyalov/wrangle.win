@@ -1,14 +1,3 @@
-<script>
-import BaseLayout from "@/layouts/BaseLayout.vue";
-
-export default {
-  layout: (h, page) => {
-    return h(BaseLayout, () => [page]);
-  },
-};
-</script>
-
-
 <script setup>
 import { Head } from "@inertiajs/vue3";
 import { onBeforeUnmount } from "vue";
@@ -17,6 +6,12 @@ import ButtonBase from "@/components/details/ButtonBase.vue";
 import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import PredictionComp from "@/components/bet/PredictionComp.vue";
 import { useFilters } from '@/composables/useFilters';
+import BaseLayout from "@/layouts/BaseLayout.vue";
+
+defineOptions({
+  name: "Prediction",
+  layout: (h, page) => h(BaseLayout, () => [page]),
+});
 
 onBeforeUnmount(() => {
   useFilters().resetFilters();

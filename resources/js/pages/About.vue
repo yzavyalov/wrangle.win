@@ -1,17 +1,13 @@
-<script>
-import BaseLayout from "@/layouts/BaseLayout.vue";
-
-export default {
-  layout: (h, page) => {
-    return h(BaseLayout, () => [page]);
-  },
-};
-</script>
-
-
 <script setup>
 import { Head } from "@inertiajs/vue3";
 import PageWrapperText from "@/components/PageWrapperText.vue";
+
+import BaseLayout from "@/layouts/BaseLayout.vue";
+
+defineOptions({
+  name: "About",
+  layout: (h, page) => h(BaseLayout, () => [page]),
+})
 
 const pageTitle = "About";
 const lastUpdated = "Last Updated: 07.05.2025";

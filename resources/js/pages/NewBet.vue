@@ -1,14 +1,3 @@
-<script lang="ts">
-import BaseLayout from "@/layouts/BaseLayout.vue";
-
-export default {
-  layout: (h, page) => {
-    return h(BaseLayout, () => [page]);
-  },
-};
-</script>
-
-
 <script setup lang="ts">
 import { onBeforeUnmount, reactive } from "vue";
 import { Head } from "@inertiajs/vue3";
@@ -21,6 +10,12 @@ import { createBet } from "@/services/bets";
 import { useLoading } from "@/composables/useLoading";
 import { useFilters } from '@/composables/useFilters';
 import NewBet from "@/components/NewBet.vue";
+import BaseLayout from "@/layouts/BaseLayout.vue";
+
+defineOptions({
+  name: "NewBet",
+  layout: (h, page) => h(BaseLayout, () => [page]),
+});
 
 </script>
 

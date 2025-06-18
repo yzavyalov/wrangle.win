@@ -1,18 +1,12 @@
-<script>
-import BaseLayout from "@/layouts/BaseLayout.vue";
-
-export default {
-  layout: (h, page) => {
-    return h(BaseLayout, () => [page]);
-  },
-};
-</script>
-
-
 <script setup>
 import { Head } from "@inertiajs/vue3";
 import AuthForm from "@/components/AuthForm.vue";
+import BaseLayout from "@/layouts/BaseLayout.vue";
 
+defineOptions({
+  name: "Register",
+  layout: (h, page) => h(BaseLayout, () => [page]),
+});
 </script>
 
 <template>
