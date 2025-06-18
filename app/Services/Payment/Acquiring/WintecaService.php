@@ -4,41 +4,75 @@ namespace App\Services\Payment\Acquiring;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use function PHPUnit\Framework\stringContains;
 
 class WintecaService
 {
+    protected string $myUrl;
+    protected string $baseUrl;
+    protected string $publicKey;
+    protected string $privatKey;
+    protected string $authorization;
 
     public function __construct()
     {
         $this->baseUrl = config('services.winteca.base_url');
+
+        $this->privatKey = config('services.winteca.privat_key');
+
         $this->publicKey = config('services.winteca.public_key');
+
         $this->authorization = 'Basic ' . base64_encode(
-                config('services.winteca.api_key') . ':' . config('services.winteca.api_secret')
+                config('services.winteca.api_account') . ':' . config('services.winteca.api_key')
             );
+
+        $this->myUrl = env('APP_URL');
     }
-    public function callWintecaApi(array $params, string $endpoint)
+
+    protected function callWintecaApiPrivatPost(array $params, string $endpoint)
     {
-        $base_url = 'api.winteca.com';
+        $url = "{$this->baseUrl}/{$endpoint}";
 
-        $public_Key = env('WINTECA_PUBLIC_KEY');
+        $payload = [
+            'data' => [
+                'type' => 'payment-invoice',
+                'attributes' => $params,
+            ],
+        ];
 
-        $url = $base_url.$endpoint;
-
-        $body = json_encode($params);
-
-        // Генерируем подпись
-        $signature = hash_hmac('sha512', $body, env('CRYPTOPROCESSING_SECRET_KEY'));
-
-        // Отправляем POST-запрос
         $response = Http::withHeaders([
-            'X-Processing-Key' => env('CRYPTOPROCESSING_PUBLIC_KEY'),
-            'X-Processing-Signature' => $signature,
+            'Accept' => '*/*',
+            'Authorization' => $this->authorization,
             'Content-Type' => 'application/json',
-        ])->post($endpoint, $params);
+        ])->post($url, $payload); // Laravel сам преобразует $params в JSON
+
+        if (!$response->successful()) {
+            throw new \Exception("Winteca API error: " . $response->body());
+        }
+
+        return $response->json(); // Возвращаем результат как массив
     }
 
 
-    public function generateHppUrl(string $currency, float $amount, string $description): string
+    protected function callWintecaApiPrivat(array $params, string $endpoint)
+    {
+        $url = "{$this->baseUrl}/hpp/{$endpoint}";
+
+        $response = Http::withHeaders([
+            'Accept' => '*/*',
+            'Authorization' => $this->authorization,
+            'Content-Type' => 'application/json',
+        ])->post($url, $params);
+
+        if (!$response->successful()) {
+            throw new \Exception("Winteca API error: " . $response->body());
+        }
+
+        return $response->json();
+    }
+
+
+    public function generateHppUrl(float $amount, string $currency, string $description): string
     {
         $user = Auth::user();
 
@@ -53,6 +87,48 @@ class WintecaService
 
         $url = "{$this->baseUrl}/hpp/?{$params}";
 
-        return response()->json(['payment_url' => $url]);
+        return $url;
     }
+
+    public function wintecaPayoutPrerequest($currency, $amount)
+    {
+//        $endpoint = 'payout-prerequest';
+        $endpoint = 'payout';
+
+        $params = [];
+
+        $params['currency'] = $currency;
+
+        $params['amount'] = $amount;
+
+        return $this->callWintecaApi($params,$endpoint);
+    }
+
+
+    public function createWintecaPaymentInvoice($currency, $amount, $reference_id, $description = null)
+    {
+        $endpoint = 'payment-invoices';
+
+        $user = Auth::user();
+
+        $params = [
+            'reference_id' => (string)$reference_id,
+            'service' => 'payment_card_usd_hpp',
+            'currency' => $currency,
+            'amount' => $amount,
+            'test_mode' => true,
+            'customer' => [
+                'reference_id' => (string)$user->id,
+                'email' => $user->email,
+            ],
+            'return_url' => $this->myUrl,
+            'callback_url' => $this->myUrl.'/winteca/callback',
+        ];
+
+        $response = $this->callWintecaApiPrivatPost($params,$endpoint);
+
+        return $response;
+    }
+
+
 }

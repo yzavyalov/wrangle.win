@@ -16,6 +16,7 @@ class OutsidePaymentService
                                 PayOutService $payOutService,
                                 AlphaPoService $alphaPoService,
                                 WintecaService $wintecaService,
+                                TransactionService $transactionService,
                                 )
     {
         $this->cryptoProcessingService = $cryptoProcessingService;
@@ -27,6 +28,8 @@ class OutsidePaymentService
         $this->alphaPoService = $alphaPoService;
 
         $this->wintecaService = $wintecaService;
+
+        $this->transactionService = $transactionService;
     }
 
 
@@ -87,17 +90,5 @@ class OutsidePaymentService
 
     }
 
-    protected function selectPayment(Payment $payment, $sum, $currency)
-    {
-        switch ($payment->id)
-        {
-            //изменить на реальные ид из БД
-            case 1:
-                break;
-            case 2
-            $this->alphaPoService->cryptoProcessingService->
 
-        }
-
-    }
 }

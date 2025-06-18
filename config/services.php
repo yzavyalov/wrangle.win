@@ -52,9 +52,11 @@ return [
 
     'winteca' => [
         'base_url' => 'https://api.winteca.com',
+        'api_account' => env('WINTECA_API_ACCOUNT_ID'),
         'api_key' => env('WINTECA_API_KEY'),
         'api_secret' => env('WINTECA_PRIVAT_KEY'),
         'public_key' => env('WINTECA_PUBLIC_KEY'),
+        'privat_key' => env('WINTECA_PRIVAT_KEY'),
     ],
 
 ];

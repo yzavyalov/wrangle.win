@@ -16,6 +16,12 @@ class WintecaController extends Controller
     {
         $data = $request->only('currency','amount');
 
-        return $this->wintecaService->generateHppUrl($data['currency'], $data['amount'], 'Check');
+        return $this->wintecaService->wintecaPayoutPrerequest($data['currency'], $data['amount']);
+    }
+
+
+    public function handle(Request $request)
+    {
+        dd($request);
     }
 }
