@@ -15,6 +15,7 @@ import { notifySuccess, notifyWarning } from "@/helpers/notify";
 import { navigateTo } from "@/helpers/navigate";
 import { PAGE_ROUTES } from "@/utils/datasets";
 import { passwordRegex } from "@/utils/regex";
+import LoaderComponent from "@/components/LoaderComponent.vue";
 
 defineOptions({
   name: "NewPasswordForm",
@@ -118,6 +119,8 @@ onMounted(() => {
       </div>
 
       <FormBase v-else title="New password form">
+
+      <LoaderComponent v-if="isLoading" />
 
       <InputPasswordWIthHelper
         v-model="formData.password"
