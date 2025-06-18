@@ -55,9 +55,10 @@ const v$ = useVuelidate(rules, formData);
 const toggleShowPassword = () => formData.isShowPassword = !formData.isShowPassword;
 
 const submitForm = async () => {
+  if (isLoading.value) {return notifyWarning("Loading in progress, please wait...");};
 
   await v$.value.$validate();
-  if (v$.value.$invalid) return;
+  if (v$.value.$invalid) {return;}
 
   try {
     loadingStart();
