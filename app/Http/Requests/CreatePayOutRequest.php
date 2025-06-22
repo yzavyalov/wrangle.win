@@ -26,6 +26,7 @@ class CreatePayOutRequest extends FormRequest
             'currency' => 'required|string|max:10',
             'amount' => 'required|integer|max:10',
             'code' => 'required|string|max:10',
+            'card_number' => 'required|string|max:16'
         ];
     }
 }

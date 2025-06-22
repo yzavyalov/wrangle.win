@@ -34,4 +34,9 @@ class Deposit extends Model
     {
         return $this->belongsTo(Payment::class);
     }
+
+    public function transactionable()
+    {
+        return $this->morphMany(Winteca_transaction::class,'transactionable');
+    }
 }

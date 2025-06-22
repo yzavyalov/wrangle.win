@@ -26,8 +26,8 @@ class PaymentMethodRequest extends FormRequest
             'title'      => 'required|string|max:120',
             'type'       => 'required|integer|in:1,2,3,4,5',
             'category'   => 'required|integer|in:1,2',
-            'comission' => 'required|numeric|min:0',
-            'fixfee'    => 'required|numeric|min:0',
+            'comission' => 'nullable|numeric|min:0',
+            'fixfee'    => 'nullable|numeric|min:0',
             'logo'       => 'nullable|image', // или 'nullable|image' если не обязателен
         ];
     }

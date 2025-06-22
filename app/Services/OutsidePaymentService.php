@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Payment;
 use App\Models\Payout;
 use App\Models\Transaction;
+use App\Services\Payment\Acquiring\WintecaExcahngeService;
 use App\Services\Payment\Acquiring\WintecaService;
 use App\Services\Payment\AlphaPoService;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +18,7 @@ class OutsidePaymentService
                                 AlphaPoService $alphaPoService,
                                 WintecaService $wintecaService,
                                 TransactionService $transactionService,
+                                WintecaExcahngeService $excahngeService,
                                 )
     {
         $this->cryptoProcessingService = $cryptoProcessingService;
@@ -30,6 +32,8 @@ class OutsidePaymentService
         $this->wintecaService = $wintecaService;
 
         $this->transactionService = $transactionService;
+
+        $this->excahngeService = $excahngeService;
     }
 
 
@@ -78,16 +82,66 @@ class OutsidePaymentService
         ], 500);
     }
 
-    public function payoutCreate(Payment $payment, array $data)
+
+    public function createWintecaDeposit($amount,$currency,$payment_id)
     {
-        $sum = $data['amount'];
+        $deposit = $this->depositService->createDeposit($amount,$currency,$payment_id);
+
+        $exchangeSum = $this->excahngeService->exchangePayIn($amount);
+
+        $newAmount = PaymentAmountService::amountWithoutComission($payment_id,$exchangeSum);
+
+        $invoice = $this->wintecaService->createWintecaPaymentInvoice($newAmount, $currency, $deposit->id);
+
+        $this->wintecaService->paymentLogsService->createLog($deposit,json_encode($invoice));
+
+        $deposit->transactionable()->create([
+            'id_winteca' => $invoice['data']['id'],
+            'status' => $invoice['data']['attributes']['status'],
+            'resolution' => $invoice['data']['attributes']['resolution'],
+            'amount' => $invoice['data']['attributes']['amount'],
+            'payment_amount' => $invoice['data']['attributes']['payment_amount'],
+            'deposit' => $invoice['data']['attributes']['deposit'],
+            'currency' => $invoice['data']['attributes']['currency'],
+            'reference_id' => $invoice['data']['attributes']['reference_id'],
+            'fee' => $invoice['data']['attributes']['fee'],
+        ]);
+
+        return $invoice;
+    }
+
+
+    public function payoutWintecaCreate(Payment $payment, array $data)
+    {
+        $amount = $data['amount'];
+
+        $exchangeSum = $this->excahngeService->exchangePayOut($amount);
+
+        $newAmount = PaymentAmountService::amountWithoutComission($payment->id,$exchangeSum);
 
         $currency = $data['currency'];
 
-        $payout = $this->payOutService->createPayOut($payment->id, $sum, $currency, Auth::id());
+        $cardNumber = $data['card_number'];
 
+        $payout = $this->payOutService->createPayOut($payment->id, $amount, $currency, Auth::id());
 
+        $invoice = $this->wintecaService->CreatePayOutInvoice($payout,$newAmount,$currency, $cardNumber);
 
+        $this->wintecaService->paymentLogsService->createLog($payout,json_encode($invoice));
+
+        $payout->transactionable()->create([
+            'id_winteca' => $invoice['data']['id'],
+            'status' => $invoice['data']['attributes']['status'],
+            'resolution' => $invoice['data']['attributes']['resolution'],
+            'amount' => $invoice['data']['attributes']['amount'],
+            'payment_amount' => $invoice['data']['attributes']['payout_amount'],
+            'deposit' => $invoice['data']['attributes']['writeoff'],
+            'currency' => $invoice['data']['attributes']['currency'],
+            'reference_id' => $invoice['data']['attributes']['reference_id'],
+            'fee' => $invoice['data']['attributes']['fee'],
+        ]);
+
+       return $invoice;
     }
 
 

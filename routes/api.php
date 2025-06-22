@@ -50,8 +50,9 @@ Route::post('/search-category',[BetCategorySearchController::class,'searchCatego
 
 //Вебхуки AlphaPo
 Route::post('/alphapo/callback', [AlphaPoController::class, 'handle']);
+//Winteca
 Route::post('/winteca/callback', [WintecaController::class, 'handle']);
-//Route::post('/alphapo/signature', [AlphaPoController::class, 'generateSignatureExample']);
+
 
 Route::middleware(['auth:sanctum','baduser'])->group(function (){
     Route::get('/user', [AuthController::class, 'me']);

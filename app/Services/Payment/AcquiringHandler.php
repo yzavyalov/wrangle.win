@@ -16,7 +16,7 @@ class AcquiringHandler implements PaymentDepositInterface
 
     public function handle(Payment $payment, array $data): mixed
     {
-        $response = $this->outsidePaymentService->wintecaService->createWintecaPaymentInvoice($data['currency'],$data['amount'],$data['reference_id']);
+        $response = $this->outsidePaymentService->createWintecaDeposit($data['amount'],$data['currency'],$payment->id);
 
         return [
             'hpp_url' => $response['data']['attributes']['hpp_url'] ?? null,
