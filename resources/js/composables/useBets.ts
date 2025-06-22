@@ -1,5 +1,5 @@
-import { computed, nextTick, Ref, ref, watch, watchEffect } from "vue";
-import { getActualBets, getHotBets, searchBets as apiSearchBets, BET_OPTION_KEY } from '@/services/bets';
+import { computed, nextTick, onBeforeUnmount, onMounted, Ref, ref, watch, watchEffect } from "vue";
+import { getActualBets, getHotBets, searchBets as apiSearchBets, BET_OPTION_KEY, UPDATE_BET_EVENT_NAME } from '@/services/bets';
 import { triggerCloseModal, triggerOpenNewModal } from "@/composables/useModalsTriggers";
 import { BetItem, SearchBetsPayload, UseBetsOptions } from "@/types/bets";
 import { useFilters } from "@/composables/useFilters";
@@ -151,6 +151,19 @@ export const useBets = (options: UseBetsOptions = {}) => {
       nextTick(() => fetchBets());
     },
   )
+
+  const updatedBetEventHandler = (event) => {
+    console.log(event, 'event - updatedBetEventHandler');
+
+  }
+
+  onMounted(() => {
+    window.addEventListener(UPDATE_BET_EVENT_NAME, updatedBetEventHandler)
+  })
+
+  onBeforeUnmount(() => {
+    window.removeEventListener(UPDATE_BET_EVENT_NAME, updatedBetEventHandler)
+  })
 
   return {
     isLoading,

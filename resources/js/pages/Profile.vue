@@ -1,15 +1,3 @@
-<script>
-import BaseLayout from "@/layouts/BaseLayout.vue";
-import { getUserData } from "@/services/user";
-
-export default {
-  layout: (h, page) => {
-    return h(BaseLayout, () => [page]);
-  },
-};
-</script>
-
-
 <script setup>
 import { Head } from "@inertiajs/vue3";
 import { computed, onMounted, ref } from "vue";
@@ -19,7 +7,12 @@ import ButtonBase from "@/components/details/ButtonBase.vue";
 import { useConfirm } from '@/composables';
 import { triggerOpenNewModal } from "@/composables/useModalsTriggers";
 import { getCurrency } from '@/helpers/getCurrency';
+import BaseLayout from "@/layouts/BaseLayout.vue";
 
+defineOptions({
+  name: "Profile",
+  layout: (h, page) => h(BaseLayout, () => [page]),
+});
 
 const { confirm } = useConfirm();
 

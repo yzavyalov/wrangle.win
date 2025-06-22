@@ -1,13 +1,3 @@
-<script>
-import BaseLayout from "@/layouts/BaseLayout.vue";
-
-export default {
-  layout: (h, page) => {
-    return h(BaseLayout, () => [page]);
-  },
-};
-</script>
-
 <script setup>
 import { onBeforeUnmount, ref, onMounted } from "vue";
 import { Head, usePage } from "@inertiajs/vue3";
@@ -22,6 +12,12 @@ import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import BetItem from "@/components/bet/BetItem.vue";
 import LoaderComponent from '@/components/LoaderComponent.vue';
 import { router } from "@inertiajs/vue3";
+import BaseLayout from "@/layouts/BaseLayout.vue";
+
+defineOptions({
+  name: "Bet",
+  layout: (h, page) => h(BaseLayout, () => [page]),
+});
 
 const props = defineProps({
   bet: { type: Object, default: () => ({}) },

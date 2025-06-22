@@ -150,3 +150,30 @@ export const updateUserProfile = async (payload) => {
     console.error(e?.response?.data?.message || e?.message);
   });
 };
+
+export const resetUserPassword = async (payload: ResetUserPassword) => {
+
+  return await http.post(AUTH.RESET_PASSWORD, payload)
+  .then(res => {
+    console.log(res, "res - resetUserPassword");
+    return res.data;
+  })
+  .catch(e => {
+    notifyWarning(e?.response?.data?.message || e?.message);
+    console.error(e?.response?.data?.message || e?.message);
+  });
+}
+
+export const forgotUserPassword = async (payload: ForgotUserPassword) => {
+
+  return await http.post(AUTH.FORGOT_PASSWORD, payload)
+  .then(res => {
+    console.log(res, "res - forgotUserPassword");
+    return res.data;
+  })
+  .catch(e => {
+    notifyWarning(e?.response?.data?.message || e?.message);
+    console.error(e?.response?.data?.message || e?.message);
+  });
+}
+

@@ -26,6 +26,7 @@ const modalText = `
 const popupHandler = async () => {
   console.log('popupHandler');
   console.warn("NO LOGIC YET");
+  notifyWarning("NO LOGIC YET");
 }
 
 </script>
