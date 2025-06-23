@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Http\Enums\PaymentCategoryEnum;
 use App\Http\Enums\PaymentTypeEnum;
+use App\Models\Payment;
 use App\Models\PaymentMethod;
 use Illuminate\Database\Seeder;
 
@@ -86,6 +87,24 @@ class PaymentMethodSeeder extends Seeder
                 ],
                 $item
             );
+        }
+
+        // 2. Связка с существующими платежами по type и category
+        $payments = Payment::all();
+
+        foreach ($payments as $payment) {
+            $matchingMethods = PaymentMethod::where('type', $payment->type)
+                ->where('category', $payment->category)
+                ->get();
+
+            foreach ($matchingMethods as $method) {
+                $payment->methods()->syncWithoutDetaching([
+                    $method->id => [
+                        'FTD' => false,
+                        'order_by' => 1,
+                    ],
+                ]);
+            }
         }
     }
 }

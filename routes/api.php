@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\BetSortController;
 use App\Http\Controllers\Api\BitController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\PaymnetsController;
+use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\UserDataController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
@@ -52,6 +53,9 @@ Route::post('/search-category',[BetCategorySearchController::class,'searchCatego
 Route::post('/alphapo/callback', [AlphaPoController::class, 'handle']);
 //Winteca
 Route::post('/winteca/callback', [WintecaController::class, 'handle']);
+Route::get('/winteca/payin/success',[WintecaController::class, 'payInSuccess']);
+Route::get('/winteca/payin/fail',[WintecaController::class, 'payInFail']);
+Route::get('/winteca/payin/pending',[WintecaController::class, 'payInPending']);
 
 
 Route::middleware(['auth:sanctum','baduser'])->group(function (){
@@ -62,12 +66,15 @@ Route::middleware(['auth:sanctum','baduser'])->group(function (){
 
     Route::post('/bet-categories',[BetCategoryController::class,'store']);
     Route::post('/bets',[BetController::class,'store']);
-    Route::post('/favorites/{betId}', [FavoriteController::class, 'toggleFavorite'])->name('favorites.toggle');
+    Route::get('/favorites/{betId}', [FavoriteController::class, 'toggleFavorite'])->name('favorites.toggle');
     Route::get('/own-bets',[BetSortController::class,'myBets']);
     Route::get('/favorite-bets',[BetSortController::class,'favoriteBets']);
+    Route::get('/union-own-and-favorite-bets',[BetSortController::class,'unionOwnFavBets']);
 
     Route::post('bit/{answerId}',[BitController::class,'createBit']);
     Route::get('user-data',[UserDataController::class,'getUser']);
+
+    Route::get('/transactions',[TransactionController::class,'allUserTransactions']);
 
     //Payments
     Route::get('/payments/in',[PaymnetsController::class,'allInPayments']);

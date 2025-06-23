@@ -21,7 +21,6 @@ class AcquiringHandler implements PaymentDepositInterface
         return [
             'hpp_url' => $response['data']['attributes']['hpp_url'] ?? null,
             'deposit' => $response['data']['attributes']['deposit'] ?? null,
-            'fee' => $response['data']['attributes']['fee'] ?? null,
             'status' => $response['data']['attributes']['status'] ?? null,
         ];
     }

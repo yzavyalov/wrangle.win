@@ -63,4 +63,19 @@ class WintecaController extends Controller
 //        return response()->json(['status' => 'ok']);
 
     }
+
+    public function payInSuccess()
+    {
+        return $this->successJsonAnswer200('Your deposit has been sent to the bank for processing.',['status' => 1]);
+    }
+
+    public function payInFail()
+    {
+        return $this->errorJsonAnswer403('The bank cannot process your payment.',['status' => 0]);
+    }
+
+    public function payInPending()
+    {
+        return $this->errorJsonAnswer403('The bank cannot process your payment.',['status' => 2]);
+    }
 }

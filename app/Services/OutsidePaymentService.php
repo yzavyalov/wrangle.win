@@ -35,7 +35,7 @@ class OutsidePaymentService
 
         $this->excahngeService = $excahngeService;
     }
-
+    
 
     public function createAlphaPoDeposit($amount,$currency,$payment_id)
     {
@@ -89,9 +89,9 @@ class OutsidePaymentService
 
         $exchangeSum = $this->excahngeService->exchangePayIn($amount);
 
-        $newAmount = PaymentAmountService::amountWithoutComission($payment_id,$exchangeSum);
+        $newAmount = PaymentAmountService::amountPayInWithoutComission($payment_id,$exchangeSum);
 
-        $invoice = $this->wintecaService->createWintecaPaymentInvoice($newAmount, $currency, $deposit->id);
+        $invoice = $this->wintecaService->createWintecaPaymentInvoice($newAmount, 'USD', $deposit->id);
 
         $this->wintecaService->paymentLogsService->createLog($deposit,json_encode($invoice));
 
@@ -117,7 +117,7 @@ class OutsidePaymentService
 
         $exchangeSum = $this->excahngeService->exchangePayOut($amount);
 
-        $newAmount = PaymentAmountService::amountWithoutComission($payment->id,$exchangeSum);
+        $newAmount = PaymentAmountService::amountPayOutWithoutComission($payment->id,$exchangeSum);
 
         $currency = $data['currency'];
 

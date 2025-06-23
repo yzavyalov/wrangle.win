@@ -80,18 +80,18 @@ class WintecaCallbackService
     protected function selectStatusFromWintecaPayOut(string $wintecaStatus): string
     {
         $statusMap = [
-            'created' => DepositStatusEnum::CREATED,
-            'terminated' => DepositStatusEnum::CANCELED,
-            'expired' => DepositStatusEnum::CANCELED,
-            'process_pending' => DepositStatusEnum::CREATED,
-            'processed' => DepositStatusEnum::PAYED,
-            'partially_processed' => DepositStatusEnum::PAYED,
-            'canceled' => DepositStatusEnum::CANCELED,
-            'partially_canceled' => DepositStatusEnum::PAYED,
-            'process_failed' => DepositStatusEnum::CANCELED,
+            'created' => DepositStatusEnum::CREATED->value,
+            'terminated' => DepositStatusEnum::CANCELED->value,
+            'expired' => DepositStatusEnum::CANCELED->value,
+            'process_pending' => DepositStatusEnum::CREATED->value,
+            'processed' => DepositStatusEnum::PAYED->value,
+            'partially_processed' => DepositStatusEnum::PAYED->value,
+            'canceled' => DepositStatusEnum::CANCELED->value,
+            'partially_canceled' => DepositStatusEnum::PAYED->value,
+            'process_failed' => DepositStatusEnum::CANCELED->value,
         ];
 
-        return $statusMap[$wintecaStatus] ?? DepositStatusEnum::CREATED;
+        return $statusMap[$wintecaStatus] ?? DepositStatusEnum::CREATED->value;
     }
 
 

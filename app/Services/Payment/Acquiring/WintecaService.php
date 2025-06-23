@@ -79,14 +79,19 @@ class WintecaService
             'reference_id' => (string)$reference_id,
             'service' => 'payment_card_usd_hpp',
             'currency' => $currency,
-            'amount' => $amount,
+            'amount' => number_format((float)$amount, 2, '.', ''),
             'test_mode' => true,
             'customer' => [
                 'reference_id' => (string)$user->id,
                 'email' => $user->email,
             ],
-            'return_url' => $this->myUrl.'/profile',
-            'callback_url' => $this->myUrl.'/winteca/callback',
+            'return_url' => $this->myUrl.'/api/profile',
+            'return_urls' => [
+                'success' => $this->myUrl.'/api/winteca/payin/success',
+                'fail' => $this->myUrl.'/api/winteca/payin/fail',
+                'pending' => $this->myUrl.'/api/winteca/payin/pending',
+            ],
+            'callback_url' => $this->myUrl.'/api/winteca/callback',
         ];
 
         $response = $this->callWintecaApiPrivatPost($params,$endpoint);

@@ -11,6 +11,7 @@ use App\Http\Requests\SelectPaymentRequest;
 use App\Http\Resources\PaymentMethodsResource;
 use App\Http\Resources\PaymentResource;
 use App\Models\Payment;
+use App\Services\BalanceService;
 use App\Services\OutsidePaymentService;
 use App\Services\Payment\CascadeService;
 use App\Services\TwoFactorService;
@@ -87,6 +88,11 @@ class PayOutController extends Controller
 //$check=true;
         if ($check)
         {
+            $checkBalance = BalanceService::checkSum($validateData['amount']);
+
+            if (!$checkBalance)
+                return $this->errorJsonAnswer403('Your balance is less than the withdrawal amount.');
+
             $payment = Payment::query()->findOrFail($id);
 
             $paymentType = PaymentTypeEnum::from($payment->type);
