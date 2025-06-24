@@ -20,7 +20,7 @@ const currencyName = getCurrency();
 const modelTitle = 'Attention !';
 const modalText = `
 <p>To perform this action, you need to pop up your balance.</p>
-<p>Current balance: <b>${userBalance}${currencyName}</b></p>
+<p>Current balance: <b>${userBalance.value}${currencyName}</b></p>
 `;
 
 const popupHandler = async () => {

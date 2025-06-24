@@ -11,12 +11,15 @@ import { PAGE_ROUTES } from '@/utils/datasets';
 import { useInform } from "@/composables/useInform"
 import { notifyWarning } from '@/helpers/notify';
 import { triggerOpenNewModal } from '@/composables/useModalsTriggers';
+import LoaderComponent from '@/components/LoaderComponent.vue';
+import { useLoading } from '@/composables/useLoading';
 
 const props = defineProps({
   isLoginVariant: { type: Boolean, default: true, },
 });
 
 const { inform } = useInform()
+const { isLoading, loadingStart, loadingStop } = useLoading();
 
 const formData = reactive({
   name: '',
@@ -47,67 +50,97 @@ const v$ = useVuelidate(rules, formData);
 
 const loginInHandle = async () => {
   console.log('loginInHandle');
+  if (isLoading.value) {return notifyWarning("Loading in progress, please wait...");};
 
   await v$.value.$validate();
   if (v$.value.$invalid) return;
 
-  const paylaod = {
-    email: formData.email,
-    password: formData.password,
-  };
+  try {
+    loadingStart();
+    const paylaod = {
+      email: formData.email,
+      password: formData.password,
+    };
 
-  const result = await login(paylaod);
-  console.log(result, 'result - login');
+    const result = await login(paylaod);
+    console.log(result, 'result - login');
 
-  if (!result) return console.warn('Login error');
+    if (!result) return console.warn('Login error');
 
-  navigateTo(PAGE_ROUTES.PROFILE);
+    navigateTo(PAGE_ROUTES.PROFILE);
+
+  } catch (error) {
+    console.warn(error);
+
+  } finally {
+    loadingStop();
+  }
 }
 
 const loginWithSocialHandler = async (socialName) => {
+  if (isLoading.value) {return notifyWarning("Loading in progress, please wait...");};
 
-  const result = await loginWithSocial(socialName);
-  console.log(result, 'result - loginWithSocialHandler');
+  try {
+    loadingStart();
 
-  if (!result) {
-    notifyWarning(`Login with ${socialName} error. Please try again later`);
-    return console.warn('loginWithSocialHandler error');
+    const result = await loginWithSocial(socialName);
+    console.log(result, 'result - loginWithSocialHandler');
+
+    if (!result) {
+      notifyWarning(`Login with ${socialName} error. Please try again later`);
+      return console.warn('loginWithSocialHandler error');
+    }
+
+    navigateTo(PAGE_ROUTES.PROFILE);
+
+  } catch (error) {
+    console.warn(error);
+
+  } finally {
+    loadingStop();
   }
-
-  navigateTo(PAGE_ROUTES.PROFILE);
 }
 
 const registerHandle = async () => {
   console.log('registerHandle');
+  if (isLoading.value) {return notifyWarning("Loading in progress, please wait...");};
 
   await v$.value.$validate();
   if (v$.value.$invalid) return;
 
-  const paylaod = {
-    name: formData.name,
-    email: formData.email,
-    password: formData.password,
-    password_confirmation: formData.passwordRepeat
-  };
+  try {
+    loadingStart();
 
-  const result = await register(paylaod);
-  console.log(result, 'result - registerHandle');
+    const paylaod = {
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+      password_confirmation: formData.passwordRepeat
+    };
 
-  if (!result) {
+    const result = await register(paylaod);
+    console.log(result, 'result - registerHandle');
+
+    if (!result) {
+      await inform({
+          title: 'Warning',
+          text: 'Something went wrong',
+      })
+      return console.warn('Register error');
+    }
+
     await inform({
-        title: 'Warning',
-        text: 'Something went wrong',
+        title: 'Congratulations',
+        text: 'Your Profile successfully created. You will be redirected to profile page',
     })
-    return console.warn('Register error');
+
+    navigateTo(PAGE_ROUTES.PROFILE);
+  } catch (error) {
+    console.warn(error);
+
+  } finally {
+    loadingStop();
   }
-
-  await inform({
-      title: 'Congratulations',
-      text: 'Your Profile successfully created. You will be redirected to profile page',
-  })
-
-  navigateTo(PAGE_ROUTES.PROFILE);
-
 }
 
 const formActionHandler = (action) => {
@@ -157,6 +190,8 @@ const formActionHandler = (action) => {
       </div>
 
       <div class="auth-form__form">
+        <LoaderComponent v-if="isLoading" />
+
         <InputBase v-if="!isLoginVariant" v-model="formData.name" :placeholder="'User name'" type="text" class="form__input" />
         <span v-if="v$.name?.$error" class="error">
           <span v-if="v$.name?.required?.$invalid">Name is required</span>
