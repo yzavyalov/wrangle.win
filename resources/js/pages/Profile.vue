@@ -8,6 +8,8 @@ import { useConfirm } from '@/composables';
 import { triggerOpenNewModal } from "@/composables/useModalsTriggers";
 import { getCurrency } from '@/helpers/getCurrency';
 import BaseLayout from "@/layouts/BaseLayout.vue";
+import { navigateTo } from "@/helpers/navigate";
+import { PAGE_ROUTES } from "@/utils/datasets";
 
 defineOptions({
   name: "Profile",
@@ -72,16 +74,22 @@ onMounted(() => {
 
     <div class="profile__body">
       <div class="profile__history first">
-        <h4>Bet History</h4>
-        <p>Nothing to see here yet...</p>
+        <h4>Favorite Events</h4>
+        <p>Haven't found interesting bet yet?</p>
+        <ButtonBase @click="navigateTo(PAGE_ROUTES.HOTS)">To Events</ButtonBase>
+
       </div>
+
       <div class="profile__history">
-        <h4>Transaction History</h4>
-        <p>Nothing to see here yet...</p>
+        <h4>My events</h4>
+        <p>Want to create your own bet?</p>
+        <ButtonBase @click="navigateTo(PAGE_ROUTES.NEW_BET)">Create Event</ButtonBase>
       </div>
+
       <div class="profile__history last">
         <ButtonBase class="min-width-80">Withdraw Money</ButtonBase>
         <ButtonBase class="min-width-80">Top up a Balance</ButtonBase>
+        <ButtonBase class="min-width-80">View last transactions</ButtonBase>
       </div>
     </div>
 
