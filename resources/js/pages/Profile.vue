@@ -10,6 +10,11 @@ import { getCurrency } from '@/helpers/getCurrency';
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import { navigateTo } from "@/helpers/navigate";
 import { PAGE_ROUTES } from "@/utils/datasets";
+import BetItemSmall from "@/components/bet/BetItemSmall.vue";
+import { getOwnBets } from "@/services/bets";
+import { useOwnBets } from "@/composables/useOwnBets";
+import { useFavoriteBets } from "@/composables/useFavoriteBets";
+import { notifyWarning } from "@/helpers/notify";
 
 defineOptions({
   name: "Profile",
@@ -17,6 +22,8 @@ defineOptions({
 });
 
 const { confirm } = useConfirm();
+const { ownBets, fetchOwnBets, fetchMoreOwnBets } = useOwnBets();
+const { favoriteBets, fetchFavoriteBets, fetchMoreFavoriteBets } = useFavoriteBets();
 
 const currentUser = computed(() => useUserStore().getUser);
 const userBalance = computed(() => Number(currentUser.value?.balance?.balance || 0)?.toFixed(2) || 0);
@@ -40,8 +47,46 @@ const userBalanceHandler = () => {
   }
 }
 
+const openBetHandler = async (bet) => {
+  console.log(bet, 'bet');
+
+  const shortBetTitle = bet.title.length > 30 ? `${bet.title.substring(0, 30)}...` : bet.title;
+
+  const result = await confirm({
+    title: 'Are you sure?',
+    text: `Open this page with this bet - '${shortBetTitle}'?`,
+    confirmText: 'Confirm',
+    cancelText: 'Cancel'
+  })
+
+  if (!result) {return}
+
+  navigateTo(`${PAGE_ROUTES.BET}/${bet.id}`);
+}
+
+const deleteBetHandler = async (bet) => {
+  const shortBetTitle = bet.title.length > 30 ? `${bet.title.substring(0, 30)}...` : bet.title;
+
+  const result = await confirm({
+    title: 'Are you sure?',
+    text: `Delete this bet - '${shortBetTitle}'?`,
+    confirmText: 'Confirm',
+    cancelText: 'Cancel'
+  })
+
+  if (!result) {return}
+
+  // console.log(bet, 'bet');
+  console.warn('No logic for delete yet...');
+  notifyWarning('No logic for delete yet...');
+
+}
+
 onMounted(() => {
   userBalanceHandler();
+
+  fetchOwnBets();
+  fetchFavoriteBets();
 })
 
 </script>
@@ -75,15 +120,33 @@ onMounted(() => {
     <div class="profile__body">
       <div class="profile__history first">
         <h4>Favorite Events</h4>
-        <p>Haven't found interesting bet yet?</p>
-        <ButtonBase @click="navigateTo(PAGE_ROUTES.HOTS)">To Events</ButtonBase>
+
+        <BetItemSmall v-for="item in favoriteBets"
+          :key="item.id"
+          :item="item"
+          class="profile__history__item"
+          @delete="deleteBetHandler(item)"
+          @detail="openBetHandler(item)"
+        />
+
+        <p class="mt-40">Haven't found interesting bet yet?</p>
+        <ButtonBase class="m-auto mt-10 min-width-60" @click="navigateTo(PAGE_ROUTES.HOTS)">To Events</ButtonBase>
 
       </div>
 
       <div class="profile__history">
         <h4>My events</h4>
-        <p>Want to create your own bet?</p>
-        <ButtonBase @click="navigateTo(PAGE_ROUTES.NEW_BET)">Create Event</ButtonBase>
+
+        <BetItemSmall v-for="item in ownBets"
+          :key="item.id"
+          :item="item"
+          class="profile__history__item"
+          @delete="deleteBetHandler(item)"
+          @detail="openBetHandler(item)"
+        />
+
+        <p class="mt-40">Want to create your own bet?</p>
+        <ButtonBase class="m-auto mt-10 min-width-60" @click="navigateTo(PAGE_ROUTES.NEW_BET)">Create Event</ButtonBase>
       </div>
 
       <div class="profile__history last">
@@ -98,6 +161,7 @@ onMounted(() => {
 
 
       <!-- <div class="profile__footer">
+        <ButtonBase class="m-auto" @click="fetchOwnBets">fetchOwnBets</ButtonBase>
         <ButtonBase class="mb-10 mt-10 m-auto" @click="triggerOpenNewModal('prediction-modal')">triggerOpenNewModal - prediction-modal</ButtonBase>
 
         <ButtonBase class="m-auto" @click="testConfirm">testConfirm</ButtonBase>
@@ -206,6 +270,8 @@ onMounted(() => {
     background: #FFEC1C;
     min-width: 100%;
     flex: 1;
+    position: relative;
+    z-index: 1;
 
     @media screen and (max-width: 929px) {
       grid-template-columns: repeat(1, 1fr);
@@ -213,6 +279,10 @@ onMounted(() => {
   }
 
   &__history {
+    &__item {
+      margin: 0 5px 5px 5px;
+    }
+
     &.first {
       background: #FFE432;
     }
@@ -253,6 +323,9 @@ onMounted(() => {
     z-index: 1;
   }
 
+  .min-width-60 {
+    min-width: 60%;
+  }
 
   .min-width-80 {
     min-width: 80%;

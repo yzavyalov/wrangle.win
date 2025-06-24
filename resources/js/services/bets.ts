@@ -51,7 +51,7 @@ export const getOwnBets = async (payload: SearchBetsPayload) => {
   .then(res => {
     console.log(res, "res - getOwnBets");
 
-    return res.data;
+    return res?.data?.data?.bets;
   })
   .catch(e => console.error(e.message));
 };
@@ -75,12 +75,21 @@ export const getHotBets = async (payload: SearchBetsPayload) => {
   .catch(e => console.error(e.message));
 };
 
-export const getFavoriteBets = async () => {
-  return await http.get(BETS.GET_FAVORITE)
+export const getFavoriteBets = async (payload: SearchBetsPayload) => {
+  if (!payload) { return console.warn("Payload is required");}
+
+    const stringRequestBody = Object.entries(payload).reduce((acc, [key, value]) => {
+    acc[key] = String(value);
+    return acc;
+  }, {} as Record<string, string>);
+
+  const requestUrl = BETS.GET_FAVORITE + "?" + new URLSearchParams(stringRequestBody).toString();
+
+  return await http.get(requestUrl)
   .then(res => {
     console.log(res, "res - getFavoriteBets");
 
-    return res.data;
+    return res?.data?.data?.bets;
   })
   .catch(e => console.error(e.message));
 };
