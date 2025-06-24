@@ -156,7 +156,7 @@ export const resetUserPassword = async (payload: ResetUserPassword) => {
   return await http.post(AUTH.RESET_PASSWORD, payload)
   .then(res => {
     console.log(res, "res - resetUserPassword");
-    return res.data;
+    return res?.data?.success;
   })
   .catch(e => {
     notifyWarning(e?.response?.data?.message || e?.message);

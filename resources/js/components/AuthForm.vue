@@ -297,6 +297,8 @@ const formActionHandler = (action) => {
       max-width: 350px;
       margin: 20px 0;
       padding: 10px;
+      display: flex;
+      justify-content: space-around;
 
       ul {
         display: grid;

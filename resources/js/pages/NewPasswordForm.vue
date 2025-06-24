@@ -16,6 +16,7 @@ import { navigateTo } from "@/helpers/navigate";
 import { PAGE_ROUTES } from "@/utils/datasets";
 import { passwordRegex } from "@/utils/regex";
 import LoaderComponent from "@/components/LoaderComponent.vue";
+import { useInform } from "@/composables/useInform"
 
 defineOptions({
   name: "NewPasswordForm",
@@ -23,6 +24,7 @@ defineOptions({
 })
 
 const { isLoading, loadingStart, loadingStop } = useLoading();
+const {} = useInform();
 
 const formData = reactive({
   password: '',
@@ -73,7 +75,16 @@ const submitForm = async () => {
 
     const success = await resetUserPassword(payload);
 
-    success && notifySuccess('Password successfully changed');
+    if (!success) {return notifyWarning('Something went wrong');}
+
+    notifySuccess('Password successfully changed');
+
+    await inform({
+      title: 'Congratulations',
+      text: 'Your password successfully changed. You will be redirected to login page',
+    })
+
+    navigateTo(PAGE_ROUTES.LOGIN);
 
   } catch (error) {
     console.warn(error);
