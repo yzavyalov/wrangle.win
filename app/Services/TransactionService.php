@@ -15,10 +15,6 @@ class TransactionService
     {
         $this->balanceService = $balanceService;
     }
-    public function allTransactions()
-    {
-        return Transaction::all();
-    }
 
 
     public function calculationBalance($sum, $operation, $userId = null)

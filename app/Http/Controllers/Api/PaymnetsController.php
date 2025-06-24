@@ -56,10 +56,6 @@ class PaymnetsController extends Controller
 
         $payment = Payment::query()->findOrFail($id);
 
-        $deposit = $this->outsidePaymentService->depositService->createDeposit($data['amount'],$data['currency'],$payment->id);
-
-        $data['reference_id'] = $deposit->id;
-
         $type = PaymentTypeEnum::from($payment->type);
 
         $handler = $type->handler();

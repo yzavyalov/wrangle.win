@@ -22,7 +22,7 @@ class PaymentWintecaSeeder extends Seeder
                 'link' => 'https://portal.winteca.com/login',
             ],
             [
-                'name' => 'AlphaPo',
+                'name' => 'Winteca',
                 'type' => PaymentTypeEnum::ACQUIRING,
                 'category' => PaymentCategoryEnum::OUT,
                 'commission' => 5,

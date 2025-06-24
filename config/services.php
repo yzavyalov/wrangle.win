@@ -57,6 +57,11 @@ return [
         'api_secret' => env('WINTECA_PRIVAT_KEY'),
         'public_key' => env('WINTECA_PUBLIC_KEY'),
         'privat_key' => env('WINTECA_PRIVAT_KEY'),
+
+        'api_account_www_pay_out' => env('WINTECA_API_ACCOUNT_ID_WWN_PAY_OUT'),
+        'api_key_www_pay_out' => env('WINTECA_API_KEY_WWN_PAY_OUT'),
+        'public_key_www_pay_out' => env('WINTECA_PUBLIC_KEY_WWN_PAY_OUT'),
+        'privat_key_www_pay_out' => env('WINTECA_PRIVAT_KEY_WWN_PAY_OUT'),
     ],
 
 ];

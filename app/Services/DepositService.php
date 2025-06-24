@@ -40,4 +40,14 @@ class DepositService
         else
             return $lastdeposit;
     }
+
+    public static function changeStatus(Deposit $deposit, $newStatus)
+    {
+        if ($deposit->status !== $newStatus)
+        {
+            $deposit->status = $newStatus;
+
+            $deposit->save();
+        }
+    }
 }

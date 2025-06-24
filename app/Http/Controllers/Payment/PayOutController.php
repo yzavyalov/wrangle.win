@@ -11,6 +11,7 @@ use App\Http\Requests\SelectPaymentRequest;
 use App\Http\Resources\PaymentMethodsResource;
 use App\Http\Resources\PaymentResource;
 use App\Models\Payment;
+use App\Services\BalanceService;
 use App\Services\OutsidePaymentService;
 use App\Services\Payment\CascadeService;
 use App\Services\TwoFactorService;
@@ -61,7 +62,7 @@ class PayOutController extends Controller
 
     public function payOutPayment(SelectPaymentRequest $request, $id)
     {
-        $payment = $this->cascadeService->payoutShowMethod($id);
+        $payment = Payment::query()->findOrFail($id);
 
         $data = $request->validated();
 
@@ -84,16 +85,26 @@ class PayOutController extends Controller
         $validateData = $request->validated();
 
         $check = TwoFactorService::verify($validateData['code']);
-
+//$check=true;
         if ($check)
         {
+            $checkBalance = BalanceService::checkSum($validateData['amount']);
+
+            if (!$checkBalance)
+                return $this->errorJsonAnswer403('Your balance is less than the withdrawal amount.');
+
             $payment = Payment::query()->findOrFail($id);
 
-            $paymentType = PaymentTypeEnum::from($payment->category);
+            $paymentType = PaymentTypeEnum::from($payment->type);
 
             $withdrawHandler = $paymentType->handlerForWithdraw();
 
-            $withdrawHandler->process($payment, $validateData);
+            $response = $withdrawHandler->handle($payment, $validateData);
+
+            if ($response['status'] === 1)
+                return $this->successJsonAnswer200('Your payment has been processed, it may take a few days for the bank to process it!');
+            else
+                return $this->errorJsonAnswer400('Withdrawal of money failed, please check with technical support');
         }
         else
         {

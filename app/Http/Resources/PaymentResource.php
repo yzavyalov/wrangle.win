@@ -24,6 +24,7 @@ class PaymentResource extends JsonResource
             'category' => $this->category,
             'category_name' => PaymentCategoryEnum::from($this->category)->label(),
             'commission' => $this->commission,
+            'fix_fee' => $this->fix_fee,
             'logo' => $this->logo,
             'link' => $this->link,
             'order_by' => optional($this->pivot)->order_by,
