@@ -169,7 +169,7 @@ export const forgotUserPassword = async (payload: ForgotUserPassword) => {
   return await http.post(AUTH.FORGOT_PASSWORD, payload)
   .then(res => {
     console.log(res, "res - forgotUserPassword");
-    return res.data;
+    return res.data.success;
   })
   .catch(e => {
     notifyWarning(e?.response?.data?.message || e?.message);

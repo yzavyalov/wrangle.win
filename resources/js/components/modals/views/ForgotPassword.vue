@@ -61,14 +61,16 @@ const submitFormHandler = async () => {
     const success = await forgotUserPassword(paylaod);
     console.log(success, 'success - forgotUserPassword');
 
-    success && notifySuccess("Your request has been sent!");
+    if (!success) { return notifyError("Something went wrong"); }
 
-    const informed = await inform({
+    notifySuccess("Your request has been sent!");
+
+    await inform({
       title: 'Success',
       text: 'Your request has been sent!',
     })
 
-    informed && triggerCloseModal();
+    triggerCloseModal();
 
   } catch (error) {
     console.warn(error);

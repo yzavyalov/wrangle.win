@@ -294,7 +294,7 @@ const formActionHandler = (action) => {
 
     &__footer {
       border-top: 1px solid #000;
-      max-width: 350px;
+      // max-width: 350px;
       margin: 20px 0;
       padding: 10px;
       display: flex;
@@ -307,6 +307,7 @@ const formActionHandler = (action) => {
         font-size: 12px;
         font-style: italic;
         text-decoration: underline;
+        width: 100%;
 
         li {
           text-align: center;
