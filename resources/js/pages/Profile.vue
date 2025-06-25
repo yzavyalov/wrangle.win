@@ -157,10 +157,6 @@ onMounted(() => {
           >
             {{ tab.name }}
           </ButtonBase>
-
-          <!-- <ButtonBase class="min-width-80">Withdraw Money</ButtonBase>
-          <ButtonBase class="min-width-80">Top up a Balance</ButtonBase>
-          <ButtonBase class="min-width-80" @click="setActiveTab('transactions')">View last transactions</ButtonBase> -->
         </div>
       </div>
     </PageWrapperMain>

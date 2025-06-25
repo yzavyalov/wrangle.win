@@ -2,15 +2,11 @@
 import { onMounted, onBeforeUnmount, ref, computed, reactive, warn } from 'vue';
 import useVuelidate from '@vuelidate/core';
 import { useUserStore } from "@/store/user";
-import { getCurrency } from '@/helpers/getCurrency';
-import { useHistory } from "@/composables/useHistory";
-import { BET_OPTION_KEY, createBit } from '@/services/bets';
 import { triggerCloseModal } from '@/composables/useModalsTriggers';
 import { notifyError, notifySuccess, notifyWarning } from '@/helpers/notify';
 import { required, sameAs, email, minLength, helpers, maxLength } from '@vuelidate/validators';
 import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import InputWIthHelper from '@/components/details/InputWIthHelper.vue';
-import InputPasswordWIthHelper from '@/components/details/InputPasswordWIthHelper.vue';
 import ButtonBaseWithIcon from "@/components/details/ButtonBaseWithIcon.vue";
 import { useInform } from '@/composables/useInform';
 import { updateUserProfile } from '@/services/user';

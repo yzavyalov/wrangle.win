@@ -167,9 +167,12 @@ export const createBit = async (payload: CreateBitPayload) => {
   .then(res => {
     console.log(res, "res - createBit");
 
-    const { success, message } = res.data
+    const { success, message, data } = res.data
 
     if (!success) { notifyError(message); }
+
+    console.log(data, 'data - createBit');
+    triggerUpdateBet(data);
 
     return success;
   })

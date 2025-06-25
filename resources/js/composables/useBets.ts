@@ -8,6 +8,7 @@ import { useUserStore } from "@/store/user";
 import { useHistory } from "@/composables/useHistory";
 import { useDebounceFn } from "@vueuse/core";
 import { sortArr } from "@/helpers/sortArr"
+import { useModalsStore } from '@/store/modals';
 
 
 export const useBets = (options: UseBetsOptions = {}) => {
@@ -18,6 +19,7 @@ export const useBets = (options: UseBetsOptions = {}) => {
   const { isLoading, loadingStart, loadingStop } = useLoading();
   const { searchQuery, filters, sortBy, selectedCategories, isDefualtFilters } = useFilters();
   const { setQueryParam } = useHistory();
+  const { updateModalContent } = useModalsStore();
 
   const bets: Ref<BetItem[]> = ref([]);
 
@@ -35,6 +37,8 @@ export const useBets = (options: UseBetsOptions = {}) => {
     // return bets.value.filter(bet => bet.title.toLowerCase().includes(searchQuery.value.toLowerCase() || bet.description.toLowerCase().includes(searchQuery.value.toLowerCase())));
     return sortArr(bets.value, sortBy, 'finish');
   });
+
+  const currentBetFromStore = computed(() => useModalsStore().getModalContent?.currentBet);
 
   const openBetModal = () => {
     console.log('openBetModal');
@@ -155,6 +159,22 @@ export const useBets = (options: UseBetsOptions = {}) => {
   const updatedBetEventHandler = (event) => {
     console.log(event, 'event - updatedBetEventHandler');
 
+    const { betData } = event.detail;
+    if (!betData) { return console.warn("No betData in event. updatedBetEventHandler"); }
+
+
+    if (bets.value?.length) {
+      const idx = bets.value.findIndex(bet => bet.id === betData.id);
+
+      if (idx > -1) {
+        bets.value[idx] = { ...bets.value[idx], ...betData, };
+      }
+    }
+
+    if (currentBetFromStore.value?.id === betData.id) {
+      const betFromStore = { ...currentBetFromStore.value, ...betData, };
+      updateModalContent({ currentBet: betFromStore });
+    }
   }
 
   onMounted(() => {
