@@ -26,8 +26,8 @@ const profileTabCompoenents = shallowRef({
 })
 
 const { confirm } = useConfirm();
-const { ownBets, fetchOwnBets, fetchMoreOwnBets } = useOwnBets();
-const { favoriteBets, fetchFavoriteBets, fetchMoreFavoriteBets } = useFavoriteBets();
+const { ownBets, fetchOwnBets, fetchMoreOwnBets, openBetHandler } = useOwnBets();
+const { favoriteBets, fetchFavoriteBets, fetchMoreFavoriteBets, toggleBetToFavoriteHandler } = useFavoriteBets();
 
 const activeTab = ref(false);
 
@@ -54,23 +54,6 @@ const userBalanceHandler = () => {
   if (!userBalance.value) {
     getUserData();
   }
-}
-
-const openBetHandler = async (bet) => {
-  console.log(bet, 'bet');
-
-  const shortBetTitle = bet.title.length > 30 ? `${bet.title.substring(0, 30)}...` : bet.title;
-
-  const result = await confirm({
-    title: 'Are you sure?',
-    text: `Open this page with this bet - '${shortBetTitle}'?`,
-    confirmText: 'Yes',
-    cancelText: 'No'
-  })
-
-  if (!result) {return}
-
-  navigateTo(`${PAGE_ROUTES.BET}/${bet.id}`);
 }
 
 const setActiveTab = (tab) => {
@@ -121,7 +104,7 @@ onMounted(() => {
         <div class="profile__user">
           <div class="profile__user--details">
             <p class="profile__user--top">{{ currentUser?.name || 'Nickname Name' }}</p>
-            <ButtonBase class="min-width-80">Edit Profile</ButtonBase>
+            <ButtonBase class="profile__user--btn">Edit Profile</ButtonBase>
             <p class="coin-decorator">
               Balance: <b>{{ userBalance }}{{ currencyName }}</b>
             </p>
@@ -142,7 +125,7 @@ onMounted(() => {
             :key="item.id"
             :item="item"
             class="profile__history__item"
-            @delete="deleteBetHandler(item)"
+            @delete="toggleBetToFavoriteHandler(item)"
             @detail="openBetHandler(item)"
           />
 
@@ -169,7 +152,7 @@ onMounted(() => {
         <div class="profile__history last">
           <ButtonBase v-for="tab in profileTabs"
             :key="tab.id"
-            class="min-width-80"
+            class="profile__history--btn"
             @click="setActiveTab(tab)"
           >
             {{ tab.name }}
@@ -268,6 +251,10 @@ onMounted(() => {
       }
     }
 
+    &--btn {
+      min-width: 60%;
+    }
+
     @media screen and (max-width: 929px) {
       &--details {
         min-width: 150px;
@@ -297,6 +284,10 @@ onMounted(() => {
   &__history {
     &__item {
       margin: 0 5px 5px 5px;
+    }
+
+    &--btn {
+      min-width: 80%;
     }
 
     &.first {
@@ -337,14 +328,6 @@ onMounted(() => {
   &__footer {
     position: relative;
     z-index: 1;
-  }
-
-  .min-width-60 {
-    min-width: 60%;
-  }
-
-  .min-width-80 {
-    min-width: 80%;
   }
 }
 </style>

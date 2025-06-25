@@ -1,13 +1,16 @@
-import { onMounted, ref } from "vue";
-import { getFavoriteBets } from "@/services/bets";
-import { SearchBetsPayload } from "@/types/bets";
+import { onMounted, Ref, ref } from "vue";
+import { getFavoriteBets, toggleToFavorite } from "@/services/bets";
+import { BetItem, SearchBetsPayload } from "@/types/bets";
 import { useLoading } from "@/composables/useLoading";
+import { useConfirm } from '@/composables/useConfirm';
+import { notifySuccess, notifyWarning } from "@/helpers/notify";
 
 export const useFavoriteBets = () => {
 
   const { isLoading, loadingStart, loadingStop } = useLoading();
+  const { confirm } = useConfirm();
 
-  const favoriteBets = ref([]);
+  const favoriteBets: Ref<BetItem[]> = ref([]);
 
   const pagination = ref({
     page: 1,
@@ -53,6 +56,29 @@ export const useFavoriteBets = () => {
     fetchFavoriteBets();
   }
 
+  const toggleBetToFavoriteHandler = async (bet) => {
+    const shortBetTitle = bet.title.length > 30 ? `${bet.title.substring(0, 30)}...` : bet.title;
+
+    const result = await confirm({
+      title: 'Are you sure?',
+      text: `Delete this bet from favorites - '${shortBetTitle}'?`,
+      confirmText: 'Yes',
+      cancelText: 'No'
+    })
+
+    if (!result) {return}
+
+    const success = await toggleToFavorite({ id: bet.id });
+
+    if (!success) {
+      notifyWarning('Error toggling to favorite');
+    }
+
+    favoriteBets.value = favoriteBets.value.filter(b => b.id !== bet.id);
+
+    notifySuccess('Bet removed from favorites');
+  }
+
   onMounted(() => {
     fetchFavoriteBets();
   })
@@ -63,5 +89,6 @@ export const useFavoriteBets = () => {
 
     fetchFavoriteBets,
     fetchMoreFavoriteBets,
+    toggleBetToFavoriteHandler,
   };
 };

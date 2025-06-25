@@ -151,7 +151,7 @@ export const createBet = async (payload: CreateBetPayload) => {
 
 export const toggleToFavorite = async (payload: ToggleToFavoritePayload) => {
 
-  return await http.post(BETS.TOGGLE_TO_FAVORITE, payload)
+  return await http.get(`${BETS.TOGGLE_TO_FAVORITE}/${payload.id}`)
   .then(res => {
     console.log(res, "res - toggleToFavorite");
 

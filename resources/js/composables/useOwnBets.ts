@@ -1,13 +1,19 @@
 import { getOwnBets } from "@/services/bets";
-import { SearchBetsPayload } from "@/types/bets";
-import { onMounted, ref } from "vue";
+import { BetItem, SearchBetsPayload } from "@/types/bets";
+import { onMounted, Ref, ref } from "vue";
 import { useLoading } from "@/composables/useLoading";
+import { navigateTo } from "@/helpers/navigate";
+import { useConfirm } from '@/composables/useConfirm';
+import { PAGE_ROUTES } from "@/utils/datasets";
+import { notifyWarning } from "@/helpers/notify";
 
 export const useOwnBets = () => {
 
   const { isLoading, loadingStart, loadingStop } = useLoading();
 
-  const ownBets = ref([]);
+  const { confirm } = useConfirm();
+
+  const ownBets: Ref<BetItem[]> = ref([]);
 
   const pagination = ref({
     page: 1,
@@ -53,6 +59,41 @@ export const useOwnBets = () => {
     fetchOwnBets();
   }
 
+  const openBetHandler = async (bet) => {
+    console.log(bet, 'bet');
+
+    const shortBetTitle = bet.title.length > 30 ? `${bet.title.substring(0, 30)}...` : bet.title;
+
+    const result = await confirm({
+      title: 'Are you sure?',
+      text: `You will be redirected to this page - '${shortBetTitle}'?`,
+      confirmText: 'Yes',
+      cancelText: 'No'
+    })
+
+    if (!result) {return}
+
+    navigateTo(`${PAGE_ROUTES.BET}/${bet.id}`);
+  }
+
+  const deleteOwnBetHandler = async (bet) => {
+    const shortBetTitle = bet.title.length > 30 ? `${bet.title.substring(0, 30)}...` : bet.title;
+
+    const result = await confirm({
+      title: 'Are you sure?',
+      text: `Delete this bet - '${shortBetTitle}'?`,
+      confirmText: 'Yes',
+      cancelText: 'No'
+    })
+
+    if (!result) {return}
+
+    // console.log(bet, 'bet');
+    console.warn('No logic for delete yet...');
+    notifyWarning('No logic for delete yet...');
+
+  }
+
   onMounted(() => {
     fetchOwnBets();
   })
@@ -63,5 +104,8 @@ export const useOwnBets = () => {
 
     fetchOwnBets,
     fetchMoreOwnBets,
+
+    openBetHandler,
+    deleteOwnBetHandler,
   };
 };

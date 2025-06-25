@@ -87,3 +87,11 @@
     margin-bottom: #{$i}px;
   }
 }
+
+@for $i from 0 through 300 {
+  @if $i % 10 == 0 {
+    .min-width-#{$i} {
+      min-width: #{$i}px !important;
+    }
+  }
+}

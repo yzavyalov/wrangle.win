@@ -20,7 +20,7 @@ export interface CreateBetPayload {
 }
 
 export interface ToggleToFavoritePayload {
-  bet_id: number
+  id: number
 }
 
 export interface CreateBitPayload {

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted, ref } from "vue";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import { useUserStore } from "@/store/user";
@@ -24,11 +24,13 @@ const currencyName = getCurrency();
 const transactions = ref([]);
 const pagination = ref({
   page: 1,
-  per_page: 20,
+  per_page: 10,
 });
+const isFirstPage = computed(() => pagination.value.page === 1);
 const isLastPage = ref(false);
 
-const fetchTransactions = async (page = 1) => {
+
+const fetchTransactions = async (page) => {
   console.log('fetchTransactions');
   if (isLoading.value) {
     notifyWarning("Loading, please wait");
@@ -44,12 +46,18 @@ const fetchTransactions = async (page = 1) => {
     loadingStart();
 
     const payload = {
-      page: page || pagination.value.page,
+      page: page || pagination.value.page || 1,
       per_page: pagination.value.per_page,
     }
 
-    const response = await fetchUserTransactions(payload);
-    console.log(response, 'response - fetchTransactions');
+    const fethcedTransactions = await fetchUserTransactions(payload);
+    console.log(fethcedTransactions, 'response - fetchTransactions');
+
+    isFirstPage.value
+      ? transactions.value = fethcedTransactions
+      : transactions.value.push(...fethcedTransactions);
+
+    isLastPage.value = fethcedTransactions.length < pagination.value.per_page;
 
   } catch (error) {
     console.warn(error);
@@ -72,7 +80,11 @@ const fetchMoreTransactions = async () => {
     return console.warn('Last page');
   }
 
-  fetchTransactions(pagination.value.page + 1);
+  pagination.value.page++
+
+  await nextTick();
+
+  fetchTransactions();
 }
 
 onMounted(() => {
@@ -87,7 +99,7 @@ onMounted(() => {
       <h4 class="coin-decorator">
         Balance: {{ userBalance }}{{ currencyName }}
       </h4>
-      <ButtonBase class="min-width-80px" @click="$emit('close')">Exit</ButtonBase>
+      <ButtonBase class="min-width-80" @click="$emit('close')">Exit</ButtonBase>
     </div>
 
     <div class="transaction-table__body">
@@ -103,7 +115,6 @@ onMounted(() => {
             <th>Created at</th>
           </tr>
         </thead>
-
 
         <tbody v-if="transactions?.length">
           <tr v-for="item in transactions" :key="item.id">
@@ -135,7 +146,7 @@ onMounted(() => {
       <LoaderComponent v-if="isLoading" class="transaction-table__loader" />
 
       <ButtonBase v-if="transactions.length && !isLastPage"
-        class="min-width-80px m-auto"
+        class="min-width-120 m-auto"
         @click="fetchMoreTransactions"
       >
         Load more
@@ -163,9 +174,6 @@ onMounted(() => {
     }
   }
 
-  .min-width-80px {
-    min-width: 80px;
-  }
 
   &__body {
     border: 1px solid black;
@@ -196,6 +204,16 @@ onMounted(() => {
       padding: 8px;
       text-align: center;
       font-weight: var(--font-weight-light);
+    }
+
+
+
+    thead {
+      background: var(--btn-bg-color);
+    }
+
+    tbody {
+      background: var(--btn-bg-color-active);
     }
 
     thead tr {
