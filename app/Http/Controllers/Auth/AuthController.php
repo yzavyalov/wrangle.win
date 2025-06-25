@@ -33,17 +33,26 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
+        // Проверка: существует ли пользователь и правильный ли пароль
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        //        $token = $user->createToken('auth-token')->plainTextToken;
+        // Проверка: подтверждён ли email
+        if (! $user->hasVerifiedEmail()) {
+            return response()->json(['message' => 'Please verify your email before logging in.'], 403);
+        }
+
+        // Авторизация пользователя
         auth()->login($user);
 
+        // Сохраняем в сессию (если используется)
         $this->userService->putInSession($user);
 
-        return $this->successJsonAnswer200('user', UserResource::make($user));
+        // Возвращаем ответ с данными пользователя
+        return $this->successJsonAnswer200('User', UserResource::make($user));
     }
+
 
     public function logout(Request $request)
     {
@@ -67,17 +76,10 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        // Валидация входных данных
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => ['required', 'confirmed', Password::min(8)
-//        ->mixedCase()     // минимум одна заглавная и одна строчная буква
-        ->letters()       // хотя бы одна буква
-        ->numbers()       // хотя бы одна цифра
-        ->symbols()       // хотя бы один символ
-//        ->uncompromised() // не был скомпрометирован (проверка через HaveIBeenPwned API)
-    ],
+            'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->symbols()],
         ]);
 
         if ($validator->fails()) {
@@ -90,21 +92,20 @@ class AuthController extends Controller
 
         if ($check === false)
         {
-            // Создание пользователя
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
 
-            auth()->login($user);
+            // Отправка письма с подтверждением
+            $user->sendEmailVerificationNotification();
 
-            $this->userService->putInSession($user);
-
-            return $this->successJsonAnswer200('User',AuthResource::make($user));
+            return $this->successJsonAnswer200('Registration successful. Please check your email to verify your account.');
         }
-        else
+        else {
             return $this->errorJsonAnswer403('Sorry but we can\'t register you, try again later!');
+        }
     }
 }
 

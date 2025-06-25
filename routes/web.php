@@ -11,6 +11,8 @@ use App\Http\Controllers\AdminPanel\PaymentMethodsController;
 use App\Http\Controllers\AdminPanel\PaymentTrustConditionsController;
 use App\Http\Controllers\AdminPanel\TransactionController;
 use App\Http\Controllers\AdminPanel\UserController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\SocialController;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +45,9 @@ Route::get('/', function () {
 })->name('index');
 
 
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/register', [AuthController::class, 'register'])->name('register');
+
 Route::get('/login', function () {
     return Inertia::render('Login');
 });
@@ -50,6 +55,10 @@ Route::get('/login', function () {
 Route::get('/register', function () {
     return Inertia::render('Register');
 });
+
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->middleware(['signed','web'])
+    ->name('verification.verify');
 
 Route::get('/prediction', function () {         // temp route
     return Inertia::render('Prediction');
