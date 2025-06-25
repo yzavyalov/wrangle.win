@@ -103,6 +103,10 @@ Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.
 Route::get('/auth/{provider}/redirect',[SocialController::class,'redirect'])->name('social.redirect');
 Route::get('/auth/{provider}/callback',[SocialController::class,'callback'])->name('social.callback');
 
+Route::get('/profile_2', function () { // temporary route for testing
+    return Inertia::render('Profile');
+})->name('profile');
+
 Route::middleware('authentication')->group(function (){
     Route::get('/profile', function () {
         return Inertia::render('Profile');
