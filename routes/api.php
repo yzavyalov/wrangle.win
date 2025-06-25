@@ -31,8 +31,8 @@ use App\Http\Controllers\Payment\{
 |--------------------------------------------------------------------------
 */
 
-Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/register', [AuthController::class, 'register'])->name('register');
+//Route::post('/login', [AuthController::class, 'login'])->name('login');
+//Route::post('/register', [AuthController::class, 'register'])->name('register');
 
 //Route::post('/register', [AuthController::class, 'register'])->middleware('web');
 //Route::post('/login', [AuthController::class, 'login'])->middleware('web')->name('login');
@@ -46,9 +46,9 @@ Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 |--------------------------------------------------------------------------
 */
 
-Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
-    ->middleware(['signed','web'])
-    ->name('verification.verify');
+//Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+//    ->middleware(['signed','web'])
+//    ->name('verification.verify');
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
