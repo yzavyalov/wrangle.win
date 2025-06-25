@@ -45,8 +45,7 @@ Route::get('/', function () {
 })->name('index');
 
 
-Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/register', [AuthController::class, 'register'])->name('register');
+
 
 Route::get('/login', function () {
     return Inertia::render('Login');
