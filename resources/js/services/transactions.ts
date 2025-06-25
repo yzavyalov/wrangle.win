@@ -16,7 +16,7 @@ export const fetchUserTransactions = async (payload: FetchTransactionsPayload) =
   .then(res => {
     console.log(res, "res - fetchUserTransactions");
 
-    return res?.data?.data?.bets;
+    return res?.data?.data?.transactions;
   })
   .catch(e => console.error(e.message));
 };
