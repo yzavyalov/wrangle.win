@@ -1,6 +1,6 @@
 <script setup>
 import { Head } from "@inertiajs/vue3";
-import { computed, onMounted, ref } from "vue";
+import { computed, defineAsyncComponent, onMounted, ref, shallowRef } from "vue";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import { useUserStore } from "@/store/user";
 import ButtonBase from "@/components/details/ButtonBase.vue";
@@ -9,7 +9,7 @@ import { triggerOpenNewModal } from "@/composables/useModalsTriggers";
 import { getCurrency } from '@/helpers/getCurrency';
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import { navigateTo } from "@/helpers/navigate";
-import { PAGE_ROUTES } from "@/utils/datasets";
+import { PAGE_ROUTES, profileTabs } from "@/utils/datasets";
 import BetItemSmall from "@/components/bet/BetItemSmall.vue";
 import { getOwnBets } from "@/services/bets";
 import { useOwnBets } from "@/composables/useOwnBets";
@@ -21,25 +21,34 @@ defineOptions({
   layout: (h, page) => h(BaseLayout, () => [page]),
 });
 
+const profileTabCompoenents = shallowRef({
+  transactions: defineAsyncComponent(() => import("@/components/profile/TransactionTable.vue")),
+})
+
 const { confirm } = useConfirm();
 const { ownBets, fetchOwnBets, fetchMoreOwnBets } = useOwnBets();
 const { favoriteBets, fetchFavoriteBets, fetchMoreFavoriteBets } = useFavoriteBets();
 
+const activeTab = ref(false);
+
 const currentUser = computed(() => useUserStore().getUser);
 const userBalance = computed(() => Number(currentUser.value?.balance?.balance || 0)?.toFixed(2) || 0);
 
+const dynamicProfileTab = computed(() => {
+  if (!activeTab.value?.id) { return null }
+
+  switch (activeTab.value?.id) {
+    case 'transactions':
+      return profileTabCompoenents.value.transactions;
+
+    default:
+      console.warn(`No handle for such tab: ${activeTab.value?.id}`);
+
+      return null;
+  }
+});
+
 const currencyName = getCurrency();
-
-const testConfirm = async () => {
-  const result = await confirm({
-    title: 'Are you sure?',
-    text: 'This action cannot be undone',
-    confirmText: 'Confirm',
-    cancelText: 'Cancel'
-  })
-
-  console.log(result , 'result');
-}
 
 const userBalanceHandler = () => {
   if (!userBalance.value) {
@@ -55,13 +64,19 @@ const openBetHandler = async (bet) => {
   const result = await confirm({
     title: 'Are you sure?',
     text: `Open this page with this bet - '${shortBetTitle}'?`,
-    confirmText: 'Confirm',
-    cancelText: 'Cancel'
+    confirmText: 'Yes',
+    cancelText: 'No'
   })
 
   if (!result) {return}
 
   navigateTo(`${PAGE_ROUTES.BET}/${bet.id}`);
+}
+
+const setActiveTab = (tab) => {
+
+  console.log('setActiveTab');
+  activeTab.value = tab;
 }
 
 const deleteBetHandler = async (bet) => {
@@ -70,8 +85,8 @@ const deleteBetHandler = async (bet) => {
   const result = await confirm({
     title: 'Are you sure?',
     text: `Delete this bet - '${shortBetTitle}'?`,
-    confirmText: 'Confirm',
-    cancelText: 'Cancel'
+    confirmText: 'Yes',
+    cancelText: 'No'
   })
 
   if (!result) {return}
@@ -94,83 +109,84 @@ onMounted(() => {
 <template>
   <Head title="Profile" />
 
-  <PageWrapperMain class="profile">
-    <div class="profile__header">
-      <div class="profile__header--welcome">
-        <h3>Welcome to</h3>
-        <h1>WRANGLE.WIN</h1>
-      </div>
+  <Transition name="fade" mode="out-in">
 
-      <div class="profile__user">
-        <div class="profile__user--details">
-          <p class="profile__user--top">{{ currentUser?.name || 'Nickname Name' }}</p>
-          <ButtonBase class="min-width-80">Edit Profile</ButtonBase>
-          <p class="coin-decorator">
-            Balance: <b>{{ userBalance }}{{ currencyName }}</b>
-          </p>
+    <PageWrapperMain v-if="!activeTab" class="profile">
+      <div class="profile__header">
+        <div class="profile__header--welcome">
+          <h3>Welcome to</h3>
+          <h1>WRANGLE.WIN</h1>
         </div>
 
-        <div class="profile__user--avatar">
-          <img v-if="currentUser" :src="'/images/avatar-sample-active.svg'" alt="avatar">
-          <img v-else :src="'/images/avatar-sample.svg'" alt="avatar">
+        <div class="profile__user">
+          <div class="profile__user--details">
+            <p class="profile__user--top">{{ currentUser?.name || 'Nickname Name' }}</p>
+            <ButtonBase class="min-width-80">Edit Profile</ButtonBase>
+            <p class="coin-decorator">
+              Balance: <b>{{ userBalance }}{{ currencyName }}</b>
+            </p>
+          </div>
+
+          <div class="profile__user--avatar">
+            <img v-if="currentUser" :src="'/images/avatar-sample-active.svg'" alt="avatar">
+            <img v-else :src="'/images/avatar-sample.svg'" alt="avatar">
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="profile__body">
-      <div class="profile__history first">
-        <h4>Favorite Events</h4>
+      <div class="profile__body">
+        <div class="profile__history first">
+          <h4>Favorite Events</h4>
 
-        <BetItemSmall v-for="item in favoriteBets"
-          :key="item.id"
-          :item="item"
-          class="profile__history__item"
-          @delete="deleteBetHandler(item)"
-          @detail="openBetHandler(item)"
-        />
+          <BetItemSmall v-for="item in favoriteBets"
+            :key="item.id"
+            :item="item"
+            class="profile__history__item"
+            @delete="deleteBetHandler(item)"
+            @detail="openBetHandler(item)"
+          />
 
-        <p class="mt-40">Haven't found interesting bet yet?</p>
-        <ButtonBase class="m-auto mt-10 min-width-60" @click="navigateTo(PAGE_ROUTES.HOTS)">To Events</ButtonBase>
+          <p class="mt-40">Haven't found interesting bet yet?</p>
+          <ButtonBase class="m-auto mt-10 min-width-60" @click="navigateTo(PAGE_ROUTES.HOTS)">To Events</ButtonBase>
 
+        </div>
+
+        <div class="profile__history">
+          <h4>My events</h4>
+
+          <BetItemSmall v-for="item in ownBets"
+            :key="item.id"
+            :item="item"
+            class="profile__history__item"
+            @delete="deleteBetHandler(item)"
+            @detail="openBetHandler(item)"
+          />
+
+          <p class="mt-40">Want to create your own bet?</p>
+          <ButtonBase class="m-auto mt-10 min-width-60" @click="navigateTo(PAGE_ROUTES.NEW_BET)">Create Event</ButtonBase>
+        </div>
+
+        <div class="profile__history last">
+          <ButtonBase v-for="tab in profileTabs"
+            :key="tab.id"
+            class="min-width-80"
+            @click="setActiveTab(tab)"
+          >
+            {{ tab.name }}
+          </ButtonBase>
+
+          <!-- <ButtonBase class="min-width-80">Withdraw Money</ButtonBase>
+          <ButtonBase class="min-width-80">Top up a Balance</ButtonBase>
+          <ButtonBase class="min-width-80" @click="setActiveTab('transactions')">View last transactions</ButtonBase> -->
+        </div>
       </div>
+    </PageWrapperMain>
 
-      <div class="profile__history">
-        <h4>My events</h4>
+    <PageWrapperMain v-else-if="activeTab">
+      <component :is="dynamicProfileTab" @close="setActiveTab(false)" />
+    </PageWrapperMain>
+  </Transition>
 
-        <BetItemSmall v-for="item in ownBets"
-          :key="item.id"
-          :item="item"
-          class="profile__history__item"
-          @delete="deleteBetHandler(item)"
-          @detail="openBetHandler(item)"
-        />
-
-        <p class="mt-40">Want to create your own bet?</p>
-        <ButtonBase class="m-auto mt-10 min-width-60" @click="navigateTo(PAGE_ROUTES.NEW_BET)">Create Event</ButtonBase>
-      </div>
-
-      <div class="profile__history last">
-        <ButtonBase class="min-width-80">Withdraw Money</ButtonBase>
-        <ButtonBase class="min-width-80">Top up a Balance</ButtonBase>
-        <ButtonBase class="min-width-80">View last transactions</ButtonBase>
-      </div>
-    </div>
-
-
-    <!-- test zone -->
-
-
-      <!-- <div class="profile__footer">
-        <ButtonBase class="m-auto" @click="fetchOwnBets">fetchOwnBets</ButtonBase>
-        <ButtonBase class="mb-10 mt-10 m-auto" @click="triggerOpenNewModal('prediction-modal')">triggerOpenNewModal - prediction-modal</ButtonBase>
-
-        <ButtonBase class="m-auto" @click="testConfirm">testConfirm</ButtonBase>
-      </div> -->
-
-
-    <!-- test zone - end -->
-
-  </PageWrapperMain>
 </template>
 
 <style scoped lang='scss'>

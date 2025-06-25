@@ -54,3 +54,21 @@ export const defaultFilters = {
   betAmount: 0,
   finish: '',
 };
+
+export const profileTabs = [
+  {
+    id: 'withdraw',
+    name: "Withdraw Money",
+    action: "withdraw",
+  },
+  {
+    id: 'deposit',
+    name: "Top up a Balance",
+    action: "deposit",
+  },
+  {
+    id: 'transactions',
+    name: "View last transactions",
+    action: "transactions",
+  },
+]

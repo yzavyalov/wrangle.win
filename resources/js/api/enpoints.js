@@ -37,3 +37,7 @@ export const USER = {
   URL_PASSWORD: "/api/user/password",
   URL_PROFILE: "/api/update-profile",
 }
+
+export const TRANSACTIONS = {
+  URL_TRANSACTIONS: "/api/transactions",
+}
