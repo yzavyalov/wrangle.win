@@ -55,3 +55,11 @@ export interface BetCaruselPayload {
   current_id: number
   direction: "next" | "previous"
 }
+
+export enum BET_STATUS_ENUM {
+  CREATED = 1,
+  PAID = 2,
+  APPROVED = 3,
+  CANCELED = 4,
+  FINISHED = 5
+}

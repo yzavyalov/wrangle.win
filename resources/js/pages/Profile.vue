@@ -1,6 +1,6 @@
 <script setup>
 import { Head } from "@inertiajs/vue3";
-import { computed, defineAsyncComponent, onMounted, ref, shallowRef } from "vue";
+import { computed, defineAsyncComponent, onMounted, onBeforeMount, ref, shallowRef } from "vue";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import { useUserStore } from "@/store/user";
 import ButtonBase from "@/components/details/ButtonBase.vue";
@@ -15,6 +15,9 @@ import { getOwnBets } from "@/services/bets";
 import { useOwnBets } from "@/composables/useOwnBets";
 import { useFavoriteBets } from "@/composables/useFavoriteBets";
 import { notifyWarning } from "@/helpers/notify";
+import { useHistory } from "@/composables/useHistory";
+
+const TAB_KEY = 'tab';
 
 defineOptions({
   name: "Profile",
@@ -23,11 +26,14 @@ defineOptions({
 
 const profileTabCompoenents = shallowRef({
   transactions: defineAsyncComponent(() => import("@/components/profile/TransactionTable.vue")),
+  withdraw: defineAsyncComponent(() => import("@/components/profile/MethodsOut.vue")),
+  deposit: defineAsyncComponent(() => import("@/components/profile/MethodsIn.vue")),
 })
 
 const { confirm } = useConfirm();
 const { ownBets, fetchOwnBets, fetchMoreOwnBets, openBetHandler } = useOwnBets();
 const { favoriteBets, fetchFavoriteBets, fetchMoreFavoriteBets, toggleBetToFavoriteHandler } = useFavoriteBets();
+const { setQueryParam, removeQueryParam, getQueryParam } = useHistory();
 
 const activeTab = ref(false);
 
@@ -40,6 +46,12 @@ const dynamicProfileTab = computed(() => {
   switch (activeTab.value?.id) {
     case 'transactions':
       return profileTabCompoenents.value.transactions;
+
+    case 'withdraw':
+      return profileTabCompoenents.value.withdraw;
+
+    case 'deposit':
+      return profileTabCompoenents.value.deposit;
 
     default:
       console.warn(`No handle for such tab: ${activeTab.value?.id}`);
@@ -57,8 +69,8 @@ const userBalanceHandler = () => {
 }
 
 const setActiveTab = (tab) => {
+  tab.id ? setQueryParam(TAB_KEY, tab.id) : removeQueryParam(TAB_KEY);
 
-  console.log('setActiveTab');
   activeTab.value = tab;
 }
 
@@ -79,6 +91,18 @@ const deleteBetHandler = async (bet) => {
   notifyWarning('No logic for delete yet...');
 
 }
+
+const tabInit = () => {
+  const tab = getQueryParam(TAB_KEY);
+
+  if (tab) {
+    setActiveTab({ id: tab });
+  }
+}
+
+onBeforeMount(() => {
+  tabInit();
+})
 
 onMounted(() => {
   userBalanceHandler();
