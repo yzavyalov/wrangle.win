@@ -17,31 +17,24 @@ class TransactionService
     }
 
 
-    public function calculationBalance($sum, $operation, $userId = null)
+    public function calculationBalance(float $sum, $operation, $userId = null): float
     {
-        if (isset($userId))
-            $user = User::query()->find($userId);
-        else
-            $user = Auth::user();
+        $user = isset($userId)
+            ? User::query()->find($userId)
+            : Auth::user();
+
+        if (!$user) {
+            return 0;
+        }
 
         $lastUserTransaction = $user->lastTransaction;
+        $oldBalance = $lastUserTransaction ? $lastUserTransaction->remaining : 0;
 
-        if ($lastUserTransaction)
-            $oldBalance = $lastUserTransaction->remaining;
-        else
-            $oldBalance = 0;
-
-        if ($operation == TransactionOperationEnum::DEBET)
-            return $oldBalance+$sum;
-        elseif ($operation == TransactionOperationEnum::CREDIT)
-        {
-            if ($oldBalance >= $sum)
-                return $oldBalance-$sum;
-            else
-                return 0;
-        }
-        else
-            return $oldBalance;
+        return match ($operation) {
+            TransactionOperationEnum::DEBET => $oldBalance + $sum,
+            TransactionOperationEnum::CREDIT => ($oldBalance >= $sum) ? $oldBalance - $sum : 0,
+            default => $oldBalance,
+        };
     }
 
     public function debit($userID, $sum, $comment = 'test', $method = TransactionMethodEnum::TEST): Transaction
