@@ -53,7 +53,6 @@ class AuthController extends Controller
         return $this->successJsonAnswer200('User', UserResource::make($user));
     }
 
-
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
@@ -76,6 +75,7 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        // Валидация входных данных
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
