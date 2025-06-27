@@ -97,11 +97,11 @@ class PaymentMethodSeeder extends Seeder
                 ->where('category', $payment->category)
                 ->get();
 
-            foreach ($matchingMethods as $method) {
+            foreach ($matchingMethods as $index => $method) {
                 $payment->methods()->syncWithoutDetaching([
                     $method->id => [
-                        'FTD' => false,
-                        'order_by' => 1,
+                        'FTD' => 1,
+                        'order_by' => $index + 1, // индекс начинается с 0, добавляем 1
                     ],
                 ]);
             }

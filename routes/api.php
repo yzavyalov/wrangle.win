@@ -31,8 +31,8 @@ use App\Http\Controllers\Payment\{
 |--------------------------------------------------------------------------
 */
 
-//Route::post('/login', [AuthController::class, 'login'])->name('login');
-//Route::post('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/register', [AuthController::class, 'register'])->name('register');
 
 //Route::post('/register', [AuthController::class, 'register'])->middleware('web');
 //Route::post('/login', [AuthController::class, 'login'])->middleware('web')->name('login');
