@@ -16,6 +16,7 @@ import { useOwnBets } from "@/composables/useOwnBets";
 import { useFavoriteBets } from "@/composables/useFavoriteBets";
 import { notifyWarning } from "@/helpers/notify";
 import { useHistory } from "@/composables/useHistory";
+import { useUser } from "@/composables/useUser";
 
 const TAB_KEY = 'tab';
 
@@ -34,11 +35,9 @@ const { confirm } = useConfirm();
 const { ownBets, fetchOwnBets, fetchMoreOwnBets, openBetHandler } = useOwnBets();
 const { favoriteBets, fetchFavoriteBets, fetchMoreFavoriteBets, toggleBetToFavoriteHandler } = useFavoriteBets();
 const { setQueryParam, removeQueryParam, getQueryParam } = useHistory();
+const { userBalanceWithCurrency, currentUser, userBalance } = useUser();
 
 const activeTab = ref(false);
-
-const currentUser = computed(() => useUserStore().getUser);
-const userBalance = computed(() => Number(currentUser.value?.balance?.balance || 0)?.toFixed(2) || 0);
 
 const dynamicProfileTab = computed(() => {
   if (!activeTab.value?.id) { return null }
@@ -59,8 +58,6 @@ const dynamicProfileTab = computed(() => {
       return null;
   }
 });
-
-const currencyName = getCurrency();
 
 const userBalanceHandler = () => {
   if (!userBalance.value) {
@@ -130,7 +127,7 @@ onMounted(() => {
             <p class="profile__user--top">{{ currentUser?.name || 'Nickname Name' }}</p>
             <ButtonBase class="profile__user--btn">Edit Profile</ButtonBase>
             <p class="coin-decorator">
-              Balance: <b>{{ userBalance }}{{ currencyName }}</b>
+              Balance: <b>{{ userBalanceWithCurrency }}</b>
             </p>
           </div>
 
