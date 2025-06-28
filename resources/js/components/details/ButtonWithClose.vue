@@ -3,6 +3,7 @@ import ButtonBaseWithIcon from "@/components/details/ButtonBaseWithIcon.vue";
 
 defineProps({
   isActive: { type: Boolean, default: false },
+  isShowClose: { type: Boolean, default: true },
 })
 
 </script>
@@ -10,7 +11,7 @@ defineProps({
 <template>
   <button :class="['button', { 'active': isActive }]">
     <slot></slot>
-    <img :src="'/images/cross.svg'" class="button__close" />
+    <img v-if="isShowClose" :src="'/images/cross.svg'" class="button__close" />
   </button>
 </template>
 

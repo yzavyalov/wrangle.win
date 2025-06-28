@@ -1,30 +1,54 @@
 <script setup>
-import { computed, nextTick, onMounted, ref } from "vue";
-import PageWrapperMain from "@/components/PageWrapperMain.vue";
+import { computed, nextTick, onMounted, reactive, ref } from "vue";
 import ButtonBase from "@/components/details/ButtonBase.vue";
-import { useUserStore } from "@/store/user";
-import { getCurrency } from "@/helpers/getCurrency";
-import { getBetStatus } from "@/helpers/getBetStatus";
 import LoaderComponent from "@/components/LoaderComponent.vue";
 import { useLoading } from "@/composables/useLoading";
 import { notifyWarning } from "@/helpers/notify";
-import { fetchUserTransactions } from "@/services/transactions";
-import { fetchInPayments } from "@/services/payments";
+import { fetchOutPayments } from "@/services/payments";
+import { useUser } from "@/composables/useUser";
+import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
+import { cutTextLength } from "@/helpers/cutTextLength";
+import { sampleTopUpMethods } from "@/utils/dummyData";
+import ButtonWithClose from "@/components/details/ButtonWithClose.vue";
 
-defineOptions({ name: "MethodsIn" })
+defineOptions({ name: "MethodsOut" })
 
 defineEmits(["close"])
 
 const { isLoading, loadingStart, loadingStop } = useLoading();
+const { userBalanceWithCurrency, userBalance } = useUser();
 
-const currentUser = computed(() => useUserStore().getUser);
-const userBalance = computed(() => Number(currentUser.value?.balance?.balance || 0)?.toFixed(2) || 0);
+const methodList = ref([]);
+const selectedMethod = ref(null);
+const paymentList = computed(() => selectedMethod.value?.payments || []);
 
-const currencyName = getCurrency();
+const selectMethod = async (method) => {
+  console.log(method, 'method');
+  if (selectedMethod.value?.id === method.id) {
+    return selectedMethod.value = null;
+  }
+
+  selectedMethod.value = method;
+}
+
+const selectPayment = async (payment) => {
+  console.log(payment, 'payment');
+
+  console.warn("this feature is comming soon...");
+  notifyWarning("this feature is comming soon...");
+}
 
 const fetchData = async () => {
-  const methods = await fetchInPayments();
-  console.log(methods, 'methods - fetchData');
+  const fetchMethods = await fetchOutPayments();
+  console.log(fetchMethods, 'fetchMethods - fetchData');
+
+  fetchMethods?.length && ( methodList.value = fetchMethods );
+
+  if (fetchMethods?.length) return;
+
+  console.warn("dummy data - sampleTopUpMethods");
+  notifyWarning("dummy data - sampleTopUpMethods");
+  methodList.value = [...sampleTopUpMethods]
 }
 
 onMounted(() => {
@@ -35,36 +59,47 @@ onMounted(() => {
 
 <template>
   <div class="methods-list">
-    <div class="methods-list__header">
-      <h4 class="coin-decorator">
-        Balance: {{ userBalance }}{{ currencyName }}
+    <div class="methods-list__header mb-20">
+      <h4>
+        Top up a Balance
       </h4>
-      <ButtonBase class="min-width-80" @click="$emit('close')">Exit</ButtonBase>
+      <ButtonWithIcon class="methods-list__header--btn" icon="/images/cross.svg" @click="$emit('close')" />
     </div>
 
-    <p>MethodsIn</p>
+    <div class="methods-list__body">
+      <LoaderComponent v-if="isLoading" />
+
+      <p class="text-center mb-20">Choose payment method</p>
+
+      <ul class="methods-list__list mb-30">
+        <ButtonWithClose v-for="method in methodList"
+          :key="method.id"
+          :is-show-close="selectedMethod?.id === method.id"
+          :is-active="selectedMethod?.id === method.id"
+          @click="selectMethod(method)"
+        >
+          {{ method.title }}
+        </ButtonWithClose>
+        <!-- <li v-for="method in methodList"
+          :key="method.id"
+          :class="['methods-list__listitem single', { active: selectedMethod?.id === method.id }]"
+          @click="selectMethod(method)"
+        >
+          <p class="text-center">{{ method.title }}</p>
+        </li> -->
+      </ul>
+
+      <ul v-if="paymentList?.length" class="methods-list__list mb-40">
+        <li v-for="method in paymentList" :key="method.id" class="methods-list__listitem" @click="selectPayment(method)">
+          <p class="methods-list__listitem--left">{{ method.name?.length > 20 ? cutTextLength(method.name, 20) : method.name  }}</p>
+          <p class="methods-list__listitem--right">{{ method.commission }}% Commission</p>
+        </li>
+      </ul>
+    </div>
+
   </div>
 </template>
 
 <style scoped lang='scss'>
-.methods-list {
-  width: 100%;
-  position: relative;
-  z-index: 1;
-  padding: 20px;
-
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px;
-
-    h4 {
-      font-size: 24px;
-      font-weight: var(--font-weight-light);
-    }
-  }
-
-
-}
+@use "@/assets/scss/method-list";
 </style>

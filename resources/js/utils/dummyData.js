@@ -222,36 +222,36 @@ export const predictionDemoData = {
   isOpen: true,
   source1: "http://www.will.com/sunt-veniam-error-rerum-mollitia-dolores"
 
-//   description
-// :
-// "Possimus nisi quia et dolores deleniti dolorem dolores at. At qui minima eius dicta enim."
-// finish
-// :
-// "2025-06-04 16:26:28"
-// id
-// :
-// 8
-// image
-// :
-// "storage/images/9b55eca9-fcbf-3d99-b369-6c1f68c327ad.jpg"
-// source1
-// :
-// "http://www.will.com/sunt-veniam-error-rerum-mollitia-dolores"
-// source2
-// :
-// "http://mraz.com/sunt-ducimus-assumenda-asperiores-error-aliquam-excepturi-cupiditate.html"
-// source3
-// :
-// null
-// status
-// :
-// 3
-// title
-// :
-// "Est necessitatibus reiciendis deserunt occaecati accusantium beatae ullam nemo. Dolores aliquid non aut quia. Quos porro maiores enim doloribus."
-// user_id
-// :
-// 37
+  //   description
+  // :
+  // "Possimus nisi quia et dolores deleniti dolorem dolores at. At qui minima eius dicta enim."
+  // finish
+  // :
+  // "2025-06-04 16:26:28"
+  // id
+  // :
+  // 8
+  // image
+  // :
+  // "storage/images/9b55eca9-fcbf-3d99-b369-6c1f68c327ad.jpg"
+  // source1
+  // :
+  // "http://www.will.com/sunt-veniam-error-rerum-mollitia-dolores"
+  // source2
+  // :
+  // "http://mraz.com/sunt-ducimus-assumenda-asperiores-error-aliquam-excepturi-cupiditate.html"
+  // source3
+  // :
+  // null
+  // status
+  // :
+  // 3
+  // title
+  // :
+  // "Est necessitatibus reiciendis deserunt occaecati accusantium beatae ullam nemo. Dolores aliquid non aut quia. Quos porro maiores enim doloribus."
+  // user_id
+  // :
+  // 37
 };
 
 // test zone
@@ -272,7 +272,7 @@ function formatDate(date) {
 export const demoBetDataPayload = {
   title: `test title - ${Date.now()}`,
   description: `test description - ${Date.now()}`,
-  categories: [ 1, 2, 3 ],
+  categories: [1, 2, 3],
   source1: 'http://www.will.com/sunt-veniam-error-rerum-mollitia-dolores',
   answers: [
     `test answer 1 - ${Date.now()}`,
@@ -281,3 +281,107 @@ export const demoBetDataPayload = {
   ],
   finish: formatDate(new Date('2025-05-01T14:00:00')),
 }
+
+export const sampleWiddrawMethods = [
+  {
+    "id": 3,
+    "name": "Aperiam non consequatur qui. Cumque quam saepe earum ut. In enim quas impedit sint.",
+    "type": 1,
+    "type_name": "Acquiring",
+    "category": 2,
+    "category_name": "Out",
+    "commission": 2,
+    "fix_fee": 4.8,
+    "logo": "https://via.placeholder.com/200x200.png/008833?text=business+Logo+sint",
+    "link": "http://wisoky.com/modi-quaerat-dolores-suscipit-non",
+    "order_by": 1
+  },
+  {
+    "id": 13,
+    "name": "Omnis voluptatem repellat est dicta odio quaerat aut. Quia temporibus natus expedita quia.",
+    "type": 1,
+    "type_name": "Acquiring",
+    "category": 2,
+    "category_name": "Out",
+    "commission": 9,
+    "fix_fee": 7.3,
+    "logo": "https://via.placeholder.com/200x200.png/0099ff?text=business+Logo+doloribus",
+    "link": "http://okon.org/",
+    "order_by": 1
+  },
+]
+
+export const sampleTopUpMethods = [
+  {
+    "id": 1,
+    "type": 1,
+    "type_name": "Acquiring",
+    "category": 1,
+    "category_name": "In",
+    "title": "Bank cards",
+    "logo": "",
+    "payments": [
+      {
+        "id": 29,
+        "name": "Dolores aut adipisci suscipit. Dolores adipisci nihil maiores soluta. Vitae vel ut autem autem repellat a.",
+        "type": 1,
+        "type_name": "Acquiring",
+        "category": 1,
+        "category_name": "In",
+        "commission": 14,
+        "fix_fee": 3.75,
+        "logo": "https://via.placeholder.com/200x200.png/0066ff?text=business+Logo+consectetur",
+        "link": "http://feil.com/",
+        "order_by": 1
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "type": 1,
+    "type_name": "Acquiring",
+    "category": 1,
+    "category_name": "In",
+    "title": "Visa",
+    "logo": "",
+    "payments": [
+      {
+        "id": 29,
+        "name": "Dolores aut adipisci suscipit. Dolores adipisci nihil maiores soluta. Vitae vel ut autem autem repellat a.",
+        "type": 1,
+        "type_name": "Acquiring",
+        "category": 1,
+        "category_name": "In",
+        "commission": 14,
+        "fix_fee": 3.75,
+        "logo": "https://via.placeholder.com/200x200.png/0066ff?text=business+Logo+consectetur",
+        "link": "http://feil.com/",
+        "order_by": 2
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "type": 1,
+    "type_name": "Acquiring",
+    "category": 1,
+    "category_name": "In",
+    "title": "MasterCard",
+    "logo": "",
+    "payments": [
+      {
+        "id": 29,
+        "name": "Dolores aut adipisci suscipit. Dolores adipisci nihil maiores soluta. Vitae vel ut autem autem repellat a.",
+        "type": 1,
+        "type_name": "Acquiring",
+        "category": 1,
+        "category_name": "In",
+        "commission": 14,
+        "fix_fee": 3.75,
+        "logo": "https://via.placeholder.com/200x200.png/0066ff?text=business+Logo+consectetur",
+        "link": "http://feil.com/",
+        "order_by": 3
+      }
+    ]
+  },
+]
