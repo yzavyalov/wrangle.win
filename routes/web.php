@@ -55,12 +55,12 @@ Route::get('/register', function () {
     return Inertia::render('Register');
 });
 
-//Route::post('/login', [AuthController::class, 'login'])->name('login');
-//Route::post('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/register', [AuthController::class, 'register'])->name('register');
 
-//Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
-//    ->middleware(['signed','web'])
-//    ->name('verification.verify');
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->middleware(['signed','web'])
+    ->name('verification.verify');
 
 Route::get('/prediction', function () {         // temp route
     return Inertia::render('Prediction');

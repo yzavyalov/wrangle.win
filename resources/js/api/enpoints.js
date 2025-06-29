@@ -1,8 +1,6 @@
 export const AUTH = {
-  URL_LOGIN: "/api/login",
-  URL_REGISTER: "/api/register",
-  // URL_LOGIN: "/login",
-  // URL_REGISTER: "/register",
+  URL_LOGIN: "/login",
+  URL_REGISTER: "/register",
 
   URL_LOGOUT: "/api/logout",
   URL_RESET_PASSWORD: "/api/reset-password",
