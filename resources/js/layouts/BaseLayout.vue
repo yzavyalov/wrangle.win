@@ -8,22 +8,27 @@ import { getUserData } from '@/services/user';
 import { useSettingsStore } from "@/store/settings";
 import { usePage } from '@inertiajs/vue3';
 import { useUserStore } from "@/store/user";
+import { useUserAccessToken } from '@/composables/useUserAccessToken';
 
 
 const { modals } = useModals({ isLayout: true });
+const { removeUserAccessToken } = useUserAccessToken();
 
-const userDatahandler = () => {
+const userDataHandler = () => {
   const user = usePage().props?.auth?.user || null;
   // console.log(user, 'user - userDatahandler');
+
+  if (!user) { return removeUserAccessToken();}
+
   user && useUserStore().updateUser(user);
 
-  // user && getUserData();
-  getUserData();
+  user && getUserData()
+  // getUserData();
 }
 
 onMounted(() => {
   // fetch user data from server
-  userDatahandler();
+  userDataHandler();
 })
 
 </script>

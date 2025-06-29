@@ -9,17 +9,15 @@ import LoaderComponent from "@/components/LoaderComponent.vue";
 import { useLoading } from "@/composables/useLoading";
 import { notifyWarning } from "@/helpers/notify";
 import { fetchUserTransactions } from "@/services/transactions";
+import { useUser } from "@/composables/useUser";
+
 
 defineOptions({ name: "TransactionTable" })
 
 defineEmits(["close"])
 
 const { isLoading, loadingStart, loadingStop } = useLoading();
-
-const currentUser = computed(() => useUserStore().getUser);
-const userBalance = computed(() => Number(currentUser.value?.balance?.balance || 0)?.toFixed(2) || 0);
-
-const currencyName = getCurrency();
+const { userBalanceWithCurrency } = useUser();
 
 const transactions = ref([]);
 const pagination = ref({
@@ -97,7 +95,7 @@ onMounted(() => {
   <div class="transaction-table">
     <div class="transaction-table__header">
       <h4 class="coin-decorator">
-        Balance: {{ userBalance }}{{ currencyName }}
+        Balance: {{ userBalanceWithCurrency }}
       </h4>
       <ButtonBase class="min-width-80" @click="$emit('close')">Exit</ButtonBase>
     </div>

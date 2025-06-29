@@ -42,3 +42,8 @@ export const USER = {
 export const TRANSACTIONS = {
   URL_TRANSACTIONS: "/api/transactions",
 }
+
+export const PAYMENTS = {
+  URL_IN: "/api/payments/in",
+  URL_OUT: "/api/payments/out",
+}
