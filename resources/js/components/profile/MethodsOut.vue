@@ -9,6 +9,7 @@ import { required, minValue, maxValue, helpers } from '@vuelidate/validators';
 import { sampleWiddrawMethods } from "@/utils/dummyData";
 import { useConfirm } from '@/composables/useConfirm';
 import { useCodeConfirm } from '@/composables/useCodeConfirm';
+import { useInform } from '@/composables/useInform';
 
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import LoaderComponent from "@/components/LoaderComponent.vue";
@@ -24,6 +25,7 @@ const { isLoading, loadingStart, loadingStop } = useLoading();
 const { userBalanceWithCurrency, userBalance } = useUser();
 const { confirm } = useConfirm();
 const { confirm: confirmCode } = useCodeConfirm();
+const { inform } = useInform();
 
 const methodList = ref([]);
 const selectedMethod = ref(null);

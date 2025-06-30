@@ -82,6 +82,57 @@ const confirm = () => {
 
 const highlightText = (str) => str?.replace(/##(.*?)##/g, "<b>$1</b>");
 
+// const handlePaste = (event) => {
+//   event.preventDefault();
+//   console.log('handlePaste - event', event);
+//   console.log(event.clipboardData || window.clipboardData, 'event.clipboardData || window.clipboardData');
+
+
+//   const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+//   if (!pastedText) return;
+
+//   const chars = pastedText.replace(/\D/g, '').slice(0, props.sybmols).split('');
+//   console.log(chars ,'chars - handlePaste');
+
+
+//   chars.forEach((char, i) => {
+//     code.value[i] = char;
+//   });
+
+//   nextTick(() => {
+//     const nextInput = inputs.value[chars.length];
+//     if (nextInput) nextInput.focus();
+//   });
+// };
+const handlePaste = (event) => {
+  event.preventDefault();
+
+  console.log('handlePaste - event', event);
+
+  const pastedText = event?.clipboardData?.getData("text") || '';
+  console.log(pastedText, 'pastedText - handlePaste');
+
+
+  if (!pastedText) return;
+
+  // const chars = pastedText.replace(/\D/g, '').slice(0, props.sybmols).split('');
+  const chars = pastedText.split('');
+  console.log(chars ,'chars - handlePaste');
+
+
+  chars.forEach((char, i) => {
+    code.value[i] = char;
+  });
+
+  nextTick(() => {
+    const nextInput = inputs.value[chars.length];
+    if (nextInput) nextInput.focus();
+  });
+
+  console.log(code.value, 'code.value - handlePaste');
+
+};
+
 watch(
   () => [ ENTER_KEY.value, ESCAPE_KEY.value ],
   () => {
@@ -128,6 +179,7 @@ onUnmounted(() => {
               @input="handleInput($event, index)"
               @keydown.backspace="handleBackspace(index)"
               @focus="focusFirstEmpty"
+              @paste="handlePaste($event)"
               ref="inputs"
               type="text"
               inputmode="numeric"
