@@ -7,13 +7,7 @@ export const fetchOutPayments = async () => {
   .then(res => {
     console.log(res, "res - fetchOutPayments");
 
-    const { success, message, data } = res.data
-
-    if (!success) { return notifyError(message); }
-
-    console.log(data, 'data - fetchOutPayments');
-
-    return success;
+    return res?.data?.data;
   })
   .catch(e => console.error(e.message));
 };
@@ -24,13 +18,7 @@ export const fetchInPayments = async () => {
   .then(res => {
     console.log(res, "res - fetchInPayments");
 
-    const { success, message, data } = res.data
-
-    if (!success) { return notifyError(message); }
-
-    console.log(data, 'data - fetchInPayments');
-
-    return success;
+    return res?.data?.data;
   })
   .catch(e => console.error(e.message));
 };

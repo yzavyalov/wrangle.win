@@ -12,15 +12,17 @@ export const register = async (payload: RegisterPayload) => {
     console.log(res, "res - register");
     if (!res?.data?.data) { return false; }
 
-    const user = res.data.data;
+    // const user = res.data.data;
 
-    const { token } = user;
+    // const { token } = user;
 
-    token && localStorage.setItem(AUTH_ACCESS_TOKEN_KEY, token);
+    // token && localStorage.setItem(AUTH_ACCESS_TOKEN_KEY, token);
 
-    useUserStore().updateUser(user);
+    // useUserStore().updateUser(user);
 
-    return user;
+    // return user;
+
+    return !!res?.data?.data;
 
   })
   .catch(e => {
@@ -103,9 +105,9 @@ export const getUserData = async () => {
   .then(res => {
     console.log(res, "res - getUserData");
 
-    const user = res?.data?.data;
+    // const user = res?.data?.data;
 
-    user && useUserStore().updateUser(user);
+    // user && useUserStore().updateUser(user);
 
     return res.data;
   })

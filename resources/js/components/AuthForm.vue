@@ -123,18 +123,19 @@ const registerHandle = async () => {
 
     if (!result) {
       await inform({
-          title: 'Warning',
-          text: 'Something went wrong',
+        title: 'Warning',
+        text: 'Something went wrong',
       })
       return console.warn('Register error');
     }
 
     await inform({
-        title: 'Congratulations',
-        text: 'Your Profile successfully created. You will be redirected to profile page',
+      title: 'Congratulations',
+      text: 'Your Profile successfully created. Please check your email to activate your account',
     })
 
-    navigateTo(PAGE_ROUTES.PROFILE);
+    navigateTo(PAGE_ROUTES.LOGIN);
+
   } catch (error) {
     console.warn(error);
 
