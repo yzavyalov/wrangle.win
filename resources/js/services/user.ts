@@ -105,9 +105,9 @@ export const getUserData = async () => {
   .then(res => {
     console.log(res, "res - getUserData");
 
-    // const user = res?.data?.data;
+    const user = res?.data?.data;
 
-    // user && useUserStore().updateUser(user);
+    user && useUserStore().updateUser(user);
 
     return res.data;
   })

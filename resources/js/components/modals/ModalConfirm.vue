@@ -78,11 +78,11 @@ onUnmounted(() => {
 
         <div class="modal-confirm__footer">
           <slot name="footer">
-            <ButtonBaseWithIcon v-if="confirmText" @click.stop.prevent="confirm" :text="confirmText" :alt="confirmText" />
-            <ButtonWithIcon v-else icon="/images/arrow-left.svg" @click.stop.prevent="confirm" />
-
             <ButtonBaseWithIcon v-if="cancelText" @click.stop.prevent="cancel" :text="cancelText" :alt="cancelText" />
             <ButtonWithIcon v-else icon="/images/arrow-right.svg" @click.stop.prevent="cancel" />
+
+            <ButtonBaseWithIcon v-if="confirmText" @click.stop.prevent="confirm" :text="confirmText" :alt="confirmText" />
+            <ButtonWithIcon v-else icon="/images/arrow-left.svg" @click.stop.prevent="confirm" />
           </slot>
         </div>
       </div>
@@ -124,6 +124,7 @@ onUnmounted(() => {
     font-weight: var(--font-weight-light);
     position: relative;
     border: 1px solid #DBDBDB;
+    max-width: 1000px;
   }
 
   &__header p {

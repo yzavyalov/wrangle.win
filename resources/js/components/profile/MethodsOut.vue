@@ -11,6 +11,8 @@ import { cutTextLength } from "@/helpers/cutTextLength";
 import useVuelidate from '@vuelidate/core';
 import { required, minValue, maxValue, helpers } from '@vuelidate/validators';
 import { sampleWiddrawMethods } from "@/utils/dummyData";
+import ButtonWithClose from "@/components/details/ButtonWithClose.vue";
+import { useConfirm } from '@/composables/useConfirm';
 
 defineOptions({ name: "MethodsOut" })
 
@@ -18,12 +20,17 @@ defineEmits(["close"])
 
 const { isLoading, loadingStart, loadingStop } = useLoading();
 const { userBalanceWithCurrency, userBalance } = useUser();
+const { confirm } = useConfirm();
 
 const methodList = ref([]);
+const selectedMethod = ref(null);
+const selectedPayment = ref(null);
 
 const formData = reactive({
   selectedAmount: 0
 })
+
+const paymentList = computed(() => selectedMethod.value?.payments || []);
 
 const rules = computed(() => {
   return {
@@ -37,15 +44,45 @@ const rules = computed(() => {
 
 const v$ = useVuelidate(rules, formData);
 
-
 const selectMethod = async (method) => {
   console.log(method, 'method');
+
+  if (selectedMethod.value?.id === method.id) {
+    return selectedMethod.value = null;
+  }
+
+  selectedMethod.value = method;
+
+  if (selectedPayment.value) {
+    selectedPayment.value = null;
+  }
+}
+
+const selectPayment = async (payment) => {
+  console.log(payment, 'payment');
+
+  if (selectPayment.value?.id === payment.id) {
+    return selectedPayment.value = null;
+  }
 
   await v$.value.$validate();
   if (v$.value.$invalid) return;
 
-  console.warn("this feature is comming soon...");
-  notifyWarning("this feature is comming soon...");
+  selectedPayment.value = payment;
+}
+
+const submit = async () => {
+
+  const result = await confirm({
+    title: 'Withdraw a Balance',
+    text: `You will be redirected to this page ${selectedPayment.value.link}`,
+    confirmText: 'Confirm',
+    cancelText: 'Cancel'
+  })
+
+  if (!result) {return;}
+
+  window.location.href = selectedPayment.value.link
 }
 
 const fetchData = async () => {
@@ -96,14 +133,29 @@ onMounted(() => {
 
       <p class="text-center mb-20">Choose withdraw method</p>
 
-      <ul v-if="methodList?.length" class="methods-list__list mb-40">
-        <li v-for="method in methodList" :key="method.id" class="methods-list__listitem" @click="selectMethod(method)">
-          <p class="methods-list__listitem--left">{{ method.name?.length > 20 ? cutTextLength(method.name, 20) : method.name }}</p>
-          <p class="methods-list__listitem--right">{{ method.commission }}% Commission</p>
-        </li>
+      <ul class="methods-list__list mb-30">
+        <ButtonWithClose v-for="method in methodList"
+          :key="method.id"
+          :is-show-close="selectedMethod?.id === method.id"
+          :is-active="selectedMethod?.id === method.id"
+          @click="selectMethod(method)"
+        >
+          {{ method.title }}
+        </ButtonWithClose>
       </ul>
 
-      <ButtonBase class="methods-list__btn">Continue</ButtonBase>
+      <transition name="fade" mode="out-in">
+        <ul v-if="paymentList?.length" class="methods-list__list mb-40">
+          <li v-for="method in paymentList" :key="method.id" class="methods-list__listitem" @click="selectPayment(method)">
+            <p class="methods-list__listitem--left">{{ method.name?.length > 20 ? cutTextLength(method.name, 20) : method.name  }}</p>
+            <p class="methods-list__listitem--right">{{ method.commission }}% Commission</p>
+          </li>
+        </ul>
+      </transition>
+
+      <transition name="bounce" mode="out-in">
+        <ButtonBase v-if="selectedPayment" class="methods-list__btn" @click="submit">Continue</ButtonBase>
+      </transition>
     </div>
 
   </div>
