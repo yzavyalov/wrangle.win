@@ -4,19 +4,22 @@ import ButtonBase from "@/components/details/ButtonBase.vue";
 import LoaderComponent from "@/components/LoaderComponent.vue";
 import { useLoading } from "@/composables/useLoading";
 import { notifyWarning } from "@/helpers/notify";
-import { fetchOutPayments } from "@/services/payments";
+import { fetchInPayments } from "@/services/payments";
 import { useUser } from "@/composables/useUser";
 import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import { cutTextLength } from "@/helpers/cutTextLength";
 import { sampleTopUpMethods } from "@/utils/dummyData";
 import ButtonWithClose from "@/components/details/ButtonWithClose.vue";
+import { useConfirm } from '@/composables/useConfirm';
 
-defineOptions({ name: "MethodsOut" })
+
+defineOptions({ name: "MethodsIn" })
 
 defineEmits(["close"])
 
 const { isLoading, loadingStart, loadingStop } = useLoading();
 const { userBalanceWithCurrency, userBalance } = useUser();
+const { confirm } = useConfirm();
 
 const methodList = ref([]);
 const selectedMethod = ref(null);
@@ -34,12 +37,23 @@ const selectMethod = async (method) => {
 const selectPayment = async (payment) => {
   console.log(payment, 'payment');
 
-  console.warn("this feature is comming soon...");
-  notifyWarning("this feature is comming soon...");
+  // console.warn("this feature is comming soon...");
+  // notifyWarning("this feature is comming soon...");
+
+  const result = await confirm({
+    title: 'Top up a Balance',
+    text: `You will be redirected to this page ${payment.link}`,
+    confirmText: 'Confirm',
+    cancelText: 'Cancel'
+  })
+
+  if (!result) {return;}
+
+  window.location.href = payment.link
 }
 
 const fetchData = async () => {
-  const fetchMethods = await fetchOutPayments();
+  const fetchMethods = await fetchInPayments();
   console.log(fetchMethods, 'fetchMethods - fetchData');
 
   fetchMethods?.length && ( methodList.value = fetchMethods );
@@ -80,21 +94,16 @@ onMounted(() => {
         >
           {{ method.title }}
         </ButtonWithClose>
-        <!-- <li v-for="method in methodList"
-          :key="method.id"
-          :class="['methods-list__listitem single', { active: selectedMethod?.id === method.id }]"
-          @click="selectMethod(method)"
-        >
-          <p class="text-center">{{ method.title }}</p>
-        </li> -->
       </ul>
 
-      <ul v-if="paymentList?.length" class="methods-list__list mb-40">
-        <li v-for="method in paymentList" :key="method.id" class="methods-list__listitem" @click="selectPayment(method)">
-          <p class="methods-list__listitem--left">{{ method.name?.length > 20 ? cutTextLength(method.name, 20) : method.name  }}</p>
-          <p class="methods-list__listitem--right">{{ method.commission }}% Commission</p>
-        </li>
-      </ul>
+      <transition name="fade" mode="out-in">
+        <ul v-if="paymentList?.length" class="methods-list__list mb-40">
+          <li v-for="method in paymentList" :key="method.id" class="methods-list__listitem" @click="selectPayment(method)">
+            <p class="methods-list__listitem--left">{{ method.name?.length > 20 ? cutTextLength(method.name, 20) : method.name  }}</p>
+            <p class="methods-list__listitem--right">{{ method.commission }}% Commission</p>
+          </li>
+        </ul>
+      </transition>
     </div>
 
   </div>

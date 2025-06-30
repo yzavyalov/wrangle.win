@@ -14,7 +14,7 @@ import { useUserAccessToken } from '@/composables/useUserAccessToken';
 const { modals } = useModals({ isLayout: true });
 const { removeUserAccessToken } = useUserAccessToken();
 
-const userDataHandler = () => {
+const userDataHandler = async () => {
   const user = usePage().props?.auth?.user || null;
   // console.log(user, 'user - userDatahandler');
 
@@ -22,7 +22,7 @@ const userDataHandler = () => {
 
   user && useUserStore().updateUser(user);
 
-  user && getUserData()
+  user && await getUserData()
   // getUserData();
 }
 

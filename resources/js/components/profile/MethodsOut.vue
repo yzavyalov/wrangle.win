@@ -1,16 +1,21 @@
 <script setup>
 import { computed, nextTick, onMounted, reactive, ref } from "vue";
-import ButtonBase from "@/components/details/ButtonBase.vue";
-import LoaderComponent from "@/components/LoaderComponent.vue";
 import { useLoading } from "@/composables/useLoading";
 import { notifyWarning } from "@/helpers/notify";
-import { fetchOutPayments } from "@/services/payments";
+import { createWidrawal, fetchOutPayments, getOutPaymentCode } from "@/services/payments";
 import { useUser } from "@/composables/useUser";
-import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import { cutTextLength } from "@/helpers/cutTextLength";
-import useVuelidate from '@vuelidate/core';
 import { required, minValue, maxValue, helpers } from '@vuelidate/validators';
 import { sampleWiddrawMethods } from "@/utils/dummyData";
+import { useConfirm } from '@/composables/useConfirm';
+import { useCodeConfirm } from '@/composables/useCodeConfirm';
+import { useInform } from '@/composables/useInform';
+
+import ButtonBase from "@/components/details/ButtonBase.vue";
+import LoaderComponent from "@/components/LoaderComponent.vue";
+import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
+import useVuelidate from '@vuelidate/core';
+import ButtonWithClose from "@/components/details/ButtonWithClose.vue";
 
 defineOptions({ name: "MethodsOut" })
 
@@ -18,12 +23,20 @@ defineEmits(["close"])
 
 const { isLoading, loadingStart, loadingStop } = useLoading();
 const { userBalanceWithCurrency, userBalance } = useUser();
+const { confirm } = useConfirm();
+const { confirm: confirmCode } = useCodeConfirm();
+const { inform } = useInform();
 
 const methodList = ref([]);
+const selectedMethod = ref(null);
+const selectedPayment = ref(null);
+const verifyCodeSymbolsNumber = 6;
 
 const formData = reactive({
   selectedAmount: 0
 })
+
+const paymentList = computed(() => selectedMethod.value?.payments || []);
 
 const rules = computed(() => {
   return {
@@ -37,15 +50,73 @@ const rules = computed(() => {
 
 const v$ = useVuelidate(rules, formData);
 
-
 const selectMethod = async (method) => {
   console.log(method, 'method');
 
-  await v$.value.$validate();
-  if (v$.value.$invalid) return;
+  if (selectedMethod.value?.id === method.id) {
+    return selectedMethod.value = null;
+  }
 
-  console.warn("this feature is comming soon...");
-  notifyWarning("this feature is comming soon...");
+  selectedMethod.value = method;
+
+  if (selectedPayment.value) {
+    selectedPayment.value = null;
+  }
+}
+
+const selectPayment = async (payment) => {
+  console.log(payment, 'payment');
+
+  if (selectPayment.value?.id === payment.id) {
+    return selectedPayment.value = null;
+  }
+
+  await v$.value.$validate();
+  if (v$.value.$invalid) {return};
+
+  selectedPayment.value = payment;
+}
+
+const submitHandler = async () => {
+
+  await v$.value.$validate();
+  if (v$.value.$invalid) {return};
+
+  const codePayload = {
+    methodId: selectedPayment.value.id,
+    amount: formData.selectedAmount
+  }
+
+  const codeSended = await getOutPaymentCode(codePayload)
+  console.log(codeSended, 'codeSended');
+
+  const code = await confirmCode({
+    title: 'Do not close this window',
+    text: `Enter the ${verifyCodeSymbolsNumber}-symbols code sent to your email`,
+    symbols: verifyCodeSymbolsNumber,
+    confirmText: 'Continue',
+  })
+  console.log(code, 'code - submitHandler');
+  if (!code) {return;}
+
+  const widrawalPayload = {
+    methodId: selectedPayment.value.id,
+    code: code,
+    amount: formData.selectedAmount
+  }
+
+  const widrawalData = await createWidrawal(widrawalPayload)
+  console.log(widrawalData, 'widrawalData');
+
+  if (!widrawalData) {
+    await inform({
+      title: 'Warning',
+      text: 'Something went wrong',
+    })
+    return;
+  }
+
+  window.location.href = widrawalData.link;
 }
 
 const fetchData = async () => {
@@ -96,14 +167,29 @@ onMounted(() => {
 
       <p class="text-center mb-20">Choose withdraw method</p>
 
-      <ul v-if="methodList?.length" class="methods-list__list mb-40">
-        <li v-for="method in methodList" :key="method.id" class="methods-list__listitem" @click="selectMethod(method)">
-          <p class="methods-list__listitem--left">{{ method.name?.length > 20 ? cutTextLength(method.name, 20) : method.name }}</p>
-          <p class="methods-list__listitem--right">{{ method.commission }}% Commission</p>
-        </li>
+      <ul class="methods-list__list mb-30">
+        <ButtonWithClose v-for="method in methodList"
+          :key="method.id"
+          :is-show-close="selectedMethod?.id === method.id"
+          :is-active="selectedMethod?.id === method.id"
+          @click="selectMethod(method)"
+        >
+          {{ method.title }}
+        </ButtonWithClose>
       </ul>
 
-      <ButtonBase class="methods-list__btn">Continue</ButtonBase>
+      <transition name="fade" mode="out-in">
+        <ul v-if="paymentList?.length" class="methods-list__list mb-40">
+          <li v-for="method in paymentList" :key="method.id" class="methods-list__listitem" @click="selectPayment(method)">
+            <p class="methods-list__listitem--left">{{ method.name?.length > 20 ? cutTextLength(method.name, 20) : method.name  }}</p>
+            <p class="methods-list__listitem--right">{{ method.commission }}% Commission</p>
+          </li>
+        </ul>
+      </transition>
+
+      <transition name="bounce" mode="out-in">
+        <ButtonBase v-if="selectedPayment" class="methods-list__btn" @click="submitHandler">Continue</ButtonBase>
+      </transition>
     </div>
 
   </div>
