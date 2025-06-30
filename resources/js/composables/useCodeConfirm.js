@@ -23,7 +23,7 @@ export const useCodeConfirm = () => {
   const confirmPromise = ref(null);
 
   const confirm = (options, slots = null) => {
-    const { text, title, confirmText, cancelText, digits, absolute, disablePadding, top = 0, selector } = options;
+    const { text, title, confirmText, cancelText, sybmols, absolute, disablePadding, top = 0, selector } = options;
     confirmPromise.value = new Promise((resolve) => {
       const container = document.createElement("div");
       container.classList.add("confirm-modal-wrapper");
@@ -42,7 +42,7 @@ export const useCodeConfirm = () => {
           slotElements[key] = () => createSlotVNode(slot);
         });
       }
-      const vnode = createVNode(confirmComponent, { title, text, confirmText, digits, cancelText, absolute: absolute || false, disablePadding: disablePadding || false, top }, slotElements);
+      const vnode = createVNode(confirmComponent, { title, text, confirmText, sybmols, cancelText, absolute: absolute || false, disablePadding: disablePadding || false, top }, slotElements);
 
       vnode.props.onConfirm = (payload) => {
         resolve(payload || true);

@@ -3,6 +3,16 @@ import { useUserStore } from "@/store/user";
 import { getCurrency } from "@/helpers/getCurrency";
 import { useUserAccessToken } from "@/composables/useUserAccessToken";
 
+// Add type declarations for ImportMetaEnv and ImportMeta
+interface ImportMetaEnv {
+  readonly VITE_CURRENT_CURRENCY: string;
+  // add other env variables here if needed
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+
 export const useUser = () => {
   const currencyName = getCurrency();
 

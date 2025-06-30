@@ -1,19 +1,20 @@
 <script setup>
 import { computed, nextTick, onMounted, reactive, ref } from "vue";
-import ButtonBase from "@/components/details/ButtonBase.vue";
-import LoaderComponent from "@/components/LoaderComponent.vue";
 import { useLoading } from "@/composables/useLoading";
 import { notifyWarning } from "@/helpers/notify";
-import { fetchOutPayments } from "@/services/payments";
+import { createWidrawal, fetchOutPayments, getOutPaymentCode } from "@/services/payments";
 import { useUser } from "@/composables/useUser";
-import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import { cutTextLength } from "@/helpers/cutTextLength";
-import useVuelidate from '@vuelidate/core';
 import { required, minValue, maxValue, helpers } from '@vuelidate/validators';
 import { sampleWiddrawMethods } from "@/utils/dummyData";
-import ButtonWithClose from "@/components/details/ButtonWithClose.vue";
 import { useConfirm } from '@/composables/useConfirm';
 import { useCodeConfirm } from '@/composables/useCodeConfirm';
+
+import ButtonBase from "@/components/details/ButtonBase.vue";
+import LoaderComponent from "@/components/LoaderComponent.vue";
+import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
+import useVuelidate from '@vuelidate/core';
+import ButtonWithClose from "@/components/details/ButtonWithClose.vue";
 
 defineOptions({ name: "MethodsOut" })
 
@@ -27,6 +28,7 @@ const { confirm: confirmCode } = useCodeConfirm();
 const methodList = ref([]);
 const selectedMethod = ref(null);
 const selectedPayment = ref(null);
+const verifyCodeSymbolsNumber = 6;
 
 const formData = reactive({
   selectedAmount: 0
@@ -68,35 +70,51 @@ const selectPayment = async (payment) => {
   }
 
   await v$.value.$validate();
-  if (v$.value.$invalid) return;
+  if (v$.value.$invalid) {return};
 
   selectedPayment.value = payment;
 }
 
-const submit = async () => {
+const submitHandler = async () => {
+
+  await v$.value.$validate();
+  if (v$.value.$invalid) {return};
+
+  const codePayload = {
+    methodId: selectedPayment.value.id,
+    amount: formData.selectedAmount
+  }
+
+  const codeSended = await getOutPaymentCode(codePayload)
+  console.log(codeSended, 'codeSended');
 
   const code = await confirmCode({
     title: 'Do not close this window',
-    text: `Enter the 6-digit code sent to your email`,
-    digits: 6,
+    text: `Enter the ${verifyCodeSymbolsNumber}-symbols code sent to your email`,
+    symbols: verifyCodeSymbolsNumber,
     confirmText: 'Continue',
   })
-
+  console.log(code, 'code - submitHandler');
   if (!code) {return;}
 
-  console.log(code, 'code - submit');
+  const widrawalPayload = {
+    methodId: selectedPayment.value.id,
+    code: code,
+    amount: formData.selectedAmount
+  }
 
+  const widrawalData = await createWidrawal(widrawalPayload)
+  console.log(widrawalData, 'widrawalData');
 
-  // const result = await confirm({
-  //   title: 'Withdraw a Balance',
-  //   text: `You will be redirected to this page ${selectedPayment.value.link}`,
-  //   confirmText: 'Confirm',
-  //   cancelText: 'Cancel'
-  // })
+  if (!widrawalData) {
+    await inform({
+      title: 'Warning',
+      text: 'Something went wrong',
+    })
+    return;
+  }
 
-  // if (!result) {return;}
-
-  window.location.href = selectedPayment.value.link
+  window.location.href = widrawalData.link;
 }
 
 const fetchData = async () => {
@@ -168,7 +186,7 @@ onMounted(() => {
       </transition>
 
       <transition name="bounce" mode="out-in">
-        <ButtonBase v-if="selectedPayment" class="methods-list__btn" @click="submit">Continue</ButtonBase>
+        <ButtonBase v-if="selectedPayment" class="methods-list__btn" @click="submitHandler">Continue</ButtonBase>
       </transition>
     </div>
 

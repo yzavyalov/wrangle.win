@@ -14,7 +14,7 @@ const DELAY_MILISECONDS = 100;
 const props = defineProps({
   title: { type: String, default: "Are you sure ?" },
   text: String,
-  digits: { type: Number, default: 6 },
+  sybmols: { type: Number, default: 6 },
   confirmText: { type: String || null, default: 'Continue' },
   cancelText: { type: String || null, default: null },
   absolute: { type: Boolean, default: false, },
@@ -25,7 +25,7 @@ const emit = defineEmits(["confirm", "cancel"]);
 
 const active = ref(false);
 
-const code = ref(Array(props.digits).fill(''))
+const code = ref(Array(props.sybmols).fill(''))
 const inputs = ref([])
 
 const handleInput = (event, index) => {
@@ -33,15 +33,7 @@ const handleInput = (event, index) => {
 
   const val = event.target.value;
 
-  const isNumber = !isNaN(Number(code.value[index]));
-  if (!isNumber) {
-    console.warn('Invalid value');
-    notifyWarning('Invalid value');
-    code.value[index] = '';
-    return
-  }
-
-  if (val.length === 1 && index < props.digits - 1) {
+  if (val.length === 1 && index < props.sybmols - 1) {
     nextTick(() => inputs.value[index + 1]?.focus())
   }
 }
@@ -70,12 +62,12 @@ const confirm = () => {
 
   if (!active.value){ return; }
   console.log(code.value ,'code.value - confirm');
-  console.log(code.value?.length < props.digits - 1, 'code.value?.length < props.digits - 1');
+  console.log(code.value?.length < props.sybmols - 1, 'code.value?.length < props.sybmols - 1');
 
 
-  if (code.value?.length < props.digits - 1) {
-    notifyWarning(`Invalid code. Please fill all ${props.digits} digits.`);
-    return console.warn(`Invalid code. Please fill all ${props.digits} digits.`);
+  if (code.value?.length < props.sybmols - 1) {
+    notifyWarning(`Invalid code. Please fill all ${props.sybmols} sybmols.`);
+    return console.warn(`Invalid code. Please fill all ${props.sybmols} sybmols.`);
   }
 
   console.log(code.value, 'code.value - confirm');
