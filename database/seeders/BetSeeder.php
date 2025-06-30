@@ -23,10 +23,12 @@ class BetSeeder extends Seeder
                 $bet->categories()->attach($categories);
             })
             ->each(function ($bet) {
-                // Выбираем случайный ответ как победителя
-                $winner = $bet->answers()->inRandomOrder()->first();
-                if ($winner) {
-                    $bet->update(['winner_answer_id' => $winner->id]);
+                // Только если ставка завершена (finish < сейчас)
+                if ($bet->finish < now()) {
+                    $winner = $bet->answers()->inRandomOrder()->first();
+                    if ($winner) {
+                        $bet->update(['winner_answer_id' => $winner->id]);
+                    }
                 }
             });
     }

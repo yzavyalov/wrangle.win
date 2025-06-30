@@ -197,6 +197,12 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
+                                <a href="{{ route('from-admin-form') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Add money manual</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{ route('all-transactions') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>All transactions</p>

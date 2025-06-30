@@ -149,11 +149,20 @@ class BetService
 
         $ownerRewards = $this->betOwnerMoney($bet, $allMoney);
 
-        $answerWin = $bet->winnerAnswer;
+        $answerWin = $bet->winnerAnswer; // а если нет победителя
 
-        $profit = AnswerService::profit($answerWin);
+        if ($answerWin)
+        {
+            $profit = AnswerService::profit($answerWin);
 
-        $answerWinBits = $answerWin->bits;
+            $answerWinBits = $answerWin->bits; // есть победитель
+        }
+        else
+        {
+            $profit = 0;
+
+            $answerWinBits = $bet->bits;
+        }
 
         foreach ($answerWinBits as $winBit)
         {
@@ -164,12 +173,10 @@ class BetService
             else
                 $sum = $winBit->sum*$profit+$winBit->sum;
 
-            $comment = 'Your winnings on the dispute'.$bet->title;
+            $comment = 'Your winnings on the event'.$bet->title;
 
             $this->transactionService->debit($userID, $sum, $comment, TransactionMethodEnum::BIT);
         }
-
-        //находим ставки итого, ставки которые поставили на выиграшный ответ, высчитываем разницу. Дальше разницу
     }
 
     protected function allmoneyBet($bet)
@@ -181,7 +188,7 @@ class BetService
     {
         $owner = $bet->owner;
 
-        $reward = $allMoney * 0.05;
+        $reward = $allMoney * 0.05; // здесь ставка того кто создал событие
 
         $transaction = $this->transactionService->debit($owner->id, $reward,'reward for your bet id='.$bet->is.' title = '.$bet->title);
 

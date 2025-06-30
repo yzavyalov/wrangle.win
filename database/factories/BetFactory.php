@@ -24,7 +24,7 @@ class BetFactory extends Factory
             'source1' => fake()->url(), // Случайная ссылка
             'source2' => fake()->url(), // Случайная ссылка
             'description' => fake()->text(),
-            'finish' => fake()->dateTimeBetween('+1 day', '+1 year'), // Будущая дата и время
+            'finish' => fake()->dateTimeBetween('-1 year', '+1 year'),
         ];
     }
 }

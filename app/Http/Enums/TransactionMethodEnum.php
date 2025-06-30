@@ -9,6 +9,7 @@ enum TransactionMethodEnum:int
     case OPENBANKING = 3;
     case CRYPTO = 4;
     case BIT = 5;
+    case BONUS = 6;
 
 
     // Получение всех значений статусов
@@ -26,6 +27,7 @@ enum TransactionMethodEnum:int
             self::OPENBANKING => 'Openbanking',
             self::CRYPTO => 'Crypto',
             self::BIT => 'Bit',
+            self::BONUS => 'Bonus',
         };
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminPanel\AdminTwoFactorAuthController;
 use App\Http\Controllers\AdminPanel\BetCategoryController;
 use App\Http\Controllers\AdminPanel\BetController;
 use App\Http\Controllers\AdminPanel\BitController;
+use App\Http\Controllers\AdminPanel\MoneyController;
 use App\Http\Controllers\AdminPanel\PageController;
 use App\Http\Controllers\AdminPanel\PaymentController;
 use App\Http\Controllers\AdminPanel\PaymentMethodsController;
@@ -168,6 +169,7 @@ Route::middleware('moderator')->prefix('/admin-panel')->group(function (){
     Route::post('/payment/conditions/save',[PaymentTrustConditionsController::class,'save'])->name('payment-conditions-save');
     Route::get('/payment/{id}/conditions/edit',[PaymentTrustConditionsController::class,'edit'])->name('payment-conditions-edit');
     Route::put('/payment/conditions/update',[PaymentTrustConditionsController::class,'update'])->name('payment-conditions-update');
+    Route::get('/transaction/from-admin',[MoneyController::class,'index'])->name('from-admin-form');
 
     Route::get('/all-methods',[PaymentMethodsController::class,'all'])->name('all-methods');
     Route::get('/method/create',[PaymentMethodsController::class,'create'])->name('create-method-form');

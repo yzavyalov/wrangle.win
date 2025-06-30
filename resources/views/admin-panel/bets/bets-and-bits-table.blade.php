@@ -21,6 +21,11 @@
                     {{ session('success') }}
                 </div>
             @endif
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
         <div class="overflow-hidden shadow-sm dashboard-bg dash-window">
             <div class="p-6">
                 <table id="transactions-table" class="table table-bordered table-striped">
