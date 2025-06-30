@@ -13,6 +13,7 @@ import { required, minValue, maxValue, helpers } from '@vuelidate/validators';
 import { sampleWiddrawMethods } from "@/utils/dummyData";
 import ButtonWithClose from "@/components/details/ButtonWithClose.vue";
 import { useConfirm } from '@/composables/useConfirm';
+import { useCodeConfirm } from '@/composables/useCodeConfirm';
 
 defineOptions({ name: "MethodsOut" })
 
@@ -21,6 +22,7 @@ defineEmits(["close"])
 const { isLoading, loadingStart, loadingStop } = useLoading();
 const { userBalanceWithCurrency, userBalance } = useUser();
 const { confirm } = useConfirm();
+const { confirm: confirmCode } = useCodeConfirm();
 
 const methodList = ref([]);
 const selectedMethod = ref(null);
@@ -73,14 +75,26 @@ const selectPayment = async (payment) => {
 
 const submit = async () => {
 
-  const result = await confirm({
-    title: 'Withdraw a Balance',
-    text: `You will be redirected to this page ${selectedPayment.value.link}`,
-    confirmText: 'Confirm',
-    cancelText: 'Cancel'
+  const code = await confirmCode({
+    title: 'Do not close this window',
+    text: `Enter the 6-digit code sent to your email`,
+    digits: 6,
+    confirmText: 'Continue',
   })
 
-  if (!result) {return;}
+  if (!code) {return;}
+
+  console.log(code, 'code - submit');
+
+
+  // const result = await confirm({
+  //   title: 'Withdraw a Balance',
+  //   text: `You will be redirected to this page ${selectedPayment.value.link}`,
+  //   confirmText: 'Confirm',
+  //   cancelText: 'Cancel'
+  // })
+
+  // if (!result) {return;}
 
   window.location.href = selectedPayment.value.link
 }
