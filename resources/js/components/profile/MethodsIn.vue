@@ -4,7 +4,7 @@ import ButtonBase from "@/components/details/ButtonBase.vue";
 import LoaderComponent from "@/components/LoaderComponent.vue";
 import { useLoading } from "@/composables/useLoading";
 import { notifyWarning } from "@/helpers/notify";
-import { fetchOutPayments } from "@/services/payments";
+import { fetchInPayments } from "@/services/payments";
 import { useUser } from "@/composables/useUser";
 import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import { cutTextLength } from "@/helpers/cutTextLength";
@@ -39,7 +39,7 @@ const selectPayment = async (payment) => {
 }
 
 const fetchData = async () => {
-  const fetchMethods = await fetchOutPayments();
+  const fetchMethods = await fetchInPayments();
   console.log(fetchMethods, 'fetchMethods - fetchData');
 
   fetchMethods?.length && ( methodList.value = fetchMethods );
