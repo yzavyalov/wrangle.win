@@ -7,17 +7,17 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
-use App\Http\Controllers\Api\{
-    BetCategoryController,
+use App\Http\Controllers\Api\{BetCategoryController,
     BetCategorySearchController,
     BetController,
     BetSortController,
     BitController,
     FavoriteController,
+    FavouriteBetController,
+    OwnBetController,
     PaymnetsController,
     TransactionController,
-    UserDataController
-};
+    UserDataController};
 use App\Http\Controllers\Payment\{
     AlphaPoController,
     DepositController,
@@ -101,9 +101,10 @@ Route::middleware(['auth:sanctum', 'baduser'])->group(function () {
     // Bets
     Route::post('/bet-categories', [BetCategoryController::class, 'store']);
     Route::post('/bets', [BetController::class, 'store']);
-    Route::get('/own-bets', [BetSortController::class, 'myBets']);
-    Route::get('/favorite-bets', [BetSortController::class, 'favoriteBets']);
-    Route::get('/union-own-and-favorite-bets', [BetSortController::class, 'unionOwnFavBets']);
+    Route::get('/own-bets', [OwnBetController::class, 'myBets']);
+    Route::get('/own-bet/{id}/del',[OwnBetController::class,'delMyBet']);
+    Route::get('/favorite-bets', [FavouriteBetController::class, 'favoriteBets']);
+    Route::get('/union-own-and-favorite-bets', [FavouriteBetController::class, 'unionOwnFavBets']);
     Route::get('/favorites/{betId}', [FavoriteController::class, 'toggleFavorite'])->name('favorites.toggle');
 
     // Bits

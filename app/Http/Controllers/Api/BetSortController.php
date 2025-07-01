@@ -13,7 +13,6 @@ use App\Http\Resources\CurrentUserResource;
 use App\Models\Bet;
 use App\Services\UserService;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 
 
 class BetSortController extends Controller
@@ -22,60 +21,7 @@ class BetSortController extends Controller
     {
         $this->userService = $userService;
     }
-    public function myBets(PaginateRequest $request)
-    {
-        $perPage = $request->input('per_page', 15); // по умолчанию 15
-        $page = $request->input('page', 1);
 
-        $user = Auth::user();
-
-        $bets = $user->mybets()->paginate($perPage, ['*'], 'page', $page);
-
-        $bets = BetResource::collection($bets);
-
-        $user = CurrentUserResource::make($user);
-
-        return $this->successJsonAnswer200('My bets',compact('bets','user'));
-    }
-
-    public function favoriteBets(PaginateRequest $request)
-    {
-        $perPage = $request->input('per_page', 15); // по умолчанию 15
-
-        $page = $request->input('page', 1);
-
-        $user = Auth::user();
-
-        $bets = $user->favoriteBets()->paginate($perPage, ['*'], 'page', $page);;
-
-        $bets = BetResource::collection($bets);
-
-        $user = CurrentUserResource::make($user);
-
-        return $this->successJsonAnswer200('My favorite bets',compact('bets','user'));
-    }
-
-
-    public function unionOwnFavBets(PaginateRequest $request)
-    {
-        $perPage = $request->input('per_page', 15); // по умолчанию 15
-
-        $page = $request->input('page', 1);
-
-        $user = Auth::user();
-
-        $favbets = $user->favoriteBets()->paginate($perPage, ['*'], 'page', $page);
-
-        $ownbets = $user->mybets()->paginate($perPage, ['*'], 'page', $page);
-
-        $favbets = BetResource::collection($favbets);
-
-        $ownbets = BetResource::collection($ownbets);
-
-        $user = CurrentUserResource::make($user);
-
-        return $this->successJsonAnswer200('My favorite bets',compact('favbets','ownbets','user'));
-    }
 
     public function searchBet(BetSearchRequest $request)
     {

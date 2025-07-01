@@ -15,6 +15,7 @@ class Bet extends Model
     protected $fillable = [
         'id',
         'user_id',
+        'list',
         'title',
         'image',
         'status',

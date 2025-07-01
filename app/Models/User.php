@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Http\Enums\BetStatusEnum;
 use App\Http\Enums\TransactionOperationEnum;
 use App\Models\Auth\SocialAccount;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -51,7 +52,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function mybets()
     {
-        return $this->hasMany(Bet::class,'user_id','id');
+        return $this->hasMany(Bet::class, 'user_id', 'id')
+            ->where(function ($query) {
+                $query->where('list', '!=', 1)
+                    ->orWhereNull('list');
+            });
     }
 
     public function balance()

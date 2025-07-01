@@ -10,6 +10,8 @@ enum BetStatusEnum: int
     case CANCELED = 4;
     case FINISHED = 5;
 
+    case DELETED =6;
+
     // Получение всех значений статусов
     public static function values(): array
     {
@@ -25,6 +27,7 @@ enum BetStatusEnum: int
             self::APPROVED => 'Approved',
             self::CANCELED => 'Canceled',
             self::FINISHED => 'Finished',
+            self::DELETED => 'Deleted',
         };
     }
 }
