@@ -11,12 +11,13 @@ import BaseLayout from "@/layouts/BaseLayout.vue";
 import { navigateTo } from "@/helpers/navigate";
 import { PAGE_ROUTES, profileTabs } from "@/utils/datasets";
 import BetItemSmall from "@/components/bet/BetItemSmall.vue";
-import { getOwnBets } from "@/services/bets";
+import { deleteBet, getOwnBets } from "@/services/bets";
 import { useOwnBets } from "@/composables/useOwnBets";
 import { useFavoriteBets } from "@/composables/useFavoriteBets";
-import { notifyWarning } from "@/helpers/notify";
+import { notifySuccess, notifyWarning } from "@/helpers/notify";
 import { useHistory } from "@/composables/useHistory";
 import { useUser } from "@/composables/useUser";
+import { useLoading } from "@/composables/useLoading";
 
 const TAB_KEY = 'tab';
 
@@ -32,10 +33,11 @@ const profileTabCompoenents = shallowRef({
 })
 
 const { confirm } = useConfirm();
-const { ownBets, fetchOwnBets, fetchMoreOwnBets, openBetHandler } = useOwnBets();
+const { ownBets, fetchOwnBets, fetchMoreOwnBets, openBetHandler, deleteOwnBetHandler } = useOwnBets();
 const { favoriteBets, fetchFavoriteBets, fetchMoreFavoriteBets, toggleBetToFavoriteHandler } = useFavoriteBets();
 const { setQueryParam, removeQueryParam, getQueryParam } = useHistory();
 const { userBalanceWithCurrency, currentUser, userBalance } = useUser();
+const { isLoading, loadingStart, loadingStop } = useLoading();
 
 const activeTab = ref(false);
 
@@ -69,24 +71,6 @@ const setActiveTab = (tab) => {
   tab.id ? setQueryParam(TAB_KEY, tab.id) : removeQueryParam(TAB_KEY);
 
   activeTab.value = tab;
-}
-
-const deleteBetHandler = async (bet) => {
-  const shortBetTitle = bet.title.length > 30 ? `${bet.title.substring(0, 30)}...` : bet.title;
-
-  const result = await confirm({
-    title: 'Are you sure?',
-    text: `Delete this bet - '${shortBetTitle}'?`,
-    confirmText: 'Yes',
-    cancelText: 'No'
-  })
-
-  if (!result) {return}
-
-  // console.log(bet, 'bet');
-  console.warn('No logic for delete yet...');
-  notifyWarning('No logic for delete yet...');
-
 }
 
 const tabInit = () => {
@@ -162,7 +146,7 @@ onMounted(() => {
             :key="item.id"
             :item="item"
             class="profile__history__item"
-            @delete="deleteBetHandler(item)"
+            @delete="deleteOwnBetHandler(item)"
             @detail="openBetHandler(item)"
           />
 

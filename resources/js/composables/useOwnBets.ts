@@ -1,11 +1,11 @@
-import { getOwnBets } from "@/services/bets";
+import { deleteBet, getOwnBets } from "@/services/bets";
 import { BetItem, SearchBetsPayload } from "@/types/bets";
 import { onMounted, Ref, ref } from "vue";
 import { useLoading } from "@/composables/useLoading";
 import { navigateTo } from "@/helpers/navigate";
 import { useConfirm } from '@/composables/useConfirm';
 import { PAGE_ROUTES } from "@/utils/datasets";
-import { notifyWarning } from "@/helpers/notify";
+import { notifySuccess, notifyWarning } from "@/helpers/notify";
 
 export const useOwnBets = () => {
 
@@ -88,10 +88,27 @@ export const useOwnBets = () => {
 
     if (!result) {return}
 
-    // console.log(bet, 'bet');
-    console.warn('No logic for delete yet...');
-    notifyWarning('No logic for delete yet...');
+    try {
+      loadingStart();
 
+      const success = await deleteBet(bet);
+      console.log(success, 'success');
+
+      if (!success) {
+        notifyWarning('Error deleting bet');
+        return;
+      }
+
+      ownBets.value = ownBets.value.filter(b => b.id !== bet.id);
+
+      notifySuccess('Bet deleted successfully');
+
+    } catch (error) {
+      console.warn(error);
+
+    } finally {
+      loadingStop();
+    }
   }
 
   onMounted(() => {
