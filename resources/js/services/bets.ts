@@ -1,6 +1,6 @@
 import { http } from "@/api/http";
 import { BETS } from "@/api/enpoints";
-import { BetCaruselPayload, CreateBetPayload, CreateBitPayload, SearchBetsPayload, ToggleToFavoritePayload } from "@/types/bets";
+import { BetCaruselPayload, CreateBetPayload, CreateBitPayload, DeleteBetPayload, SearchBetsPayload, ToggleToFavoritePayload } from "@/types/bets";
 import { da } from "element-plus/es/locale";
 import { notifyError } from "@/helpers/notify";
 
@@ -145,6 +145,17 @@ export const createBet = async (payload: CreateBetPayload) => {
     const newBet = res?.data?.data;
 
     return newBet;
+  })
+  .catch(e => console.error(e.message));
+};
+
+export const deleteBet = async (payload: DeleteBetPayload) => {
+
+  return await http.get(`${BETS.OWN_BET}/${payload.id}/del`)
+  .then(res => {
+    console.log(res, "res - deleteBet");
+
+    return res?.data?.data;
   })
   .catch(e => console.error(e.message));
 };

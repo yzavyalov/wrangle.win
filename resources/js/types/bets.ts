@@ -19,6 +19,10 @@ export interface CreateBetPayload {
   finish: Date | string
 }
 
+export interface DeleteBetPayload {
+  id: number
+}
+
 export interface ToggleToFavoritePayload {
   id: number
 }

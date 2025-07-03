@@ -201,6 +201,7 @@ onUnmounted(() => {
 
 <style scoped lang='scss'>
 .modal-confirm {
+  max-width: 1440px;
 
   &__wrapper {
     position: fixed;
@@ -218,7 +219,6 @@ onUnmounted(() => {
     -webkit-backdrop-filter: blur(10px); /* для Safari */
     background-color: rgba(255, 255, 255, 0.2); /* напівпрозорий фон */
     z-index: 10;
-    max-width: 1440px;
   }
 
   &__body {
