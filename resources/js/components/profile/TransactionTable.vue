@@ -10,6 +10,9 @@ import { useLoading } from "@/composables/useLoading";
 import { notifyWarning } from "@/helpers/notify";
 import { fetchUserTransactions } from "@/services/transactions";
 import { useUser } from "@/composables/useUser";
+import { getOperationLabel } from "@/helpers/getTransactionStatus";
+import { getMethodLabel } from "@/helpers/getTransactionStatus";
+import { getStatusLabel } from "@/helpers/getTransactionStatus";
 
 
 defineOptions({ name: "TransactionTable" })
@@ -117,9 +120,9 @@ onMounted(() => {
         <tbody v-if="transactions?.length">
           <tr v-for="item in transactions" :key="item.id">
             <td>{{ item.id }}</td>
-            <td>{{ item.operation }}</td>
-            <td>{{ item.status }}</td>
-            <td>{{ item.method }}</td>
+            <td>{{ getOperationLabel(item.operation) }}</td>
+            <td>{{ getStatusLabel(item.status) }}</td>
+            <td>{{ getMethodLabel(item.method) }}</td>
             <td>{{ item.sum }}</td>
             <td>{{ item.comment }}</td>
             <td>{{ item.date }}</td>

@@ -38,6 +38,10 @@ class WintecaExcahngeService
             'Authorization' => $this->authorization,
             'Content-Type' => 'application/json'])->get($url)->json();
 
+        if (empty($response['data'])) {
+            return $sum;
+        }
+
         $rate = $response['data'][$this->baseCurrency][$paymentCurrency];
 
         return $sum*$rate;
