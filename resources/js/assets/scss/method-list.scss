@@ -30,6 +30,19 @@
   &__body {
     max-width: 700px;
     margin: 0 auto;
+
+    &.two-sections {
+      max-width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+
+      @media screen and (max-width: 700px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
   }
 
   &__form {
@@ -79,6 +92,7 @@
     align-items: center;
     justify-content: center;
     box-shadow: var(--box-shadow-main);
+    cursor: pointer;
 
     .active {
       background: var(--btn-bg-color-active);
