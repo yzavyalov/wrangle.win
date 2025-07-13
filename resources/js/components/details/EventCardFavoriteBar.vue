@@ -1,22 +1,62 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { triggerOpenNewModal } from '@/composables';
+import { notifySuccess, notifyWarning } from '@/helpers/notify';
+import { toggleToFavorite } from '@/services/bets';
+import { useLoading } from '@/composables/useLoading';
 import ButtonWithIcon from '@/components/details/ButtonWithIcon.vue';
 
 defineOptions({ name: "EventCardFavoriteBar" })
 
 const props = defineProps({
-  isFavorite: { type: Boolean, default: () => false },
+  item: { type: Object, default: () => ({}) },
 })
 
-const emit = defineEmits(['favoriteToggle', 'share'])
+const emit = defineEmits(['favoriteToggle'])
+
+const { isLoading, loadingStart, loadingStop } = useLoading();
+
+const isFavorite = ref(false);
+
+const shareHandler = async () => {
+  triggerOpenNewModal('share-bet-modal', { 'updateModalContent': { currentBet: props.item } });
+};
+
+const favoriteHandler = async () => {
+  if (isLoading.value) { return notifyWarning("Loading, please wait..."); }
+
+  try {
+    loadingStart();
+
+    const { success, message } = await toggleToFavorite({ id: props.item?.id }) || {};
+
+    if (!success) { return notifyWarning(message || "Ups... Something went wrong..."); }
+
+    notifySuccess(message);
+
+    isFavorite.value = !isFavorite.value;
+
+    emit('favoriteToggle');
+
+  } catch (error) {
+    console.warn(error);
+
+  } finally {
+    loadingStop();
+  }
+};
+
+onMounted(() => {
+  isFavorite.value = props?.item?.is_favorite;
+});
 
 </script>
 
 <template>
   <div class="favorite-bar ">
-    <ButtonWithIcon :icon="isFavorite ? '/images/heart-filled.svg' : '/images/heart.svg'" @click="emit('favoriteToggle')" />
+    <ButtonWithIcon :icon="isFavorite ? '/images/heart-filled.svg' : '/images/heart.svg'" @click="favoriteHandler" />
 
-    <ButtonWithIcon icon="/images/forward-message.svg" @click="emit('share')" />
+    <ButtonWithIcon icon="/images/forward-message.svg" @click="shareHandler" />
   </div>
 </template>
 
