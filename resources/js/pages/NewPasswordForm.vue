@@ -1,22 +1,23 @@
 <script setup>
 import { reactive, computed, onMounted } from "vue";
 import { Head } from "@inertiajs/vue3";
+import { required, sameAs, email, minLength, helpers } from '@vuelidate/validators';
+import { resetUserPassword } from "@/services/user";
+import { useLoading } from "@/composables/useLoading";
+import { notifySuccess, notifyWarning } from "@/helpers/notify";
+import { navigateTo } from "@/helpers/navigate";
+import { PAGE_ROUTES } from "@/utils/datasets";
+import { useInform } from "@/composables/useInform"
+import { passwordRegex } from "@/utils/regex";
+
+import LoaderComponent from "@/components/LoaderComponent.vue";
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import FormBase from "@/components/form/FormBase.vue";
 import InputWIthHelper from "@/components/details/InputWIthHelper.vue";
 import InputPasswordWIthHelper from "@/components/details/InputPasswordWIthHelper.vue";
 import useVuelidate from "@vuelidate/core";
-import { required, sameAs, email, minLength, helpers } from '@vuelidate/validators';
 import ButtonBaseWithIcon from "@/components/details/ButtonBaseWithIcon.vue";
-import { resetUserPassword } from "@/services/user";
-import { useLoading } from "@/composables/useLoading";
-import { notifySuccess, notifyWarning } from "@/helpers/notify";
-import { navigateTo } from "@/helpers/navigate";
-import { PAGE_ROUTES } from "@/utils/datasets";
-import { passwordRegex } from "@/utils/regex";
-import LoaderComponent from "@/components/LoaderComponent.vue";
-import { useInform } from "@/composables/useInform"
 
 defineOptions({
   name: "NewPasswordForm",
@@ -24,7 +25,7 @@ defineOptions({
 })
 
 const { isLoading, loadingStart, loadingStop } = useLoading();
-const {} = useInform();
+const { inform } = useInform();
 
 const formData = reactive({
   password: '',
