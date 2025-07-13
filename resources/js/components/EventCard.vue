@@ -17,11 +17,7 @@ const shortTitle = computed(() => {
     : props.item.title;
 });
 
-const dynamicHot = computed(() => {
-  // console.log('getDaysLeft - dynamicHot', getDaysLeft(props.item.finish));
-
-  return getDaysLeft(props.item.finish) < 1
-});
+const dynamicHot = computed(() => getDaysLeft(props.item.finish) < 1);
 
 const currencyName = getCurrency();
 
