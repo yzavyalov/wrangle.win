@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgeVerificationController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -97,6 +98,7 @@ Route::middleware(['auth:sanctum', 'baduser'])->group(function () {
     Route::put('/update-profile', [UserDataController::class, 'updateProfile']);
     Route::put('/user/password', [UserDataController::class, 'changeUserPassword']);
     Route::get('user-data', [UserDataController::class, 'getUser']);
+    Route::post('/verify-age', [AgeVerificationController::class, 'verifyAge']);
 
     // Bets
     Route::post('/bet-categories', [BetCategoryController::class, 'store']);
