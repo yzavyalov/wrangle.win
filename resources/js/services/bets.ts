@@ -166,7 +166,7 @@ export const toggleToFavorite = async (payload: ToggleToFavoritePayload) => {
   .then(res => {
     console.log(res, "res - toggleToFavorite");
 
-    return res.data;
+    return res?.data;
   })
   .catch(e => console.error(e.message));
 };

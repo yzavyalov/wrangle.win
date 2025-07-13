@@ -4,12 +4,18 @@ import { getTimeLeft, getDaysLeft } from '@/helpers/getTimeLeft';
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import { triggerOpenNewModal } from '@/composables';
 import { getCurrency } from '@/helpers/getCurrency';
+import ButtonWithIcon from '@/components/details/ButtonWithIcon.vue';
+import { notifySuccess, notifyWarning } from '@/helpers/notify';
+import EventCardFavoriteBar from '@/components/details/EventCardFavoriteBar.vue';
+import { toggleToFavorite } from '@/services/bets';
 
 const props = defineProps({
   item: { type: Object, default: () => ({}) },
 })
 
 const maxTextLength = 40;
+
+const isFavorite = ref(false);
 
 const shortTitle = computed(() => {
   return props.item.title?.length > maxTextLength
@@ -25,10 +31,30 @@ const showMoreDetailsHandler = () => {
   triggerOpenNewModal('bet-modal', { 'updateModalContent': { currentBet: props.item } });
 };
 
+const shareHandler = async () => {
+  triggerOpenNewModal('share-bet-modal', { 'updateModalContent': { currentBet: props.item } });
+};
+
+const favoriteHandler = async () => {
+  const { success, message } = await toggleToFavorite({ id: props.item.id }) || {};
+
+  if (!success) { return notifyWarning(message || "Ups... Something went wrong..."); }
+
+  notifySuccess(message);
+
+  isFavorite.value = !isFavorite.value;
+};
+
+onMounted(() => {
+  isFavorite.value = props?.item?.is_favorite;
+})
+
 </script>
 
 <template>
   <div :class="['event-card', { hot: dynamicHot }]">
+    <EventCardFavoriteBar class="event-card__favorite" :is-favorite="isFavorite" @favoriteToggle="favoriteHandler" @share="shareHandler" />
+
     <div class="event-card__overlay">
       <div v-if="item.img" class="event-card__overlay--image"
         :style="{
@@ -156,6 +182,13 @@ const showMoreDetailsHandler = () => {
     display: flex;
     gap: 5px;
     flex-wrap: wrap;
+  }
+
+  &__favorite {
+    position: absolute;
+    z-index: 2;
+    top: var(--card-indent);
+    left: var(--card-indent);
   }
 
   .hot-text {
