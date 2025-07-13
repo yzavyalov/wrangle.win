@@ -1,15 +1,16 @@
 <script setup>
 import { onMounted, reactive, computed, ref } from "vue";
-import PageWrapperMain from "@/components/PageWrapperMain.vue";
+// import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import ButtonBase from "@/components/details/ButtonBase.vue";
-import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
-import PageCloudDecorator from '@/components/details/PageCloudDecorator.vue';
+// import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
+// import PageCloudDecorator from '@/components/details/PageCloudDecorator.vue';
 // import { predictionDemoData } from '@/utils/dummyData';
 import BetOptionItem from "@/components/details/BetOptionItem.vue"
 import { getTimeLeft, getDaysLeft } from '@/helpers/getTimeLeft';
 import { getCurrency } from '@/helpers/getCurrency';
 import { useUserStore } from "@/store/user";
 import { useBets } from '@/composables/useBets';
+import EventCardFavoriteBar from '@/components/details/EventCardFavoriteBar.vue';
 
 const props = defineProps({
   item: { type: Object, required: true },
@@ -44,6 +45,8 @@ onMounted(() => {
 <template>
   <div class="p-item__wrapper">
     <div class="p-item__details">
+      <EventCardFavoriteBar class="p-item__details--favorite" :item="item" p-item__details--favorite />
+
       <div class="p-item__content">
         <div class="p-item__details--header">
           <div v-if="dynamicHot" class="p-item__details--hot">#HOT!</div>
@@ -142,6 +145,7 @@ onMounted(() => {
   }
 
   &__details {
+    position: relative;
     padding-bottom: 80px;
     background: var(--btn-bg-color);
 
@@ -199,6 +203,13 @@ onMounted(() => {
     &--btn {
       margin: 20px auto;
       min-width: 100px;
+    }
+
+    &--favorite {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
     }
   }
 

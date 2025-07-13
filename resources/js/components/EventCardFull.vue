@@ -1,12 +1,13 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
 import { getTimeLeft, getDaysLeft } from '@/helpers/getTimeLeft';
-import ButtonBase from '@/components/details/ButtonBase.vue';
+// import ButtonBase from '@/components/details/ButtonBase.vue';
 // import { predictionDemoData } from '@/utils/dummyData';
 import { useModalsStore } from '@/store/modals';
 import BetOptionItem from '@/components/details/BetOptionItem.vue';
 import { getCurrency } from '@/helpers/getCurrency';
 import { useBets } from '@/composables/useBets';
+import EventCardFavoriteBar from '@/components/details/EventCardFavoriteBar.vue';
 
 const { makeNewBit } = useBets();
 
@@ -26,11 +27,7 @@ const currencyName = getCurrency();
 
 const biggestProfit = Math.max(...currentBet.value.answers.map(item => item.profit)).toFixed(2);
 
-onMounted(() => {
-  // showMore.value = props.currentBet.showMore;
-  console.log(currentBet.value, 'currentBet - onMounted');
 
-});
 </script>
 
 <template>
@@ -67,6 +64,8 @@ onMounted(() => {
     </div>
 
     <div class="event-card__details">
+      <EventCardFavoriteBar class="event-card__favorite" :item="currentBet" />
+
       <span>Description:</span>
       <p class="event-card__details--text">{{ currentBet.description }}</p>
     </div>
@@ -268,6 +267,13 @@ onMounted(() => {
     font-style: italic;
     font-weight: var(--font-weight-light);
     margin-bottom: 10px;
+  }
+
+  &__favorite {
+    position: absolute;
+    z-index: 2;
+    top: var(--card-indent);
+    left: var(--card-indent);
   }
 }
 

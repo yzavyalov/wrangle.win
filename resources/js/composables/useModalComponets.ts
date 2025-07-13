@@ -6,6 +6,7 @@ import NewBitModal from "@/components/modals/views/NewBitModal.vue";
 import UpdatePassword from "@/components/modals/views/UpdatePassword.vue";
 import UpdateProfile from "@/components/modals/views/UpdateProfile.vue";
 import ForgotPassword from "@/components/modals/views/ForgotPassword.vue"
+import ShareBet from "@/components/modals/views/ShareBet.vue"
 
 export const getModalComponent = modalName => {
   const dynamicModalName = modalName?.value ? modalName.value : modalName;
@@ -34,6 +35,9 @@ export const getModalComponent = modalName => {
 
     case "forgot-password-modal":
       return ForgotPassword;
+
+    case "share-bet-modal":
+      return ShareBet;
 
     default:
       console.warn(`No handle for such modal name - ${modalName}`);

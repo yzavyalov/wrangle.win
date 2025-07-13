@@ -10,11 +10,11 @@ import { sampleWiddrawMethods } from "@/utils/dummyData";
 import { useConfirm } from '@/composables/useConfirm';
 import { useCodeConfirm } from '@/composables/useCodeConfirm';
 import { useInform } from '@/composables/useInform';
+import useVuelidate from '@vuelidate/core';
 
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import LoaderComponent from "@/components/LoaderComponent.vue";
 import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
-import useVuelidate from '@vuelidate/core';
 import ButtonWithClose from "@/components/details/ButtonWithClose.vue";
 
 defineOptions({ name: "MethodsOut" })

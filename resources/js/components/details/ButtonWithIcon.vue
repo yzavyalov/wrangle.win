@@ -24,6 +24,7 @@ const props = defineProps({
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 
     &.reverse-icon {
       img {

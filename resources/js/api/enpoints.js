@@ -26,6 +26,7 @@ export const BETS = {
   BIT: "/api/bit",
   HOT: "/api/hot-bets",
   CARUSEL: "/api/bets/carousel",
+  OWN_BET: "/api/own-bet"
 }
 
 export const CATEGORIES = {

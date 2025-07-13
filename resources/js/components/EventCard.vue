@@ -4,6 +4,7 @@ import { getTimeLeft, getDaysLeft } from '@/helpers/getTimeLeft';
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import { triggerOpenNewModal } from '@/composables';
 import { getCurrency } from '@/helpers/getCurrency';
+import EventCardFavoriteBar from '@/components/details/EventCardFavoriteBar.vue';
 
 const props = defineProps({
   item: { type: Object, default: () => ({}) },
@@ -17,11 +18,7 @@ const shortTitle = computed(() => {
     : props.item.title;
 });
 
-const dynamicHot = computed(() => {
-  // console.log('getDaysLeft - dynamicHot', getDaysLeft(props.item.finish));
-
-  return getDaysLeft(props.item.finish) < 1
-});
+const dynamicHot = computed(() => getDaysLeft(props.item.finish) < 1);
 
 const currencyName = getCurrency();
 
@@ -33,6 +30,8 @@ const showMoreDetailsHandler = () => {
 
 <template>
   <div :class="['event-card', { hot: dynamicHot }]">
+    <EventCardFavoriteBar :item="item" class="event-card__favorite" />
+
     <div class="event-card__overlay">
       <div v-if="item.img" class="event-card__overlay--image"
         :style="{
@@ -160,6 +159,13 @@ const showMoreDetailsHandler = () => {
     display: flex;
     gap: 5px;
     flex-wrap: wrap;
+  }
+
+  &__favorite {
+    position: absolute;
+    z-index: 2;
+    top: var(--card-indent);
+    left: var(--card-indent);
   }
 
   .hot-text {
