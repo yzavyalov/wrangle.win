@@ -14,7 +14,7 @@
             Name: {{ $user->name }}<br>
             Email: {{ $user->email }}<br>
             ID: {{ $user->id }}<br>
-            Balance: {{ $user->balance->balance }}<br>
+            Balance: {{ $user->balance->balance ?? 0 }}
 
             <button wire:click="showTopUpForm" class="btn btn-success mt-2">Top up the balance</button>
 

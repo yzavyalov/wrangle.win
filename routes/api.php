@@ -138,3 +138,4 @@ Route::middleware(['auth:sanctum', 'baduser'])->group(function () {
     // Winteca
     Route::post('/winteca/check', [WintecaController::class, 'check']);
 });
+

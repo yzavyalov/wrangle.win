@@ -92,6 +92,8 @@ onMounted(() => {
           :is-active="selectedMethod?.id === method.id"
           @click="selectMethod(method)"
         >
+<!--          <img :src="`/storage/${method.logo}`" :alt="method.title" class="method-logo" />-->
+
           {{ method.title }}
         </ButtonWithClose>
       </ul>
@@ -111,4 +113,12 @@ onMounted(() => {
 
 <style scoped lang='scss'>
 @use "@/assets/scss/method-list";
+
+//.method-logo {
+//  width: auto;
+//  height: 40px;
+//  object-fit: contain;
+//  margin-right: 10px;
+//  display: inline-block;
+//}
 </style>

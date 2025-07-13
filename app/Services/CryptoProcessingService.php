@@ -14,32 +14,7 @@ class CryptoProcessingService
     {
         $this->paymentLogsService = $paymentLogsService;
     }
-//    public function callAlphaPoApi(array $params, string $endpoint)
-//    {
-//        // Подготавливаем тело запроса
-//        $body = json_encode($params);
-//
-//        // Генерируем подпись
-//        $signature = hash_hmac('sha512', $body, env('CRYPTOPROCESSING_SECRET_KEY'));
-//
-//        // Отправляем POST-запрос
-//        $response = Http::withHeaders([
-//            'X-Processing-Key' => env('CRYPTOPROCESSING_PUBLIC_KEY'),
-//            'X-Processing-Signature' => $signature,
-//            'Content-Type' => 'application/json',
-//        ])->post($endpoint, $params);
-//
-//        // Обрабатываем ответ
-//        if ($response->successful()) {
-//            return $response->json();
-//        } else {
-//            return $response->json([
-//                'status' => 'false',
-//                'message' => "AlphaPo API error: " . $response->body(),
-//            ], 500);
-////            throw new \Exception("AlphaPo API error: " . $response->body());
-//        }
-//    }
+
 
     public function callAlphaPoApi(array $params, string $endpoint)
     {
