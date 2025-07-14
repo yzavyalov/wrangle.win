@@ -11,6 +11,7 @@ use App\Models\Bet;
 use App\Services\BetService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BetController extends Controller
 {
@@ -19,16 +20,24 @@ class BetController extends Controller
     {
         $this->betService = $betService;
     }
+
     /**
      * Display a listing of the resource.
      */
     public function index(PaginateRequest $request)
     {
+        if ($request->bearerToken()) {
+            // Выбери нужный guard — sanctum, api, или другой
+            Auth::shouldUse('sanctum'); // или 'api', если используется Passport или JWT
+        }
+
+        $user = auth()->user(); // Будет null, если пользователь не авторизован
+
         $perPage = $request->input('per_page', 15); // по умолчанию 15
         $page = $request->input('page', 1);
         $sort_order = $request->input('sort_order','asc');
 
-        $bets = Bet::query()
+        $bets = Bet::with('favoritedBy')
             ->where('status',BetStatusEnum::APPROVED)
             ->where('finish','>=',Carbon::make(now()))
             ->orderBy('finish', $sort_order)   // Добавляем сортировку по finish по возрастанию

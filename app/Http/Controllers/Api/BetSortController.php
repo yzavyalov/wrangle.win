@@ -13,6 +13,7 @@ use App\Http\Resources\CurrentUserResource;
 use App\Models\Bet;
 use App\Services\UserService;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 
 class BetSortController extends Controller
@@ -25,6 +26,13 @@ class BetSortController extends Controller
 
     public function searchBet(BetSearchRequest $request)
     {
+        if ($request->bearerToken()) {
+            // Выбери нужный guard — sanctum, api, или другой
+            Auth::shouldUse('sanctum'); // или 'api', если используется Passport или JWT
+        }
+
+        $user = auth()->user(); // Будет null, если пользователь не авторизован
+
         $page = $request->query('page', 1);
         $perPage = $request->query('per_page', 15);
 
