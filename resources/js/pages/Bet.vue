@@ -89,6 +89,9 @@ onBeforeUnmount(() => {
 onMounted(() => {
   getFullBetData();
 });
+
+const user = usePage().props.auth?.user;
+console.log('👤 User from Inertia:', user);
 </script>
 
 <template>

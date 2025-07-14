@@ -87,8 +87,6 @@ Route::get('/bet/{id}', function ($id) {
     $bet = Bet::findOrFail($id);
 
     return Inertia::render('Bet', [
-        'auth' => Auth::check(),
-        'user' => Auth::user(),
         'bet' => $bet,
     ]);
 });
