@@ -57,14 +57,14 @@ export const defaultFilters = {
 
 export const profileTabs = [
   {
-    id: 'withdraw',
-    name: "Withdraw Money",
-    action: "withdraw",
-  },
-  {
     id: 'deposit',
     name: "Top up a Balance",
     action: "deposit",
+  },
+  {
+    id: 'withdraw',
+    name: "Withdraw Money",
+    action: "withdraw",
   },
   {
     id: 'transactions',

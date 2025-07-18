@@ -204,12 +204,12 @@ const formActionHandler = (action) => {
           <span v-else-if="v$.email?.email?.$invalid">Email is invalid</span>
         </span>
 
-        <InputBase v-model="formData.password" placeholder="Password" :type="formData.isShowPassword ? 'text' : 'password'" class="form__input" />
+        <InputBase v-model="formData.password" placeholder="Password" :type="formData.isShowPassword ? 'text' : 'password'" class="form__input" @keyup:enter="loginInHandle" />
         <span v-if="v$.password?.$error" class="error">
           <span v-if="v$.password?.required?.$invalid">Password is required</span>
           <span v-else-if="v$.password?.minLength?.$invalid">Password must be at least 6 characters</span>
         </span>
-        <InputBase v-if="!isLoginVariant" v-model="formData.passwordRepeat" placeholder="Password (Repeat)" :type="formData.isShowPassword ? 'text' : 'password'" class="form__input" />
+        <InputBase v-if="!isLoginVariant" v-model="formData.passwordRepeat" placeholder="Password (Repeat)" :type="formData.isShowPassword ? 'text' : 'password'" class="form__input" @keyup:enter="registerHandle" />
         <span v-if="v$.passwordRepeat?.$error" class="error">
           <span v-if="v$.passwordRepeat?.required?.$invalid">Password (repeat) is required</span>
           <span v-else-if="v$.passwordRepeat?.sameAsPassword?.$invalid">Passwords do not match</span>

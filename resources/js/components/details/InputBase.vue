@@ -4,13 +4,15 @@ const props = defineProps({
   type: { type: String, default: "text" },
 })
 
+const emit = defineEmits(['keyup:enter']);
+
 const inputModel = defineModel();
 
 </script>
 
 <template>
   <div class="base_input">
-    <input v-model="inputModel" :type="type" :placeholder="placeholder">
+    <input v-model="inputModel" :type="type" :placeholder="placeholder" @keyup.enter="emit('keyup:enter')">
   </div>
 </template>
 
