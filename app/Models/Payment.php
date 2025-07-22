@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
-    use HasFactory;
+    use HasFactory,Filterable;
 
     protected $fillable = [
         'id',
@@ -18,6 +19,7 @@ class Payment extends Model
         'fix_fee',
         'logo',
         'link',
+        'function',
     ];
 
 

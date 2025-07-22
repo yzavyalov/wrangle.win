@@ -20,6 +20,7 @@ class PaymentAlphaPoSeeder extends Seeder
                 'fix_fee' => 0,
                 'logo' => 'logo.png',
                 'link' => 'https://app.alphapo.net/static/cdn/apiDocumentation.pdf',
+                'function' => 'createAlphaPoDeposit',
             ],
             [
                 'name' => 'AlphaPo',

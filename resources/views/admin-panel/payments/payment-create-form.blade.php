@@ -28,6 +28,12 @@
                     @error('link')<span class="text-danger fw-bold">{{ $message }}</span> @enderror
                 </div>
 
+                <div class="row mb-3">
+                    <label for="function">Input the payment's function</label>
+                    <input name="function" type="text" value="{{ old('function') }}" class="form-control @error('function') is-invalid @enderror">
+                    @error('function')<span class="text-danger fw-bold">{{ $message }}</span> @enderror
+                </div>
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group mt-3">

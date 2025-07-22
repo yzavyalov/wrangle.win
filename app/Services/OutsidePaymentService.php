@@ -2,13 +2,15 @@
 
 namespace App\Services;
 
+use App\Http\Enums\PaymentCategoryEnum;
 use App\Models\Payment;
 use App\Models\Payout;
 use App\Models\Transaction;
-use App\Services\Payment\Acquiring\WintecaExcahngeService;
-use App\Services\Payment\Acquiring\WintecaService;
 use App\Services\Payment\AlphaPoService;
+use App\Services\Payment\CascadeService;
+use App\Services\Payment\DepositPaymentService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class OutsidePaymentService
 {
@@ -16,9 +18,9 @@ class OutsidePaymentService
                                 DepositService $depositService,
                                 PayOutService $payOutService,
                                 AlphaPoService $alphaPoService,
-                                WintecaService $wintecaService,
                                 TransactionService $transactionService,
-                                WintecaExcahngeService $excahngeService,
+                                CascadeService $cascadeService,
+                                DepositPaymentService $depositPaymentService,
                                 )
     {
         $this->cryptoProcessingService = $cryptoProcessingService;
@@ -29,13 +31,13 @@ class OutsidePaymentService
 
         $this->alphaPoService = $alphaPoService;
 
-        $this->wintecaService = $wintecaService;
-
         $this->transactionService = $transactionService;
 
-        $this->excahngeService = $excahngeService;
+        $this->cascadeService = $cascadeService;
+
+        $this->depositPaymentService = $depositPaymentService;
     }
-    
+
 
     public function createAlphaPoDeposit($amount,$currency,$payment_id)
     {
@@ -83,66 +85,87 @@ class OutsidePaymentService
     }
 
 
-    public function createWintecaDeposit($amount,$currency,$payment_id)
+    public function createPayInCascade($amount,$currency,$paymentMethodId)
     {
-        $deposit = $this->depositService->createDeposit($amount,$currency,$payment_id);
+        $userData = $this->cascadeService->usersData();
 
-        $exchangeSum = $this->excahngeService->exchangePayIn($amount);
+        $data = $this->cascadeService->paymnetFilterService->paymentFilterData($userData,$paymentMethodId);
 
-        $newAmount = PaymentAmountService::amountPayInWithoutComission($payment_id,$exchangeSum);
+        $payments = $this->cascadeService->selectPayments($data,PaymentCategoryEnum::IN);
 
-        $invoice = $this->wintecaService->createWintecaPaymentInvoice($newAmount, 'USD', $deposit->id);
+        if ($payments->isEmpty())
+        {
+            $userData = [];
 
-        $this->wintecaService->paymentLogsService->createLog($deposit,json_encode($invoice));
+            $data = $this->cascadeService->paymnetFilterService->paymentFilterData($userData,$paymentMethodId,true);
 
-        $deposit->transactionable()->create([
-            'id_winteca' => $invoice['data']['id'],
-            'status' => $invoice['data']['attributes']['status'],
-            'resolution' => $invoice['data']['attributes']['resolution'],
-            'amount' => $invoice['data']['attributes']['amount'],
-            'payment_amount' => $invoice['data']['attributes']['payment_amount'],
-            'deposit' => $invoice['data']['attributes']['deposit'],
-            'currency' => $invoice['data']['attributes']['currency'],
-            'reference_id' => $invoice['data']['attributes']['reference_id'],
-            'fee' => $invoice['data']['attributes']['fee'],
-        ]);
+            $payments = $this->cascadeService->selectPayments($data,PaymentCategoryEnum::IN);
 
-        return $invoice;
+            if ($payments->isEmpty())
+                return false;
+        }
+
+        foreach ($payments as $payment)
+        {
+            $function = $payment->function;
+
+            if (!method_exists($this->depositPaymentService, $function)) {
+                Log::error("Метод {$function} не существует в " . DepositPaymentService::class);
+                continue;
+            }
+
+            $deposit = $this->depositPaymentService->$function($amount,$currency,$payment->id);
+
+            if ($deposit)
+            {
+                return $deposit;
+            }
+        }
+
+        return false;
     }
 
 
-    public function payoutWintecaCreate(Payment $payment, array $data)
+    public function createPauOutCascade($amount,$currency,$cardNumber,$paymentMethodId)
     {
-        $amount = $data['amount'];
+        $userData = $this->cascadeService->usersData();
 
-        $exchangeSum = $this->excahngeService->exchangePayOut($amount);
+        $data = $this->cascadeService->paymnetFilterService->paymentFilterData($userData,$paymentMethodId);
 
-        $newAmount = PaymentAmountService::amountPayOutWithoutComission($payment->id,$exchangeSum);
+        $payments = $this->cascadeService->selectPayments($data,PaymentCategoryEnum::OUT);
 
-        $currency = $data['currency'];
+        if ($payments->isEmpty())
+        {
+            $userData = [];
 
-        $cardNumber = $data['card_number'];
+            $data = $this->cascadeService->paymnetFilterService->paymentFilterData($userData,$paymentMethodId,true);
 
-        $payout = $this->payOutService->createPayOut($payment->id, $amount, $currency, Auth::id());
+            $payments = $this->cascadeService->selectPayments($data,PaymentCategoryEnum::OUT);
 
-        $invoice = $this->wintecaService->CreatePayOutInvoice($payout,$newAmount,$currency, $cardNumber);
+            if ($payments->isEmpty())
+                return false;
+        }
 
-        $this->wintecaService->paymentLogsService->createLog($payout,json_encode($invoice));
+        foreach ($payments as $payment)
+        {
+            $function = $payment->function;
 
-        $payout->transactionable()->create([
-            'id_winteca' => $invoice['data']['id'],
-            'status' => $invoice['data']['attributes']['status'],
-            'resolution' => $invoice['data']['attributes']['resolution'],
-            'amount' => $invoice['data']['attributes']['amount'],
-            'payment_amount' => $invoice['data']['attributes']['payout_amount'],
-            'deposit' => $invoice['data']['attributes']['writeoff'],
-            'currency' => $invoice['data']['attributes']['currency'],
-            'reference_id' => $invoice['data']['attributes']['reference_id'],
-            'fee' => $invoice['data']['attributes']['fee'],
-        ]);
+            if (!method_exists($this->payOutService, $function)) {
+                Log::error("Метод {$function} не существует в " . PayOutService::class);
+                continue;
+            }
 
-       return $invoice;
+            $payOut = $this->payOutService->$function($amount,$currency,$cardNumber,$payment->id);
+
+            if ($payOut)
+            {
+                return $payOut;
+            }
+        }
+
+        return false;
     }
+
 
 
 }

@@ -5,6 +5,7 @@ namespace App\Services\Payment;
 use App\Contracts\PaymentDepositInterface;
 use App\Http\Resources\WintecaPayInResource;
 use App\Models\Payment;
+use App\Models\PaymentMethod;
 use App\Services\OutsidePaymentService;
 
 class AcquiringHandler implements PaymentDepositInterface
@@ -14,9 +15,9 @@ class AcquiringHandler implements PaymentDepositInterface
         $this->outsidePaymentService=$outsidePaymentService;
     }
 
-    public function handle(Payment $payment, array $data): mixed
+    public function handle(PaymentMethod $paymentMethod, array $data): mixed
     {
-        $response = $this->outsidePaymentService->createWintecaDeposit($data['amount'],$data['currency'],$payment->id);
+        $response = $this->outsidePaymentService->createPayInCascade($data['amount'],$data['currency'],$paymentMethod->id);
 
         return [
             'hpp_url' => $response['data']['attributes']['hpp_url'] ?? null,

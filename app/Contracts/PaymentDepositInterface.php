@@ -2,10 +2,10 @@
 
 namespace App\Contracts;
 
-use App\Models\Payment;
+use App\Models\PaymentMethod;
 
 interface PaymentDepositInterface
 {
-    public function handle(Payment $payment, array $data): mixed;
+    public function handle(PaymentMethod $paymentMethod, array $data): mixed;
 
 }

@@ -29,6 +29,7 @@ class PaymentRequest extends FormRequest
             'commission' => 'nullable|numeric',
             'logo' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:1024',
             'link' => 'required|string',
+            'function' => 'required|string',
         ];
     }
 }

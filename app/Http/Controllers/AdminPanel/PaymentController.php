@@ -53,9 +53,9 @@ class PaymentController extends Controller
         return redirect()->route('all-payments');
     }
 
-    public function delPaymnet($id)
+    public function delPayment($id)
     {
-        $this->paymentService->delBet($id);
+        $this->paymentService->delPayment($id);
 
         return redirect()->route('all-payments');
     }

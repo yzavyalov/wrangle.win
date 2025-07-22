@@ -38,6 +38,8 @@ class PaymentService
 
         $payment->link = $validateData['link'];
 
+        $payment->function = $validateData['function'];
+
         $payment->save();
 
         return $payment;
@@ -70,7 +72,7 @@ class PaymentService
         return $payment;
     }
 
-    public function delBet($id)
+    public function delPayment($id)
     {
         $payment = Payment::query()->find($id);
 

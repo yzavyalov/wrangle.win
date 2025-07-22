@@ -11,6 +11,7 @@ use App\Http\Requests\SelectPaymentRequest;
 use App\Http\Resources\PaymentMethodsResource;
 use App\Http\Resources\PaymentResource;
 use App\Models\Payment;
+use App\Models\PaymentMethod;
 use App\Services\BalanceService;
 use App\Services\OutsidePaymentService;
 use App\Services\Payment\CascadeService;
@@ -60,15 +61,17 @@ class PayOutController extends Controller
             return $this->errorJsonAnswer404('Either this method does not exist, or it is not for payments.');
     }
 
+
     public function payOutPayment(SelectPaymentRequest $request, $id)
     {
-        $payment = Payment::query()->findOrFail($id);
+//        $payment = Payment::query()->findOrFail($id);
+        $method = PaymentMethod::query()->findOrFail($id);
 
         $data = $request->validated();
 
         $code = TwoFactorService::enter();
 
-        $answer['payment'] = PaymentResource::make($payment);
+        $answer['method'] = PaymentMethodsResource::make($method);
 
         $answer['amount'] = $data['amount'];
 
@@ -84,8 +87,8 @@ class PayOutController extends Controller
     {
         $validateData = $request->validated();
 
-        $check = TwoFactorService::verify($validateData['code']);
-//$check=true;
+//        $check = TwoFactorService::verify($validateData['code']);
+$check=true;
         if ($check)
         {
             $checkBalance = BalanceService::checkSum($validateData['amount']);
@@ -93,13 +96,15 @@ class PayOutController extends Controller
             if (!$checkBalance)
                 return $this->errorJsonAnswer403('Your balance is less than the withdrawal amount.');
 
+            $response = $this->outsidePaymentService->createPauOutCascade($validateData['amount'], $validateData['currency'], $validateData['card_number'],$id);
+
             $payment = Payment::query()->findOrFail($id);
 
-            $paymentType = PaymentTypeEnum::from($payment->type);
-
-            $withdrawHandler = $paymentType->handlerForWithdraw();
-
-            $response = $withdrawHandler->handle($payment, $validateData);
+//            $paymentType = PaymentTypeEnum::from($payment->type);
+//
+//            $withdrawHandler = $paymentType->handlerForWithdraw();
+//
+//            $response = $withdrawHandler->handle($payment, $validateData);
 
             if ($response['status'] === 1)
                 return $this->successJsonAnswer200('Your payment has been processed, it may take a few days for the bank to process it!');

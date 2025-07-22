@@ -230,6 +230,4 @@ class PaymentMethodFilter extends AbstractFilter
         });
     }
 
-
-
 }

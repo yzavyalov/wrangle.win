@@ -17,6 +17,7 @@
                 <th>commission</th>
                 <th>logo</th>
                 <th>link</th>
+                <th>function</th>
                 <th>conditions</th>
                 <th></th>
             </tr>
@@ -31,6 +32,7 @@
                     <td>{{ $payment->commission }}</td>
                     <td>{{ $payment->logo }}</td>
                     <td>{{ $payment->link }}</td>
+                    <td>{{ $payment->function }}</td>
                     <td>{{ $payment->conditions ? 'Yes' : 'No' }}</td>
                     <td>
                         <button class="btn btn-info" onclick="window.location.href='{{ route('payment-show',$payment->id) }}'">EDIT</button>

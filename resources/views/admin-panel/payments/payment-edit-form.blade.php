@@ -25,6 +25,12 @@
                     <input name="link" type="text" value=" {{ $payment->link }}" class="form-control @error('link') is-invalid @enderror">
                     @error('link')<span class="text-danger fw-bold">{{ $message }}</span> @enderror
                 </div>
+                <div class="row">
+                    <label for="function">Input the payment's function</label>
+                    <input name="function" type="text" value=" {{ $payment->function }}" class="form-control @error('function') is-invalid @enderror">
+                    @error('function')<span class="text-danger fw-bold">{{ $message }}</span> @enderror
+                </div>
+
                 <div class="col-4">
                     <div class="form-group mt-3">
                         <label for="type" class="form-label">Select Type</label>

@@ -162,7 +162,7 @@ Route::middleware('moderator')->prefix('/admin-panel')->group(function (){
     Route::post('/store-payments',[PaymentController::class,'store'])->name('store-payment');
     Route::get('/show-payment/{id}',[PaymentController::class,'showEditForm'])->name('payment-show');
     Route::put('/update-payment/{id}',[PaymentController::class,'updatePaymnet'])->name('payment-update');
-    Route::get('/del-payment/{id}',[PaymentController::class,'delPaymnet'])->name('payment-del');
+    Route::get('/del-payment/{id}',[PaymentController::class,'delPayment'])->name('payment-del');
     Route::get('/payment/{id}/conditions/create',[PaymentTrustConditionsController::class,'create'])->name('form-payment-conditions');
     Route::post('/payment/conditions/save',[PaymentTrustConditionsController::class,'save'])->name('payment-conditions-save');
     Route::get('/payment/{id}/conditions/edit',[PaymentTrustConditionsController::class,'edit'])->name('payment-conditions-edit');

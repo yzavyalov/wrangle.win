@@ -23,7 +23,7 @@ class SelectPaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'currency' => 'required|string|min:2|max:7',
+            'currency' => 'nullable|string|min:2|max:7',
             'amount' => 'required|numeric',
         ];
     }

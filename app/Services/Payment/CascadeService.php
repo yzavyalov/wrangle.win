@@ -4,8 +4,11 @@ namespace App\Services\Payment;
 
 use App\Http\Enums\PaymentCategoryEnum;
 use App\Http\Enums\PaymentTypeEnum;
+use App\Http\Filters\PaymentFilter;
 use App\Http\Filters\PaymentMethodFilter;
+use App\Models\Payment;
 use App\Models\PaymentMethod;
+use App\Models\PaymentsTrustCondition;
 use App\Models\Payout;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -13,18 +16,12 @@ use mysql_xdevapi\Collection;
 
 class CascadeService
 {
-    public function checkUserPaymentsIn($type = null,)
+    public function __construct(PaymentFilterService $filterService)
     {
-        $data = $this->usersData();
-
-        $data['type'] = $type;
-        $data['category'] = PaymentCategoryEnum::IN;
-        $data['ftd'] = null;
-        $data['ftd_limits'] = null;
-        $data['std'] = null;
-        $data['std_limits'] = null;
+        $this->paymnetFilterService = $filterService;
     }
-    public function selectPayments(array $data, $category)
+
+    public function selectMethods(array $data, $category)
     {
         $filter = app()->make(PaymentMethodFilter::class, ['queryParams' => array_filter($data)]);
 
@@ -35,7 +32,18 @@ class CascadeService
         return $methods;
     }
 
-    protected function usersData()
+    public function selectPayments(array $data, $category)
+    {
+        $filter = app()->make(PaymentFilter::class, ['queryParams' => array_filter($data)]);
+
+        $payments= Payment::filter($filter)
+            ->where('category',$category)
+            ->get();
+
+        return $payments;
+    }
+
+    public function usersData()
     {
         $user = Auth::user();
 
@@ -50,6 +58,10 @@ class CascadeService
         return $data;
     }
 
+    public function cascade(Collection $payments)
+    {
+        dd($payments);
+    }
 
     protected function checkTrust()
     {
@@ -77,7 +89,7 @@ class CascadeService
     {
         $data = $this->checkTrust();
 
-        $methods = $this->selectPayments($data,PaymentCategoryEnum::IN);
+        $methods = $this->selectMethods($data,PaymentCategoryEnum::IN);
 
         return $methods;
     }
@@ -88,7 +100,7 @@ class CascadeService
 
         $data['id'] = $id;
 
-        $method = $this->selectPayments($data,PaymentCategoryEnum::IN);
+        $method = $this->selectMethods($data,PaymentCategoryEnum::IN);
 
         return $method;
     }

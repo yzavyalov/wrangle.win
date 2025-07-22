@@ -24,7 +24,9 @@ class PaymentMethodsResource extends JsonResource
             'category_name' => PaymentCategoryEnum::from($this->category)->label(),
             'title' => $this->title,
             'logo' => $this->logo,
-            'payments' => PaymentResource::collection($this->payments),
+            'rate' => $this->payments->max('commission'),
+            'fix_fee' => $this->payments->max('fix_fee'),
+//            'payments' => PaymentResource::collection($this->payments),
         ];
     }
 }

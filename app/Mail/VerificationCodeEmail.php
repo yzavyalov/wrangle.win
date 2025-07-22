@@ -9,9 +9,11 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class VerificationCodeEmail extends Mailable
+class VerificationCodeEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
+
+    public string $code;
 
     /**
      * Create a new message instance.

@@ -12,19 +12,22 @@ use App\Models\Payment;
 use App\Models\PaymentMethod;
 use App\Services\OutsidePaymentService;
 use App\Services\Payment\CascadeService;
+use App\Services\Payment\FirstDepositService;
 use Illuminate\Http\Request;
 
 class PaymnetsController extends Controller
 {
-    public function __construct(CascadeService $cascadeService, OutsidePaymentService $outsidePaymentService)
+    public function __construct(OutsidePaymentService $outsidePaymentService,
+                                FirstDepositService $firstDepositService)
     {
-        $this->cascadeService = $cascadeService;
-
         $this->outsidePaymentService = $outsidePaymentService;
+
+        $this->firstDepositService = $firstDepositService;
     }
+
     public function allInPayments()
     {
-        $methods = $this->cascadeService->methods();
+        $methods = $this->outsidePaymentService->cascadeService->methods();
 
         return PaymentMethodsResource::collection($methods);
     }
@@ -33,7 +36,7 @@ class PaymnetsController extends Controller
 
     public function showMethod($id)
     {
-        $method = $this->cascadeService->showMethod($id);
+        $method = $this->outsidePaymentService->cascadeService->showMethod($id);
 
         foreach ($method as $item)
         {
@@ -54,14 +57,13 @@ class PaymnetsController extends Controller
     {
         $data = $request->validated();
 
-        $payment = Payment::query()->findOrFail($id);
+//        $this->firstDepositService->checkFirstDeposit();
 
-        $type = PaymentTypeEnum::from($payment->type);
+        $result = $this->outsidePaymentService->createPayInCascade($data['amount'],$data['currency'],$id);
 
-        $handler = $type->handler();
-
-        $result = $handler->handle($payment, $data);
-
-        return $result;
+        if ($result)
+            return $this->successJsonAnswer200('Success',$result);
+        else
+            return $this->errorJsonAnswer403('We were unable to create a payment, please contact our technical support.');
     }
 }
