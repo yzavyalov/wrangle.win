@@ -35,12 +35,12 @@ class AdminUserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'password' => bcrypt('Admin3#'),
             ],
-            [
-                'name' => 'Roman',
-                'email' => 'Kostromichov.roman@gmail.com',
-                'email_verified_at' => now(),
-                'password' => bcrypt('Admin4!'),
-            ],
+//            [
+//                'name' => 'Roman',
+//                'email' => 'Kostromichov.roman@gmail.com',
+//                'email_verified_at' => now(),
+//                'password' => bcrypt('Admin4!'),
+//            ],
         ];
 
         foreach ($userData as $user)

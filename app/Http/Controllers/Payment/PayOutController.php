@@ -98,18 +98,10 @@ $check=true;
 
             $response = $this->outsidePaymentService->createPauOutCascade($validateData['amount'], $validateData['currency'], $validateData['card_number'],$id);
 
-            $payment = Payment::query()->findOrFail($id);
-
-//            $paymentType = PaymentTypeEnum::from($payment->type);
-//
-//            $withdrawHandler = $paymentType->handlerForWithdraw();
-//
-//            $response = $withdrawHandler->handle($payment, $validateData);
-
-            if ($response['status'] === 1)
+            if($response)
                 return $this->successJsonAnswer200('Your payment has been processed, it may take a few days for the bank to process it!');
             else
-                return $this->errorJsonAnswer400('Withdrawal of money failed, please check with technical support');
+                return $this->errorJsonAnswer400('Withdrawal of money failed, please select another method or check with technical support');
         }
         else
         {

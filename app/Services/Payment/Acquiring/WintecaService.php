@@ -120,28 +120,42 @@ class WintecaService
     }
 
 
-    protected function callWintecaApiPrivatPostPayOut(array $params, string $endpoint)
+    protected function callWintecaApiPrivatPostPayOut(array $params, string $endpoint)  // справить здесь
     {
-        $url = "{$this->baseUrl}/{$endpoint}";
+       try {
+            $url = "{$this->baseUrl}/{$endpoint}";
 
-        $payload = [
-            'data' => [
-                'type' => 'payout-invoice',
-                'attributes' => $params,
-            ],
-        ];
+            $payload = [
+                'data' => [
+                    'type' => 'payout-invoice',
+                    'attributes' => $params,
+                ],
+            ];
 
-        $response = Http::withHeaders([
-            'Accept' => '*/*',
-            'Authorization' => $this->authorization_www_pay_out,
-            'Content-Type' => 'application/json',
-        ])->post($url, $payload); // Laravel сам преобразует $params в JSON
+            $response = Http::withHeaders([
+                'Accept' => '*/*',
+                'Authorization' => $this->authorization,
+                'Content-Type' => 'application/json',
+            ])->post($url, $payload);
 
-        if (!$response->successful()) {
-            throw new \Exception("Winteca API error: " . $response->body());
+            // Проверка на HTTP-ошибку
+            if (!$response->successful()) {
+                return false;
+            }
+
+            $json = $response->json();
+
+            // Проверка на наличие ошибки в теле (например, {"errors": [...]})
+            if (isset($json['errors'])) {
+                return false;
+            }
+
+            return $json;
+        } catch (\Throwable $e) {
+            // Логируем ошибку при необходимости
+            Log::error("Winteca API error: " . $e->getMessage());
+            return false;
         }
-
-        return $response->json(); // Возвращаем результат как массив
     }
 
     public function CreatePayOutInvoice($payout,$amount,$currency,$cardNumber)

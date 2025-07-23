@@ -10,9 +10,12 @@ use Illuminate\Support\Facades\Http;
 
 class CryptoProcessingService
 {
+    public $base_currency;
     public function __construct(PaymentLogsService $paymentLogsService)
     {
         $this->paymentLogsService = $paymentLogsService;
+
+        $this->base_currency = env('CURRENT_CURRENCY');
     }
 
 
@@ -181,7 +184,7 @@ class CryptoProcessingService
         $params = [
             'foreign_id' =>  Auth::id(),
             'amount' => $amount,
-            'currency' => env('CURRENT_CURRENCY'),
+            'currency' => $this->base_currency,
             'convert_to' => $currency,
             'address' => $address,
             'tag' => $tag,
