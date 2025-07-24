@@ -24,5 +24,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PaymentAlphaPoSeeder::class);
         $this->call(PaymentWintecaSeeder::class);
         $this->call(PaymentMethodSeeder::class);
+        $this->call(TestAcсountSeeder::class);
     }
 }

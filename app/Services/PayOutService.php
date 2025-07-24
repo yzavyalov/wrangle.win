@@ -3,9 +3,7 @@
 namespace App\Services;
 
 use App\Http\Enums\DepositStatusEnum;
-use App\Models\Payment;
 use App\Models\Payout;
-use App\Models\Transaction;
 use App\Models\User;
 use App\Services\Payment\Acquiring\WintecaExcahngeService;
 use App\Services\Payment\Acquiring\WintecaService;

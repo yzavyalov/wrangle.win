@@ -30,6 +30,7 @@ class PaymentWintecaSeeder extends Seeder
                 'fix_fee' => 0.5,
                 'logo' => 'logo.png',
                 'link' => 'https://portal.winteca.com/login',
+                'function' => 'createWintecaPayOut',
             ],
         ];
 

@@ -23,18 +23,6 @@ class PaymentMethodSeeder extends Seeder
                 'logo' => '',
             ],
             [
-                'type' => PaymentTypeEnum::ACQUIRING->value,
-                'category' => PaymentCategoryEnum::IN->value,
-                'title' => 'Visa',
-                'logo' => '',
-            ],
-            [
-                'type' => PaymentTypeEnum::ACQUIRING->value,
-                'category' => PaymentCategoryEnum::IN->value,
-                'title' => 'MasterCard',
-                'logo' => '',
-            ],
-            [
                 'type' => PaymentTypeEnum::CRYPTO->value,
                 'category' => PaymentCategoryEnum::IN->value,
                 'title' => 'Bitcoin',
@@ -50,18 +38,6 @@ class PaymentMethodSeeder extends Seeder
                 'type' => PaymentTypeEnum::ACQUIRING->value,
                 'category' => PaymentCategoryEnum::OUT->value,
                 'title' => 'Bank cards',
-                'logo' => '',
-            ],
-            [
-                'type' => PaymentTypeEnum::ACQUIRING->value,
-                'category' => PaymentCategoryEnum::OUT->value,
-                'title' => 'Visa',
-                'logo' => '',
-            ],
-            [
-                'type' => PaymentTypeEnum::ACQUIRING->value,
-                'category' => PaymentCategoryEnum::OUT->value,
-                'title' => 'MasterCard',
                 'logo' => '',
             ],
             [
@@ -90,21 +66,21 @@ class PaymentMethodSeeder extends Seeder
         }
 
         // 2. Связка с существующими платежами по type и category
-        $payments = Payment::all();
-
-        foreach ($payments as $payment) {
-            $matchingMethods = PaymentMethod::where('type', $payment->type)
-                ->where('category', $payment->category)
-                ->get();
-
-            foreach ($matchingMethods as $index => $method) {
-                $payment->methods()->syncWithoutDetaching([
-                    $method->id => [
-                        'FTD' => 1,
-                        'order_by' => $index + 1, // индекс начинается с 0, добавляем 1
-                    ],
-                ]);
-            }
-        }
+//        $payments = Payment::all();
+//
+//        foreach ($payments as $payment) {
+//            $matchingMethods = PaymentMethod::where('type', $payment->type)
+//                ->where('category', $payment->category)
+//                ->get();
+//
+//            foreach ($matchingMethods as $index => $method) {
+//                $payment->methods()->syncWithoutDetaching([
+//                    $method->id => [
+//                        'FTD' => 1,
+//                        'order_by' => $index + 1, // индекс начинается с 0, добавляем 1
+//                    ],
+//                ]);
+//            }
+//        }
     }
 }
