@@ -24,6 +24,7 @@ class PaymentFactory extends Factory
             'fix_fee' => fake()->randomFloat(2,0,10),
             'logo' => fake()->imageUrl(200, 200, 'business', true, 'Logo'),
             'link' => fake()->url(),
+            'function' => fake()->text(50),
         ];
     }
 }

@@ -16,6 +16,7 @@ class DepositPaymentService
                                 WintecaService $wintecaService,
                                 WintecaExcahngeService $excahngeService,
                                 AlphaPoExcechangeService $alphaPoExcechangeService,
+                                PaymentAnswerService $paymentAnswerService,
     )
     {
         $this->cryptoProcessingService = $cryptoProcessingService;
@@ -27,6 +28,8 @@ class DepositPaymentService
         $this->wintecaService = $wintecaService;
 
         $this->excahngeService = $excahngeService;
+
+        $this->paymentAnswerService = $paymentAnswerService;
 
         $this->baseCurrency = env('CURRENT_CURRENCY');
     }
@@ -57,6 +60,7 @@ class DepositPaymentService
             ]);
         }
 
+        $invoice = $this->paymentAnswerService->wintecaPayInAnswer($invoice);
 
         return $invoice;
     }

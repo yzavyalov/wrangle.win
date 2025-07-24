@@ -120,9 +120,9 @@ Route::middleware(['auth:sanctum', 'baduser'])->group(function () {
     Route::get('/payments/in/method/{id}', [PaymnetsController::class, 'showMethod']);
     Route::get('/payments/in/deposit/{id}', [PaymnetsController::class, 'deposit']);
 
-    Route::post('/payment/in/cryptoprocessing/deposit', [DepositController::class, 'alphaPoDeposit']);
-    Route::post('/payment/in/cryptoprocessing/new-deposit-adres', [DepositController::class, 'alphaNewDepositAdres']);
-    Route::get('/payment/deposit/cryptoprocessing/invoice/create', [DepositController::class, 'cryptoInvoiceCreate']);
+//    Route::post('/payment/in/cryptoprocessing/deposit', [DepositController::class, 'alphaPoDeposit']);
+//    Route::post('/payment/in/cryptoprocessing/new-deposit-adres', [DepositController::class, 'alphaNewDepositAdres']);
+//    Route::get('/payment/deposit/cryptoprocessing/invoice/create', [DepositController::class, 'cryptoInvoiceCreate']);
 
     Route::get('/payment/deposit/cryptoprocessing/currency-list', [AlphaPoController::class, 'cryptoList']);
     Route::get('/payment/deposit/cryptoprocessing/pare', [AlphaPoController::class, 'pare']);
