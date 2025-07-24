@@ -60,7 +60,7 @@ class PaymnetsController extends Controller
 //        $this->firstDepositService->checkFirstDeposit();
 
         $result = $this->outsidePaymentService->createPayInCascade($data['amount'],$data['currency'],$id);
-        return $result;
+        return $this->successJsonAnswer200('Message', $result);
 //        if ($result)
 //            return $this->successJsonAnswer200('Success',$result);
 //        else

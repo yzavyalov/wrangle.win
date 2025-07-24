@@ -17,7 +17,7 @@ class UserResource extends JsonResource
         return [
             'name' => $this->name,
             'email' => $this->email,
-//            'token' => $this->createToken('auth-token')->plainTextToken,
+            'token' => $this->createToken('auth-token')->plainTextToken,
             'balance' => BalanceResource::make($this->balance),
         ];
     }
