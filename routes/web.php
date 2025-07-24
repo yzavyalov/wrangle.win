@@ -134,6 +134,7 @@ Route::middleware('moderator')->prefix('/admin-panel')->group(function (){
     Route::put('/bet-edit/{id}',[BetController::class,'update'])->name('bet-edit');
     Route::get('/bet-del/{id}',[BetController::class,'del'])->name('bet-del');
     Route::get('/bet-create',[BetController::class,'create'])->name('bet-create');
+    Route::post('/bet-store',[BetController::class,'store'])->name('bet-store');
     Route::get('/bet-select-form',[BetController::class,'selectForm'])->name('bet-select-form');
     Route::get('/bet-select',[BetController::class, 'select'])->name('bet-select');
     Route::get('/bets-and-bits',[BetController::class,'betsAndBits'])->name('bets-and-bits');
