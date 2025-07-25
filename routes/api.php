@@ -1,10 +1,7 @@
 <?php
 
 use App\Http\Controllers\AgeVerificationController;
-use App\Http\Controllers\Auth\EmailVerificationController;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
@@ -21,10 +18,10 @@ use App\Http\Controllers\Api\{BetCategoryController,
     UserDataController};
 use App\Http\Controllers\Payment\{
     AlphaPoController,
-    DepositController,
     PayOutController,
     WintecaController
 };
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,7 +87,7 @@ Route::get('/winteca/payin/pending', [WintecaController::class, 'payInPending'])
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth:sanctum', 'baduser'])->group(function () {
+Route::middleware([EnsureFrontendRequestsAreStateful::class,'auth:sanctum', 'baduser'])->group(function () {
     Route::get('/user', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('web');
 

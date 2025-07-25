@@ -33,6 +33,8 @@ use App\Models\Bet;
 */
 
 
+Auth::routes();
+
 Route::fallback(function () {
     if(Auth()->id()==null)
 
@@ -179,3 +181,5 @@ Route::middleware('moderator')->prefix('/admin-panel')->group(function (){
 
     Route::get('/cascade-setup',[PaymentMethodsController::class,'cascadeSet'])->name('cascade-setup');
 });
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
