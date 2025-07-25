@@ -3,36 +3,16 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AlphaRatesRequest;
-use App\Services\OutsidePaymentService;
 use App\Services\Payment\AlphaPoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class AlphaPoController extends Controller
 {
-    public function __construct(OutsidePaymentService $outsidePaymentService, AlphaPoService $alphaPoService)
-    {
-        $this->outsidePaymentService = $outsidePaymentService;
 
+    public function __construct(AlphaPoService $alphaPoService)
+    {
         $this->alphaPoService = $alphaPoService;
-    }
-
-    public function cryptoList()
-    {
-        return $this->outsidePaymentService->cryptoProcessingService->currencyList();
-    }
-
-    public function pare()
-    {
-        return $this->outsidePaymentService->cryptoProcessingService->pare();
-    }
-
-    public function rates(AlphaRatesRequest $request)
-    {
-        $request = $request->validated();
-
-        return $this->outsidePaymentService->cryptoProcessingService->rates($request['currency_from'],$request['currency_to']);
     }
 
 
@@ -94,7 +74,6 @@ class AlphaPoController extends Controller
             $this->alphaPoService->getCallBackDeposit($data);
         elseif ($data['type'] == 'withdrawal')
             $this->alphaPoService->getCallBackWithdrawal($data);
-
 
 
         // Order::where('id', $data['order_id'])->update([...]);

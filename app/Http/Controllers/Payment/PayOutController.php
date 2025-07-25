@@ -28,21 +28,7 @@ class PayOutController extends Controller
 
         $this->cascadeService = $cascadeService;
     }
-
-    public function payoutCrypto(AlphaPoPayOutRequest $request)
-    {
-        $data = $request->validated();
-
-        $amount = $data['amount'];
-
-        $currency = $data['convert_to'];
-
-        $address = $data['address'];
-
-        $tag = $data['tag'] ?? null;
-
-        return $this->outsidePaymentService->createAlphaPoPayOut($amount, $currency, $address, $tag);
-    }
+    
 
     public function allOutPayments()
     {
