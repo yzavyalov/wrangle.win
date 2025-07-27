@@ -120,9 +120,9 @@ class WintecaService
     }
 
 
-    protected function callWintecaApiPrivatPostPayOut(array $params, string $endpoint)  // справить здесь
+    protected function callWintecaApiPrivatPostPayOut(array $params, string $endpoint)
     {
-       try {
+        try {
             $url = "{$this->baseUrl}/{$endpoint}";
 
             $payload = [
@@ -140,23 +140,32 @@ class WintecaService
 
             // Проверка на HTTP-ошибку
             if (!$response->successful()) {
-                return false;
+                return [
+                    'error' => "HTTP error {$response->status()}: " . $response->body()
+                ];
             }
 
             $json = $response->json();
 
-            // Проверка на наличие ошибки в теле (например, {"errors": [...]})
+            // Проверка на ошибки в теле ответа
             if (isset($json['errors'])) {
-                return false;
+                return [
+                    'error' => json_encode($json['errors'], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+                ];
             }
 
-            return $json;
+            return [
+                'response' => $json
+            ];
         } catch (\Throwable $e) {
-            // Логируем ошибку при необходимости
-            Log::error("Winteca API error: " . $e->getMessage());
-            return false;
+            Log::error("Winteca API exception: " . $e->getMessage());
+
+            return [
+                'error' => "Exception: " . $e->getMessage()
+            ];
         }
     }
+
 
     public function CreatePayOutInvoice($payout,$amount,$currency,$cardNumber)
     {

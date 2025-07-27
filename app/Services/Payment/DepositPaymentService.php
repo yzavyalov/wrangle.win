@@ -71,11 +71,13 @@ class DepositPaymentService
         $exchangeSum = $this->alphaPoExcechangeService->exchangeCrypto($amount,$currency);
 
         if (!$exchangeSum)
-            return null;
+            return $this->paymentAnswerService->AlphaPoPayInNotCurrencyAnswer();
         else
             $deposit = $this->depositService->createDeposit($exchangeSum, $this->baseCurrency, $payment_id);
 
-        return $this->cryptoProcessingService->createDeposit($deposit,$currency);
+        $responce = $this->cryptoProcessingService->createDeposit($deposit,$currency);
+
+        return $this->paymentAnswerService->AlphaPoPayInAnswer($responce, $amount, $currency);
     }
 
 }

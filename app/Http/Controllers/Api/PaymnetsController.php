@@ -57,9 +57,13 @@ class PaymnetsController extends Controller
     {
         $data = $request->validated();
 
+        if (PaymentMethod::query()->findOrFail($id)->category !== PaymentCategoryEnum::IN->value)
+            return $this->errorJsonAnswer400('incorrectly chosen method');
+
 //        $this->firstDepositService->checkFirstDeposit();
 
         $result = $this->outsidePaymentService->createPayInCascade($data['amount'],$data['currency'],$id);
+
         return $this->successJsonAnswer200('Message', $result);
 //        if ($result)
 //            return $this->successJsonAnswer200('Success',$result);

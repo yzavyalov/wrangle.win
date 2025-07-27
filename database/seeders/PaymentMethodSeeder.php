@@ -65,22 +65,22 @@ class PaymentMethodSeeder extends Seeder
             );
         }
 
-        // 2. Связка с существующими платежами по type и category
-//        $payments = Payment::all();
-//
-//        foreach ($payments as $payment) {
-//            $matchingMethods = PaymentMethod::where('type', $payment->type)
-//                ->where('category', $payment->category)
-//                ->get();
-//
-//            foreach ($matchingMethods as $index => $method) {
-//                $payment->methods()->syncWithoutDetaching([
-//                    $method->id => [
-//                        'FTD' => 1,
-//                        'order_by' => $index + 1, // индекс начинается с 0, добавляем 1
-//                    ],
-//                ]);
-//            }
-//        }
+//         2. Связка с существующими платежами по type и category
+        $payments = Payment::all();
+
+        foreach ($payments as $payment) {
+            $matchingMethods = PaymentMethod::where('type', $payment->type)
+                ->where('category', $payment->category)
+                ->get();
+
+            foreach ($matchingMethods as $index => $method) {
+                $payment->methods()->syncWithoutDetaching([
+                    $method->id => [
+                        'FTD' => 1,
+                        'order_by' => $index + 1, // индекс начинается с 0, добавляем 1
+                    ],
+                ]);
+            }
+        }
     }
 }
