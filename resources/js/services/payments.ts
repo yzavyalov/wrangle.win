@@ -1,5 +1,5 @@
 import { http } from "@/api/http";
-import { PAYMENTS } from "@/api/enpoints";
+import { PAYMENTS, TRANSACTIONS } from "@/api/enpoints";
 import { notifyError } from "@/helpers/notify";
 import { GetOutPaymentCodePayload, CreateWidrawalPayload, ImportMetaEnv, ImportMeta } from "@/types/payments";
 
@@ -56,6 +56,16 @@ export const createWidrawal = async (payload: CreateWidrawalPayload) => {
     console.log(res, "res - createWithdrawal");
 
     return res?.data?.data;
+  })
+  .catch(e => notifyError(e.message));
+};
+
+export const getMethodsLogo = async () => {
+  return await http.get(TRANSACTIONS.METHODS_LOGO)
+  .then(res => {
+    console.log(res, "res - getMethodsLogo");
+
+    return res?.data;
   })
   .catch(e => notifyError(e.message));
 };

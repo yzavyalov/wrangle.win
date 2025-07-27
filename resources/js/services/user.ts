@@ -179,3 +179,15 @@ export const forgotUserPassword = async (payload: ForgotUserPassword) => {
   });
 }
 
+export const getCSRFToken = async () => {
+
+  return await http.get(AUTH.CSRF_TOKEN)
+  .then(res => {
+    console.log(res, "res - getCSRFToken");
+    return res.data.data;
+  })
+  .catch(e => {
+    notifyWarning(e?.response?.data?.message || e?.message);
+    console.error(e?.response?.data?.message || e?.message);
+  });
+}

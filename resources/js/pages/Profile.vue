@@ -18,6 +18,8 @@ import { notifySuccess, notifyWarning } from "@/helpers/notify";
 import { useHistory } from "@/composables/useHistory";
 import { useUser } from "@/composables/useUser";
 import { useLoading } from "@/composables/useLoading";
+import { getMethodsLogo } from "@/services/payments";
+import { getCSRFToken } from "@/services/user";
 
 const TAB_KEY = 'tab';
 
@@ -40,6 +42,8 @@ const { userBalanceWithCurrency, currentUser, userBalance } = useUser();
 const { isLoading, loadingStart, loadingStop } = useLoading();
 
 const activeTab = ref(false);
+
+const methodsLogo = ref([]);
 
 const dynamicProfileTab = computed(() => {
   if (!activeTab.value?.id) { return null }
@@ -81,6 +85,27 @@ const tabInit = () => {
   }
 }
 
+const fetchMethodsLogo = async () => {
+  const res = await getMethodsLogo();
+  console.log(res, "res - fetchMethodsLogo");
+  methodsLogo.value = res;
+  console.log(methodsLogo.value, "methodsLogo.value");
+
+  if (methodsLogo.value[0]?.length) { return }
+
+  const testLogo = [
+    'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
+    'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
+    'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
+    'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
+    'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
+    'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
+  ]
+
+  methodsLogo.value = testLogo;
+  console.log(methodsLogo.value, "methodsLogo.value");
+}
+
 onBeforeMount(() => {
   tabInit();
 })
@@ -90,6 +115,8 @@ onMounted(() => {
 
   fetchOwnBets();
   fetchFavoriteBets();
+
+  fetchMethodsLogo();
 })
 
 </script>
@@ -162,6 +189,13 @@ onMounted(() => {
           >
             {{ tab.name }}
           </ButtonBase>
+
+          <ul v-if="methodsLogo?.length" class="profile__methods">
+            <li v-for="logo in methodsLogo" :key="logo" class="profile__methods--item">
+              <img :src="logo" alt="logo">
+            </li>
+          </ul>
+
         </div>
       </div>
     </PageWrapperMain>
@@ -329,6 +363,23 @@ onMounted(() => {
   &__footer {
     position: relative;
     z-index: 1;
+  }
+
+  &__methods {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    &--item {
+      max-width: 60px;
+      max-height: 40px;
+
+      img {
+        width: 100%;
+      }
+    }
   }
 }
 </style>
