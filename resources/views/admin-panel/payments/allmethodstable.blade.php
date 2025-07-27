@@ -14,6 +14,7 @@
                 <th>title</th>
                 <th>category</th>
                 <th>logo</th>
+                <th>Currency</th>
                 <th></th>
             </tr>
             </thead>
@@ -31,6 +32,7 @@
                             <span>Image not found: {{ $method->logo }}</span>
                         @endif
                     </td>
+                    <td>{{ $method->currency }}</td>
                     <td>
                         <button class="btn btn-info" onclick="window.location.href='{{ route('method-show',$method->id) }}'">EDIT</button>
                         <button class="btn btn-danger"

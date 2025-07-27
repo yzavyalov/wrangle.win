@@ -50,18 +50,6 @@
                             </select>
                         </div>
 
-{{--                        <div class="form-group mt-3">--}}
-{{--                            <label for="comission" class="form-label">Input the commission</label>--}}
-{{--                            <input name="comission" type="text" value="{{ $method->comission }}" class="form-control @error('comission') is-invalid @enderror">--}}
-{{--                            @error('comission')<span class="text-danger fw-bold">{{ $message }}</span> @enderror--}}
-{{--                        </div>--}}
-
-{{--                        <div class="form-group mt-3">--}}
-{{--                            <label for="fixfee" class="form-label">Input the fix_fee</label>--}}
-{{--                            <input name="fixfee" type="text" value="{{ $method->fixfee }}" class="form-control @error('fixfee') is-invalid @enderror">--}}
-{{--                            @error('fixfee')<span class="text-danger fw-bold">{{ $message }}</span> @enderror--}}
-{{--                        </div>--}}
-
                         <div class="form-group mt-3">
                             <label for="logo">Upload logo image</label>
 
@@ -80,8 +68,13 @@
                             @enderror
                         </div>
 
+                        <div class="row mb-3">
+                            <label for="currency">Input the payment method's currency</label>
+                            <input name="currency" type="text" value="{{ $method->currency }}" class="form-control @error('currency') is-invalid @enderror">
+                            @error('currency')<span class="text-danger fw-bold">{{ $message }}</span> @enderror
+                        </div>
 
-                    @if(session('logo'))
+                        @if(session('logo'))
                             <div class="alert alert-success mt-3">
                                 {{ session('logo') }}
                             </div>
