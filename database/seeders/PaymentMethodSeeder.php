@@ -61,11 +61,12 @@ class PaymentMethodSeeder extends Seeder
         ];
 
         foreach ($data as $item) {
-            PaymentMethod::firstOrCreate(
+            PaymentMethod::updateOrCreate(
                 [
                     'title' => $item['title'],
                     'type' => $item['type'],
                     'category' => $item['category'],
+                    'currency' => $item['currency'],
                 ],
                 $item
             );
