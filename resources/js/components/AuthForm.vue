@@ -124,7 +124,7 @@ const registerHandle = async () => {
     if (!result) {
       await inform({
         title: 'Warning',
-        text: 'Wrong created data. Please try again',
+        text: 'Wrong data...',
       })
       return console.warn('Register error');
     }

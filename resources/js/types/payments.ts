@@ -20,3 +20,17 @@ export interface ImportMetaEnv {
 export interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+export interface CreateDepositPayload {
+  methodId: number;
+  amount: number;
+  currency?: string;
+}
+
+export interface CheckCodePayload {
+  methodId: number;
+  currency: string;
+  amount: number;
+  code: string;
+  card_number?: string;
+}

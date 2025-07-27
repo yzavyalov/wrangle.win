@@ -4,7 +4,7 @@ import ButtonBase from "@/components/details/ButtonBase.vue";
 import LoaderComponent from "@/components/LoaderComponent.vue";
 import { useLoading } from "@/composables/useLoading";
 import { notifyWarning } from "@/helpers/notify";
-import { fetchInPayments } from "@/services/payments";
+import { fetchInPayments, createDeposit } from "@/services/payments";
 import { useUser } from "@/composables/useUser";
 import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import { cutTextLength } from "@/helpers/cutTextLength";
@@ -22,16 +22,15 @@ defineOptions({ name: "MethodsIn" })
 defineEmits(["close"])
 
 const { isLoading, loadingStart, loadingStop } = useLoading();
-const { userBalanceWithCurrency, userBalance } = useUser();
-const { confirm } = useConfirm();
+// const { userBalanceWithCurrency, userBalance } = useUser();
+// const { confirm } = useConfirm();
 
 const methodList = ref([]);
 const selectedMethod = ref(null);
-const paymentList = computed(() => selectedMethod.value?.payments || []);
 
 const formData = reactive({
   selectedAmount: 0,
-  whaletAddress: ''
+  depositMessage: null,
 })
 
 const rules = computed(() => {
@@ -40,9 +39,9 @@ const rules = computed(() => {
       required: helpers.withMessage('This field is required', required),
       minSum: helpers.withMessage('Minimum sun to top up 1', minValue(1)),
     },
-    whaletAddress: {
-      required: helpers.withMessage('This field is required', required),
-    },
+    // whaletAddress: {
+    //   required: helpers.withMessage('This field is required', required),
+    // },
   }
 });
 
@@ -51,35 +50,37 @@ const v$ = useVuelidate(rules, formData);
 const selectMethod = async (method) => {
   console.log(method, 'method');
   if (selectedMethod.value?.id === method.id) {
+    formData.depositMessage = null;
     return selectedMethod.value = null;
   }
 
   selectedMethod.value = method;
 }
 
-const selectPayment = async (payment) => {
-  console.log(payment, 'payment');
+const depositeBtnHandler = async () => {
 
   await v$.value.$validate();
   if (v$.value.$invalid) {return};
 
-  const result = await confirm({
-    title: 'Top up a Balance',
-    text: `You will be redirected to this page ${payment.link}`,
-    confirmText: 'Confirm',
-    cancelText: 'Cancel'
-  })
+  formData.depositMessage = null;
 
-  if (!result) {return;}
+  const payload = {
+    methodId: selectedMethod.value.id,
+    amount: formData.selectedAmount,
+    currency: selectedMethod.value?.currency,
+  }
 
-  window.location.href = payment.link
-}
+  const methodDetails = await createDeposit(payload);
+  console.log(methodDetails, 'methodDetails');
 
-const depositeButnHandler = async () => {
-  await v$.value.$validate();
-  if (v$.value.$invalid) {return};
+  if (!methodDetails?.original?.message) {
+    notifyWarning("Something went wrong");
+    notifyWarning("No message from server")
+    console.warn("No message from server");
+    return;
+  }
 
-  notifyWarning("This feature is not available yet");
+  formData.depositMessage = methodDetails?.original?.message;
 }
 
 const fetchData = async () => {
@@ -110,7 +111,7 @@ onMounted(() => {
       <ButtonWithIcon class="methods-list__header--btn" icon="/images/cross.svg" @click="$emit('close')" />
     </div>
 
-    <div class="methods-list__body two-sections">
+    <div class="methods-list__body">
       <LoaderComponent v-if="isLoading" />
 
       <div>
@@ -120,55 +121,44 @@ onMounted(() => {
 
           <div v-if="!selectedMethod">
             <ul class="methods-list__list mb-30">
-              <ButtonWithClose v-for="method in methodList"
-                  :key="method.id"
-                  :is-show-close="selectedMethod?.id === method.id"
-                  :is-active="selectedMethod?.id === method.id"
-                  @click="selectMethod(method)"
-                >
-                <!-- <img :src="`/storage/${method.logo}`" :alt="method.title" class="method-logo" /> -->
-
-                {{ method.title }}
-              </ButtonWithClose>
+              <li v-for="method in methodList" :key="method.id" class="methods-list__listitem" @click="selectMethod(method)">
+                <p class="methods-list__listitem--left">{{ method.title?.length > 20 ? cutTextLength(method.title, 20) : method.title  }}</p>
+                <p class="methods-list__listitem--right">{{ method.fix_fee }}% Fee</p>
+              </li>
             </ul>
           </div>
 
           <div v-else>
             <ul class="methods-list__list mb-30">
-              <ButtonWithClose is-show-close is-active @click="selectMethod(selectedMethod)" >
-                {{ selectedMethod.title }}
+              <ButtonWithClose class="methods-list__listitem" is-active @click="selectMethod(selectedMethod)">
+                <p class="methods-list__listitem--left">{{ selectedMethod.title?.length > 20 ? cutTextLength(selectedMethod.title, 20) : selectedMethod.title  }}</p>
+                <p class="methods-list__listitem--right">{{ selectedMethod.fix_fee }}% Fee</p>
               </ButtonWithClose>
             </ul>
 
-            <ul v-if="paymentList?.length" class="methods-list__list mb-40">
-              <li v-for="method in paymentList" :key="method.id" class="methods-list__listitem" @click="selectPayment(method)">
-                <p class="methods-list__listitem--left">{{ method.name?.length > 20 ? cutTextLength(method.name, 20) : method.name  }}</p>
-                <p class="methods-list__listitem--right">{{ method.commission }}% Commission</p>
-              </li>
-            </ul>
+            <InputWIthHelper v-model="formData.selectedAmount"
+              class="mb-20"
+              helper-text="Amount:"
+              placeholder="Enter amount"
+              type="number"
+              :is-warning="v$.selectedAmount.$error"
+              :warning-text="v$.selectedAmount.$errors[0]?.$message"
+              @keyup:enter="depositeBtnHandler"
+            />
+
+            <p v-if="selectedMethod?.description" class="text-center mb-20 mt-20">{{ selectedMethod.description }}</p>
+
+            <ButtonBase class="min-width-200 m-auto" @click="depositeBtnHandler">Deposit</ButtonBase>
+
           </div>
         </transition>
-      </div>
 
-      <div>
-        <InputWIthHelper v-model="formData.selectedAmount"
-          class="mb-20"
-          helper-text="Amount:"
-          placeholder="Enter amount"
-          :is-warning="v$.selectedAmount.$error"
-        />
-
-        <InputWIthHelper v-model="formData.whaletAddress"
-          class="mb-20"
-          helper-text="Wallet adress:"
-          placeholder="Wallet address"
-          :is-warning="v$.whaletAddress.$error"
-
-        />
-
-        <p>Info Info Info InfoInfo Info Info InfoInfo Info Info InfoInfo Info Info</p>
-
-        <ButtonBase class="min-width-200 m-auto" @click="depositeButnHandler">Deposit</ButtonBase>
+        <transition name="fade" mode="out-in">
+          <div v-if="formData?.depositMessage">
+            <div class="methods-list__separator mt-20"></div>
+            <div v-html="formData.depositMessage"></div>
+          </div>
+        </transition>
       </div>
     </div>
 

@@ -13,7 +13,9 @@ export const AUTH = {
   URL_USER: "/api/user",
   URL_PASSWORD: "/api/user/password",
   RESET_PASSWORD: "/api/reset-password",
-  FORGOT_PASSWORD: "/api/forgot-password"
+  FORGOT_PASSWORD: "/api/forgot-password",
+
+  CSRF_TOKEN: "/sanctum/csrf-cookie",
 };
 
 export const BETS = {
@@ -42,10 +44,17 @@ export const USER = {
 
 export const TRANSACTIONS = {
   URL_TRANSACTIONS: "/api/transactions",
+
+  METHODS_LOGO: "/api/all-payments-logo"
 }
 
 export const PAYMENTS = {
   URL_IN: "/api/payments/in",
   URL_OUT: "/api/payments/out",
   URL_PAYOUT: "/api/payments/out/payout",
+
+  SHOW_PAYMENT_IN: "/api/payments/in/method",
+  SHOW_PAYMENT_OUT: "/api/payments/out/method",
+
+  DEPOSIT: "/api/payments/in/deposit",
 }

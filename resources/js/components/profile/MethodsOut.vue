@@ -2,20 +2,22 @@
 import { computed, nextTick, onMounted, reactive, ref } from "vue";
 import { useLoading } from "@/composables/useLoading";
 import { notifyWarning } from "@/helpers/notify";
-import { createWidrawal, fetchOutPayments, getOutPaymentCode } from "@/services/payments";
+import { createWidrawal, fetchOutPayments, getOutPaymentCode, checkCode } from "@/services/payments";
 import { useUser } from "@/composables/useUser";
 import { cutTextLength } from "@/helpers/cutTextLength";
-import { required, minValue, maxValue, helpers } from '@vuelidate/validators';
+import { required, minValue, maxValue, helpers, minLength, maxLength } from '@vuelidate/validators';
 import { sampleWiddrawMethods } from "@/utils/dummyData";
 import { useConfirm } from '@/composables/useConfirm';
 import { useCodeConfirm } from '@/composables/useCodeConfirm';
 import { useInform } from '@/composables/useInform';
 import useVuelidate from '@vuelidate/core';
+import { outMethodsWithWalletAddress } from "@/utils/constants";
 
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import LoaderComponent from "@/components/LoaderComponent.vue";
 import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import ButtonWithClose from "@/components/details/ButtonWithClose.vue";
+import InputWIthHelper from "@/components/details/InputWIthHelper.vue";
 
 defineOptions({ name: "MethodsOut" })
 
@@ -29,21 +31,29 @@ const { inform } = useInform();
 
 const methodList = ref([]);
 const selectedMethod = ref(null);
-const selectedPayment = ref(null);
 const verifyCodeSymbolsNumber = 6;
 
 const formData = reactive({
-  selectedAmount: 0
+  selectedAmount: 0,
+  whaletAddress: ''
 })
 
-const paymentList = computed(() => selectedMethod.value?.payments || []);
+const isNeewWalletAddress = computed(() => selectedMethod.value && outMethodsWithWalletAddress.includes(selectedMethod.value?.type))
 
 const rules = computed(() => {
   return {
     selectedAmount: {
       required: helpers.withMessage('This field is required', required),
       minSum: helpers.withMessage('Minimum sun to withdraw 10', minValue(10)),
-      maxSum: helpers.withMessage('Maximum sun to withdraw ' + userBalance.value, maxValue(userBalance.value)),
+      maxSum: helpers.withMessage('Maximum sum to withdraw ' + userBalance.value, maxValue(userBalance.value)),
+    },
+    whaletAddress: {
+      required: helpers.withMessage(
+        'This field is required',
+        (val) => !isNeewWalletAddress.value || required(val)
+      ),
+      minLength: helpers.withMessage('Minimum length 3', minLength(3)),
+      maxLength: helpers.withMessage('Maximum length 100', maxLength(100)),
     },
   }
 });
@@ -58,23 +68,6 @@ const selectMethod = async (method) => {
   }
 
   selectedMethod.value = method;
-
-  if (selectedPayment.value) {
-    selectedPayment.value = null;
-  }
-}
-
-const selectPayment = async (payment) => {
-  console.log(payment, 'payment');
-
-  if (selectPayment.value?.id === payment.id) {
-    return selectedPayment.value = null;
-  }
-
-  await v$.value.$validate();
-  if (v$.value.$invalid) {return};
-
-  selectedPayment.value = payment;
 }
 
 const submitHandler = async () => {
@@ -83,7 +76,7 @@ const submitHandler = async () => {
   if (v$.value.$invalid) {return};
 
   const codePayload = {
-    methodId: selectedPayment.value.id,
+    methodId: selectedMethod.value.id,
     amount: formData.selectedAmount
   }
 
@@ -99,24 +92,32 @@ const submitHandler = async () => {
   console.log(code, 'code - submitHandler');
   if (!code) {return;}
 
-  const widrawalPayload = {
-    methodId: selectedPayment.value.id,
+  const checkCodePayload = {
+    methodId: selectedMethod.value.id,
     code: code,
-    amount: formData.selectedAmount
+    amount: formData.selectedAmount,
+    currency: selectedMethod.value?.currency,
   }
 
-  const widrawalData = await createWidrawal(widrawalPayload)
-  console.log(widrawalData, 'widrawalData');
-
-  if (!widrawalData) {
-    await inform({
-      title: 'Warning',
-      text: 'Something went wrong',
-    })
-    return;
+  if (isNeewWalletAddress.value) {
+    checkCodePayload.card_number = formData.whaletAddress;
   }
 
-  window.location.href = widrawalData.link;
+  const checkCodeData = await checkCode(checkCodePayload)
+  console.log(checkCodeData, 'checkCodeData');
+
+  // if (!checkCodeData) {
+  //   await inform({
+  //     title: 'Warning',
+  //     text: 'Something went wrong',
+  //   })
+  //   return;
+  // }
+
+  // await inform({
+  //   title: 'Success',
+  //   text: 'Withdrawal successful',
+  // })
 }
 
 const fetchData = async () => {
@@ -167,31 +168,42 @@ onMounted(() => {
 
       <p class="text-center mb-20">Choose withdraw method</p>
 
-      <ul class="methods-list__list mb-30">
-        <ButtonWithClose v-for="method in methodList"
-          :key="method.id"
-          :is-show-close="selectedMethod?.id === method.id"
-          :is-active="selectedMethod?.id === method.id"
-          @click="selectMethod(method)"
-        >
-          {{ method.title }}
-        </ButtonWithClose>
-      </ul>
-
       <transition name="fade" mode="out-in">
-        <ul v-if="paymentList?.length" class="methods-list__list mb-40">
-          <li v-for="method in paymentList" :key="method.id" class="methods-list__listitem" @click="selectPayment(method)">
-            <p class="methods-list__listitem--left">{{ method.name?.length > 20 ? cutTextLength(method.name, 20) : method.name  }}</p>
-            <p class="methods-list__listitem--right">{{ method.commission }}% Commission</p>
-          </li>
-        </ul>
-      </transition>
+        <div v-if="!selectedMethod">
+          <ul  class="methods-list__list mb-30">
+            <ButtonWithClose v-for="method in methodList"
+              :key="method.id"
+              :is-show-close="selectedMethod?.id === method.id"
+              :is-active="selectedMethod?.id === method.id"
+              @click="selectMethod(method)"
+            >
+              {{ method.title }}
+            </ButtonWithClose>
+          </ul>
+        </div>
 
-      <transition name="bounce" mode="out-in">
-        <ButtonBase v-if="selectedPayment" class="methods-list__btn" @click="submitHandler">Continue</ButtonBase>
+        <div v-else>
+          <ul class="methods-list__list mb-30">
+            <ButtonWithClose class="methods-list__listitem" is-active @click="selectMethod(selectedMethod)">
+              <p class="methods-list__listitem--left">{{ selectedMethod.title?.length > 20 ? cutTextLength(selectedMethod.title, 20) : selectedMethod.title  }}</p>
+              <p class="methods-list__listitem--right">{{ selectedMethod.fix_fee }}% Fee</p>
+            </ButtonWithClose>
+          </ul>
+
+          <InputWIthHelper v-if="isNeewWalletAddress"
+            v-model="formData.whaletAddress"
+            class="mb-20"
+            helper-text="Wallet adress:"
+            placeholder="Wallet address"
+            type="text"
+            :is-warning="v$.whaletAddress.$error"
+            :warning-text="v$.whaletAddress.$errors[0]?.$message"
+          />
+
+          <ButtonBase class="methods-list__btn" @click="submitHandler">Continue</ButtonBase>
+        </div>
       </transition>
     </div>
-
   </div>
 </template>
 
