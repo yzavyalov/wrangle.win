@@ -5,4 +5,9 @@ export const componentOffsetsByVariant: Record<ComponentOffsetsVariants, { offse
   default: { offsetX: 0, offsetY: 0 },
 };
 
-export const outMethodsWithWalletAddress = [ 3 ];
+export const outMethodsWithWalletAddress = [ 1, 3 ];
+
+export const METHOD_TYPES = {
+  CARD: 1,
+  CRYPTO: 3,
+}

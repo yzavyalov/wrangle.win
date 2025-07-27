@@ -94,7 +94,7 @@ export const createDeposit = async (payload: CreateDepositPayload) => {
   .catch(e => notifyError(e.message));
 };
 
-export const checkCode = async (payload: CheckCodePayload) => {
+export const checkPaymentCode = async (payload: CheckCodePayload) => {
 
   const { methodId } = payload;
 
@@ -104,7 +104,7 @@ export const checkCode = async (payload: CheckCodePayload) => {
   .then(res => {
     console.log(res, "res - checkCode");
 
-    return res?.data?.data;
+    return res?.data;
   })
   .catch(e => notifyError(e.message));
 };

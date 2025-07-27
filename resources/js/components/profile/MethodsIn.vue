@@ -22,8 +22,6 @@ defineOptions({ name: "MethodsIn" })
 defineEmits(["close"])
 
 const { isLoading, loadingStart, loadingStop } = useLoading();
-// const { userBalanceWithCurrency, userBalance } = useUser();
-// const { confirm } = useConfirm();
 
 const methodList = ref([]);
 const selectedMethod = ref(null);
@@ -50,6 +48,7 @@ const v$ = useVuelidate(rules, formData);
 const selectMethod = async (method) => {
   console.log(method, 'method');
   if (selectedMethod.value?.id === method.id) {
+    v$.value.$reset();
     formData.depositMessage = null;
     return selectedMethod.value = null;
   }
@@ -58,29 +57,40 @@ const selectMethod = async (method) => {
 }
 
 const depositeBtnHandler = async () => {
+  if (isLoading.value) {return notifyWarning("Please wait for the previous operation to complete")};
 
   await v$.value.$validate();
   if (v$.value.$invalid) {return};
 
-  formData.depositMessage = null;
+  try {
+    loadingStart();
 
-  const payload = {
-    methodId: selectedMethod.value.id,
-    amount: formData.selectedAmount,
-    currency: selectedMethod.value?.currency,
-  }
+    formData.depositMessage = null;
 
-  const methodDetails = await createDeposit(payload);
-  console.log(methodDetails, 'methodDetails');
+    const payload = {
+      methodId: selectedMethod.value.id,
+      amount: formData.selectedAmount,
+      currency: selectedMethod.value?.currency,
+    }
 
-  if (!methodDetails?.original?.message) {
+    const methodDetails = await createDeposit(payload);
+    console.log(methodDetails, 'methodDetails');
+
+    if (!methodDetails?.original?.message) {
+      notifyWarning("Something went wrong");
+      notifyWarning("No message from server")
+      console.warn("No message from server");
+      return;
+    }
+
+    formData.depositMessage = methodDetails?.original?.message;
+  } catch (error) {
+    console.warn(error, 'error - depositeBtnHandler');
     notifyWarning("Something went wrong");
-    notifyWarning("No message from server")
-    console.warn("No message from server");
-    return;
-  }
 
-  formData.depositMessage = methodDetails?.original?.message;
+  } finally {
+    loadingStop();
+  }
 }
 
 const fetchData = async () => {
@@ -123,7 +133,7 @@ onMounted(() => {
             <ul class="methods-list__list mb-30">
               <li v-for="method in methodList" :key="method.id" class="methods-list__listitem" @click="selectMethod(method)">
                 <p class="methods-list__listitem--left">{{ method.title?.length > 20 ? cutTextLength(method.title, 20) : method.title  }}</p>
-                <p class="methods-list__listitem--right">{{ method.fix_fee }}% Fee</p>
+                <p class="methods-list__listitem--right">{{ method.fix_fee?.toFixed(2) }}% Fee</p>
               </li>
             </ul>
           </div>
@@ -132,7 +142,7 @@ onMounted(() => {
             <ul class="methods-list__list mb-30">
               <ButtonWithClose class="methods-list__listitem" is-active @click="selectMethod(selectedMethod)">
                 <p class="methods-list__listitem--left">{{ selectedMethod.title?.length > 20 ? cutTextLength(selectedMethod.title, 20) : selectedMethod.title  }}</p>
-                <p class="methods-list__listitem--right">{{ selectedMethod.fix_fee }}% Fee</p>
+                <p class="methods-list__listitem--right">{{ selectedMethod.fix_fee?.toFixed(2) }}% Fee</p>
               </ButtonWithClose>
             </ul>
 

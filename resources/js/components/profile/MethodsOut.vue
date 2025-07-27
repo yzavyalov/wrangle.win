@@ -2,7 +2,7 @@
 import { computed, nextTick, onMounted, reactive, ref } from "vue";
 import { useLoading } from "@/composables/useLoading";
 import { notifyWarning } from "@/helpers/notify";
-import { createWidrawal, fetchOutPayments, getOutPaymentCode, checkCode } from "@/services/payments";
+import { createWidrawal, fetchOutPayments, getOutPaymentCode, checkPaymentCode } from "@/services/payments";
 import { useUser } from "@/composables/useUser";
 import { cutTextLength } from "@/helpers/cutTextLength";
 import { required, minValue, maxValue, helpers, minLength, maxLength } from '@vuelidate/validators';
@@ -11,7 +11,7 @@ import { useConfirm } from '@/composables/useConfirm';
 import { useCodeConfirm } from '@/composables/useCodeConfirm';
 import { useInform } from '@/composables/useInform';
 import useVuelidate from '@vuelidate/core';
-import { outMethodsWithWalletAddress } from "@/utils/constants";
+import { METHOD_TYPES, outMethodsWithWalletAddress } from "@/utils/constants";
 
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import LoaderComponent from "@/components/LoaderComponent.vue";
@@ -35,12 +35,24 @@ const verifyCodeSymbolsNumber = 6;
 
 const formData = reactive({
   selectedAmount: 0,
-  whaletAddress: ''
+  whaletAddress: '',
+  widrawalMessage: null,
 })
 
-const isNeewWalletAddress = computed(() => selectedMethod.value && outMethodsWithWalletAddress.includes(selectedMethod.value?.type))
+const isNeedWalletAddress = computed(() => selectedMethod.value && outMethodsWithWalletAddress.includes(selectedMethod.value?.type))
 
 const rules = computed(() => {
+
+  if (!isNeedWalletAddress.value) {
+    return {
+      selectedAmount: {
+        required: helpers.withMessage('This field is required', required),
+        minSum: helpers.withMessage('Minimum sun to withdraw 10', minValue(10)),
+        maxSum: helpers.withMessage('Maximum sum to withdraw ' + userBalance.value, maxValue(userBalance.value)),
+      },
+    }
+  }
+
   return {
     selectedAmount: {
       required: helpers.withMessage('This field is required', required),
@@ -48,10 +60,7 @@ const rules = computed(() => {
       maxSum: helpers.withMessage('Maximum sum to withdraw ' + userBalance.value, maxValue(userBalance.value)),
     },
     whaletAddress: {
-      required: helpers.withMessage(
-        'This field is required',
-        (val) => !isNeewWalletAddress.value || required(val)
-      ),
+      required: helpers.withMessage('This field is required', required),
       minLength: helpers.withMessage('Minimum length 3', minLength(3)),
       maxLength: helpers.withMessage('Maximum length 100', maxLength(100)),
     },
@@ -64,6 +73,8 @@ const selectMethod = async (method) => {
   console.log(method, 'method');
 
   if (selectedMethod.value?.id === method.id) {
+    v$.value.$reset();
+    formData.widrawalMessage = null;
     return selectedMethod.value = null;
   }
 
@@ -71,53 +82,72 @@ const selectMethod = async (method) => {
 }
 
 const submitHandler = async () => {
+  if (isLoading.value) {return notifyWarning("Please wait for the previous operation to complete")};
 
   await v$.value.$validate();
   if (v$.value.$invalid) {return};
 
-  const codePayload = {
-    methodId: selectedMethod.value.id,
-    amount: formData.selectedAmount
+  try {
+    loadingStart();
+
+    const codePayload = {
+      methodId: selectedMethod.value.id,
+      amount: formData.selectedAmount
+    }
+
+    const codeSended = await getOutPaymentCode(codePayload)
+    console.log(codeSended, 'codeSended');
+
+    const code = await confirmCode({
+      title: 'Do not close this window',
+      text: `Enter the ${verifyCodeSymbolsNumber}-symbols code sent to your email`,
+      symbols: verifyCodeSymbolsNumber,
+      confirmText: 'Continue',
+    })
+    console.log(code, 'code - submitHandler');
+    if (!code) {return;}
+
+    const checkCodePayload = {
+      methodId: selectedMethod.value.id,
+      code: code,
+      amount: formData.selectedAmount,
+      currency: selectedMethod.value?.currency,
+    }
+
+    if (isNeedWalletAddress.value) {
+      checkCodePayload.card_number = formData.whaletAddress;
+    }
+
+    const checkCodeResult = await checkPaymentCode(checkCodePayload)
+    console.log(checkCodeResult, 'checkCodeResult');
+
+
+    if (checkCodeResult.message) {
+      formData.widrawalMessage = checkCodeResult.message;
+    }
+
+    console.log(formData.widrawalMessage, 'formData.widrawalMessage');
+
+    // if (!checkCodeData) {
+    //   await inform({
+    //     title: 'Warning',
+    //     text: 'Something went wrong',
+    //   })
+    //   return;
+    // }
+
+    // await inform({
+    //   title: 'Success',
+    //   text: 'Withdrawal successful',
+    // })
+
+  } catch (error) {
+    console.warn(error, 'error - submitHandler');
+    notifyWarning("Something went wrong");
+
+  } finally {
+    loadingStop();
   }
-
-  const codeSended = await getOutPaymentCode(codePayload)
-  console.log(codeSended, 'codeSended');
-
-  const code = await confirmCode({
-    title: 'Do not close this window',
-    text: `Enter the ${verifyCodeSymbolsNumber}-symbols code sent to your email`,
-    symbols: verifyCodeSymbolsNumber,
-    confirmText: 'Continue',
-  })
-  console.log(code, 'code - submitHandler');
-  if (!code) {return;}
-
-  const checkCodePayload = {
-    methodId: selectedMethod.value.id,
-    code: code,
-    amount: formData.selectedAmount,
-    currency: selectedMethod.value?.currency,
-  }
-
-  if (isNeewWalletAddress.value) {
-    checkCodePayload.card_number = formData.whaletAddress;
-  }
-
-  const checkCodeData = await checkCode(checkCodePayload)
-  console.log(checkCodeData, 'checkCodeData');
-
-  // if (!checkCodeData) {
-  //   await inform({
-  //     title: 'Warning',
-  //     text: 'Something went wrong',
-  //   })
-  //   return;
-  // }
-
-  // await inform({
-  //   title: 'Success',
-  //   text: 'Withdrawal successful',
-  // })
 }
 
 const fetchData = async () => {
@@ -190,17 +220,24 @@ onMounted(() => {
             </ButtonWithClose>
           </ul>
 
-          <InputWIthHelper v-if="isNeewWalletAddress"
+          <InputWIthHelper v-if="isNeedWalletAddress"
             v-model="formData.whaletAddress"
             class="mb-20"
-            helper-text="Wallet adress:"
-            placeholder="Wallet address"
-            type="text"
+            :helper-text="selectedMethod?.type === METHOD_TYPES.CARD ? 'Card number:' : 'Wallet adress:'"
+            :placeholder="selectedMethod?.type === METHOD_TYPES.CARD ? 'Card number' : 'Wallet address'"
+            :type="selectedMethod?.type === METHOD_TYPES.CARD ? 'number' : 'text'"
             :is-warning="v$.whaletAddress.$error"
             :warning-text="v$.whaletAddress.$errors[0]?.$message"
           />
 
           <ButtonBase class="methods-list__btn" @click="submitHandler">Continue</ButtonBase>
+        </div>
+      </transition>
+
+      <transition name="fade" mode="out-in">
+        <div v-if="formData?.widrawalMessage">
+          <div class="methods-list__separator mt-20"></div>
+          <div v-html="formData.widrawalMessage"></div>
         </div>
       </transition>
     </div>
