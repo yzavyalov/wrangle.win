@@ -96,35 +96,40 @@ class CryptoProcessingService
 
     public function createDeposit(Deposit $deposit, $currency)
     {
-        $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/addresses/take';
+        try {
+            $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/addresses/take';
 
-        $user = Auth::user();
+            $user = Auth::user();
 
-        if ($user->cryptoWallets()->where('currency',$currency)->exists())
-        {
-            $wallets = $user->cryptoWallets()->where('currency',$currency)->get();
-        }
-        else
-        {
-            $params = [
-                'foreign_id' => str($user->id),
-                'currency' =>$currency,
-                'convert_to' => 'EUR',
-            ];
+            if ($user->cryptoWallets()->where('currency', $currency)->exists())
+            {
+                $wallets = $user->cryptoWallets()->where('currency', $currency)->first();
+            }
+            else
+            {
+                $params = [
+                    'foreign_id' => str($user->id),
+                    'currency' => $currency,
+                    'convert_to' => 'EUR',
+                ];
 
-            $response = $this->callAlphaPoApi($params, $url);
+                $response = $this->callAlphaPoApi($params, $url);
 
-            $this->paymentLogsService->createLog($deposit, json_encode($response));
+                $this->paymentLogsService->createLog($deposit, json_encode($response));
 
-            if (!is_array($response) || !array_key_exists('data', $response) || is_null($response['data'])) {
-                throw new \Exception('Ошибка получения данных из AlphaPo API');
+                if (!is_array($response) || !array_key_exists('data', $response) || is_null($response['data'])) {
+                    return ['error' => 'Ошибка получения данных из AlphaPo API'];
+                }
+
+                $wallets = $this->saveWallets($response['data']['data'], $user);
             }
 
-            $wallets = $this->saveWallets($response['data']['data'], $user);
+            return ['data' => $wallets];
+        } catch (\Throwable $e) {
+            return ['error' => $e->getMessage()];
         }
-
-        return $wallets;
     }
+
 
 
     public function newAdres($currency)
@@ -161,7 +166,7 @@ class CryptoProcessingService
     protected function saveWallets(array $data, User $user)
     {
         $wallet = $user->cryptoWallets()->create($data);
-        return collect([$wallet]);
+        return $wallet;
     }
 
 

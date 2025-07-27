@@ -79,7 +79,7 @@ class PayOutService
         $invoice = $this->wintecaService->CreatePayOutInvoice($payout,$newAmount,$currency, $cardNumber);
 
         $this->wintecaService->paymentLogsService->createLog($payout,json_encode($invoice));
-
+dd($invoice);
         if ($invoice)
         {
             $payout->transactionable()->create([

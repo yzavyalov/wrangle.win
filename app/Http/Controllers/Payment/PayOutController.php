@@ -15,6 +15,7 @@ use App\Models\PaymentMethod;
 use App\Services\BalanceService;
 use App\Services\OutsidePaymentService;
 use App\Services\Payment\CascadeService;
+use App\Services\Payment\PaymentPayOutAnswerService;
 use App\Services\TwoFactorService;
 use Illuminate\Http\Request;
 
@@ -28,7 +29,7 @@ class PayOutController extends Controller
 
         $this->cascadeService = $cascadeService;
     }
-    
+
 
     public function allOutPayments()
     {
@@ -73,6 +74,9 @@ class PayOutController extends Controller
     {
         $validateData = $request->validated();
 
+        if (PaymentMethod::query()->findOrFail($id)->category !== PaymentCategoryEnum::OUT->value)
+            return $this->errorJsonAnswer400('incorrectly chosen method');
+
 //        $check = TwoFactorService::verify($validateData['code']);
 $check=true;
         if ($check)
@@ -80,7 +84,7 @@ $check=true;
             $checkBalance = BalanceService::checkSum($validateData['amount']);
 
             if (!$checkBalance)
-                return $this->errorJsonAnswer403('Your balance is less than the withdrawal amount.');
+                return PaymentPayOutAnswerService::lessBalance();
 
             $response = $this->outsidePaymentService->createPauOutCascade($validateData['amount'], $validateData['currency'], $validateData['card_number'],$id);
 
