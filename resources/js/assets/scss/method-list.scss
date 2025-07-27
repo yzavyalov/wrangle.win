@@ -121,6 +121,14 @@
     }
   }
 
+  &__separator {
+    // text-align: center;
+    // font-size: 16px;
+    // font-weight: var(--font-weight-light);
+    // margin: 20px 0;
+    border-bottom: 1px solid var(--btn-border-color);
+  }
+
   &__btn {
     min-width: 150px;
     margin: 0 auto;

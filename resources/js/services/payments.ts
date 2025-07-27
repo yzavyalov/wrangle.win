@@ -1,7 +1,7 @@
 import { http } from "@/api/http";
 import { PAYMENTS, TRANSACTIONS } from "@/api/enpoints";
 import { notifyError } from "@/helpers/notify";
-import { GetOutPaymentCodePayload, CreateWidrawalPayload, ImportMetaEnv, ImportMeta } from "@/types/payments";
+import { GetOutPaymentCodePayload, CreateWidrawalPayload, ImportMetaEnv, ImportMeta, CreateDepositPayload } from "@/types/payments";
 
 export const fetchOutPayments = async () => {
   return await http.get(PAYMENTS.URL_OUT)
@@ -69,3 +69,25 @@ export const getMethodsLogo = async () => {
   })
   .catch(e => notifyError(e.message));
 };
+
+export const createDeposit = async (payload: CreateDepositPayload) => {
+
+  const currencyName: ImportMetaEnv["VITE_CURRENT_CURRENCY"] = (import.meta as unknown as ImportMeta).env.VITE_CURRENT_CURRENCY || "EUR";
+  payload.currency = currencyName;
+
+  const stringRequestBody = Object.entries(payload).reduce((acc, [key, value]) => {
+    acc[key] = String(value);
+    return acc;
+  }, {} as Record<string, string>);
+
+  const requestUrl = `${PAYMENTS.DEPOSIT}/${payload.methodId}` + "?" + new URLSearchParams(stringRequestBody).toString();
+
+  return await http.get(requestUrl, payload)
+  .then(res => {
+    console.log(res, "res - createDeposit");
+
+    return res?.data?.data;
+  })
+  .catch(e => notifyError(e.message));
+};
+

@@ -12,7 +12,7 @@ defineProps({
   warningText: { type: String, default: "warning text" },
 })
 
-const emit = defineEmits(["showPassToogle"])
+const emit = defineEmits(["showPassToogle", "keyup:enter"])
 
 const inputModel = defineModel()
 
@@ -27,7 +27,7 @@ const inputModel = defineModel()
     <div class="input-p__wrapper">
       <img v-if="type === 'password'" :src="'/images/visibility_show.svg'" class="input-p__btn" @click.stop.prevent="emit('showPassToogle')" />
       <img v-else :src="'/images/visibility_hide.svg'" class="input-p__btn" @click.stop.prevent="emit('showPassToogle')" />
-      <input :type="type" v-model="inputModel" :placeholder="placeholder">
+      <input :type="type" v-model="inputModel" :placeholder="placeholder" @keyup.enter="emit('keyup:enter')">
     </div>
 
     <slot name="warning">

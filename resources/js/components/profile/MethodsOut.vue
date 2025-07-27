@@ -5,7 +5,7 @@ import { notifyWarning } from "@/helpers/notify";
 import { createWidrawal, fetchOutPayments, getOutPaymentCode } from "@/services/payments";
 import { useUser } from "@/composables/useUser";
 import { cutTextLength } from "@/helpers/cutTextLength";
-import { required, minValue, maxValue, helpers } from '@vuelidate/validators';
+import { required, minValue, maxValue, helpers, minLength, maxLength } from '@vuelidate/validators';
 import { sampleWiddrawMethods } from "@/utils/dummyData";
 import { useConfirm } from '@/composables/useConfirm';
 import { useCodeConfirm } from '@/composables/useCodeConfirm';
@@ -46,13 +46,15 @@ const rules = computed(() => {
     selectedAmount: {
       required: helpers.withMessage('This field is required', required),
       minSum: helpers.withMessage('Minimum sun to withdraw 10', minValue(10)),
-      maxSum: helpers.withMessage('Maximum sun to withdraw ' + userBalance.value, maxValue(userBalance.value)),
+      maxSum: helpers.withMessage('Maximum sum to withdraw ' + userBalance.value, maxValue(userBalance.value)),
     },
     whaletAddress: {
       required: helpers.withMessage(
         'This field is required',
-        helpers.withPredicate(() => isNeewWalletAddress.value, required)
+        (val) => !isNeewWalletAddress.value || required(val)
       ),
+      minLength: helpers.withMessage('Minimum length 3', minLength(3)),
+      maxLength: helpers.withMessage('Maximum length 100', maxLength(100)),
     },
   }
 });
@@ -176,55 +178,42 @@ onMounted(() => {
 
       <p class="text-center mb-20">Choose withdraw method</p>
 
-      <div v-if="!selectedMethod">
-        <ul  class="methods-list__list mb-30">
-          <ButtonWithClose v-for="method in methodList"
-            :key="method.id"
-            :is-show-close="selectedMethod?.id === method.id"
-            :is-active="selectedMethod?.id === method.id"
-            @click="selectMethod(method)"
-          >
-            {{ method.title }}
-          </ButtonWithClose>
-        </ul>
-      </div>
+      <transition name="fade" mode="out-in">
+        <div v-if="!selectedMethod">
+          <ul  class="methods-list__list mb-30">
+            <ButtonWithClose v-for="method in methodList"
+              :key="method.id"
+              :is-show-close="selectedMethod?.id === method.id"
+              :is-active="selectedMethod?.id === method.id"
+              @click="selectMethod(method)"
+            >
+              {{ method.title }}
+            </ButtonWithClose>
+          </ul>
+        </div>
 
-      <div v-else>
-        <ul class="methods-list__list mb-30">
-          <ButtonWithClose is-show-close is-active @click="selectMethod(selectedMethod)" >
-            {{ selectedMethod.title }}
-          </ButtonWithClose>=
-        </ul>
+        <div v-else>
+          <ul class="methods-list__list mb-30">
+            <ButtonWithClose class="methods-list__listitem" is-active @click="selectMethod(selectedMethod)">
+              <p class="methods-list__listitem--left">{{ selectedMethod.title?.length > 20 ? cutTextLength(selectedMethod.title, 20) : selectedMethod.title  }}</p>
+              <p class="methods-list__listitem--right">{{ selectedMethod.fix_fee }}% Fee</p>
+            </ButtonWithClose>
+          </ul>
 
-        <InputWIthHelper v-if="isNeewWalletAddress"
-          v-model="formData.whaletAddress"
-          class="mb-20"
-          helper-text="Wallet adress:"
-          placeholder="Wallet address"
-          type="text"
-          :is-warning="v$.whaletAddress.$error"
-          :warning-text="v$.whaletAddress.$errors[0]?.$message"
-        />
+          <InputWIthHelper v-if="isNeewWalletAddress"
+            v-model="formData.whaletAddress"
+            class="mb-20"
+            helper-text="Wallet adress:"
+            placeholder="Wallet address"
+            type="text"
+            :is-warning="v$.whaletAddress.$error"
+            :warning-text="v$.whaletAddress.$errors[0]?.$message"
+          />
 
-        <ButtonBase v-if="selectedPayment" class="methods-list__btn" @click="submitHandler">Continue</ButtonBase>
-
-
-      </div>
-
-      <!-- <transition name="fade" mode="out-in">
-        <ul v-if="paymentList?.length" class="methods-list__list mb-40">
-          <li v-for="method in paymentList" :key="method.id" class="methods-list__listitem" @click="selectPayment(method)">
-            <p class="methods-list__listitem--left">{{ method.name?.length > 20 ? cutTextLength(method.name, 20) : method.name  }}</p>
-            <p class="methods-list__listitem--right">{{ method.commission }}% Commission</p>
-          </li>
-        </ul>
-      </transition> -->
-
-      <!-- <transition name="bounce" mode="out-in">
-        <ButtonBase v-if="selectedPayment" class="methods-list__btn" @click="submitHandler">Continue</ButtonBase>
-      </transition> -->
+          <ButtonBase class="methods-list__btn" @click="submitHandler">Continue</ButtonBase>
+        </div>
+      </transition>
     </div>
-
   </div>
 </template>
 

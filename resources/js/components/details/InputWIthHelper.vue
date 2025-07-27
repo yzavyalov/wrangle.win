@@ -14,7 +14,7 @@ defineProps({
   warningText: { type: String, default: "warning text" },
 })
 
-const emit = defineEmits(["close:click"])
+const emit = defineEmits(["close:click", "keyup:enter"])
 
 const inputModel = defineModel()
 
@@ -29,7 +29,7 @@ const inputModel = defineModel()
     <div class="input-h__wrapper">
       <img v-if="isShowClose" :src="'/images/cross.svg'" class="input-h__close" @click="emit('close:click')" />
       <textarea v-if="inputType === 'textarea'" name="description" cols="30" rows="5" v-model="inputModel" :placeholder="placeholder" :class="{'with-close': isShowClose}"></textarea>
-      <input v-else :type="type" v-model="inputModel" :placeholder="placeholder"  :class="{'with-close': isShowClose}">
+      <input v-else :type="type" v-model="inputModel" :placeholder="placeholder"  :class="{'with-close': isShowClose}" @keyup.enter="emit('keyup:enter')">
     </div>
 
     <slot name="warning">

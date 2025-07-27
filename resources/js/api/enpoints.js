@@ -52,4 +52,9 @@ export const PAYMENTS = {
   URL_IN: "/api/payments/in",
   URL_OUT: "/api/payments/out",
   URL_PAYOUT: "/api/payments/out/payout",
+
+  SHOW_PAYMENT_IN: "/api/payments/in/method",
+  SHOW_PAYMENT_OUT: "/api/payments/out/method",
+
+  DEPOSIT: "/api/payments/in/deposit",
 }
