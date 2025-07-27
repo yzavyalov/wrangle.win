@@ -51,7 +51,6 @@ class PayOutController extends Controller
 
     public function payOutPayment(SelectPaymentRequest $request, $id)
     {
-//        $payment = Payment::query()->findOrFail($id);
         $method = PaymentMethod::query()->findOrFail($id);
 
         $data = $request->validated();
@@ -91,7 +90,7 @@ $check=true;
             if($response)
                 return $this->successJsonAnswer200('Your payment has been processed, it may take a few days for the bank to process it!');
             else
-                return $this->errorJsonAnswer400('Withdrawal of money failed, please select another method or check with technical support');
+                return $this->errorJsonAnswer409('Withdrawal of money failed, please select another method or check with technical support');
         }
         else
         {

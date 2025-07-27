@@ -21,36 +21,42 @@ class PaymentMethodSeeder extends Seeder
                 'category' => PaymentCategoryEnum::IN->value,
                 'title' => 'Bank cards',
                 'logo' => '',
+                'currency' => env('CURRENT_CURRENCY'),
             ],
             [
                 'type' => PaymentTypeEnum::CRYPTO->value,
                 'category' => PaymentCategoryEnum::IN->value,
                 'title' => 'Bitcoin',
                 'logo' => '',
+                'currency' => 'BTC',
             ],
             [
                 'type' => PaymentTypeEnum::CRYPTO->value,
                 'category' => PaymentCategoryEnum::IN->value,
                 'title' => 'USDT ERC20',
                 'logo' => '',
+                'currency' => 'USDTE',
             ],
             [
                 'type' => PaymentTypeEnum::ACQUIRING->value,
                 'category' => PaymentCategoryEnum::OUT->value,
                 'title' => 'Bank cards',
                 'logo' => '',
+                'currency' => env('CURRENT_CURRENCY'),
             ],
             [
                 'type' => PaymentTypeEnum::CRYPTO->value,
                 'category' => PaymentCategoryEnum::OUT->value,
                 'title' => 'Bitcoin',
                 'logo' => '',
+                'currency' => 'BTC',
             ],
             [
                 'type' => PaymentTypeEnum::CRYPTO->value,
                 'category' => PaymentCategoryEnum::OUT->value,
                 'title' => 'USDT ERC20',
                 'logo' => '',
+                'currency' => 'USDTE',
             ],
         ];
 

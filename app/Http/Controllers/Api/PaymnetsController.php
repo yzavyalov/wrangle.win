@@ -65,9 +65,5 @@ class PaymnetsController extends Controller
         $result = $this->outsidePaymentService->createPayInCascade($data['amount'],$data['currency'],$id);
 
         return $this->successJsonAnswer200('Message', $result);
-//        if ($result)
-//            return $this->successJsonAnswer200('Success',$result);
-//        else
-//            return $this->errorJsonAnswer403('We were unable to create a payment, please contact our technical support.');
     }
 }

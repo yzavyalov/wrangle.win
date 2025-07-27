@@ -18,6 +18,7 @@ class PaymentMethod extends Model
         'category',
         'title',
         'logo',
+        'currency',
     ];
 
     public function payments()
