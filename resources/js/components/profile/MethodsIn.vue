@@ -31,7 +31,7 @@ const paymentList = computed(() => selectedMethod.value?.payments || []);
 
 const formData = reactive({
   selectedAmount: 0,
-  whaletAddress: ''
+  // whaletAddress: ''
 })
 
 const rules = computed(() => {
@@ -40,9 +40,9 @@ const rules = computed(() => {
       required: helpers.withMessage('This field is required', required),
       minSum: helpers.withMessage('Minimum sun to top up 1', minValue(1)),
     },
-    whaletAddress: {
-      required: helpers.withMessage('This field is required', required),
-    },
+    // whaletAddress: {
+    //   required: helpers.withMessage('This field is required', required),
+    // },
   }
 });
 
@@ -110,7 +110,7 @@ onMounted(() => {
       <ButtonWithIcon class="methods-list__header--btn" icon="/images/cross.svg" @click="$emit('close')" />
     </div>
 
-    <div class="methods-list__body two-sections">
+    <div class="methods-list__body">
       <LoaderComponent v-if="isLoading" />
 
       <div>
@@ -121,11 +121,11 @@ onMounted(() => {
           <div v-if="!selectedMethod">
             <ul class="methods-list__list mb-30">
               <ButtonWithClose v-for="method in methodList"
-                  :key="method.id"
-                  :is-show-close="selectedMethod?.id === method.id"
-                  :is-active="selectedMethod?.id === method.id"
-                  @click="selectMethod(method)"
-                >
+                :key="method.id"
+                :is-show-close="selectedMethod?.id === method.id"
+                :is-active="selectedMethod?.id === method.id"
+                @click="selectMethod(method)"
+              >
                 <!-- <img :src="`/storage/${method.logo}`" :alt="method.title" class="method-logo" /> -->
 
                 {{ method.title }}
@@ -140,35 +140,28 @@ onMounted(() => {
               </ButtonWithClose>
             </ul>
 
-            <ul v-if="paymentList?.length" class="methods-list__list mb-40">
+            <InputWIthHelper v-model="formData.selectedAmount"
+              class="mb-20"
+              helper-text="Amount:"
+              placeholder="Enter amount"
+              type="number"
+              :is-warning="v$.selectedAmount.$error"
+              :warning-text="v$.selectedAmount.$errors[0]?.$message"
+            />
+
+            <ButtonBase class="min-width-200 m-auto" @click="depositeButnHandler">Deposit</ButtonBase>
+
+            <p class="text-center mb-20 mt-20">Info Info Info InfoInfo Info Info InfoInfo Info Info InfoInfo Info Info</p>
+
+
+            <!-- <ul v-if="paymentList?.length" class="methods-list__list mb-40">
               <li v-for="method in paymentList" :key="method.id" class="methods-list__listitem" @click="selectPayment(method)">
                 <p class="methods-list__listitem--left">{{ method.name?.length > 20 ? cutTextLength(method.name, 20) : method.name  }}</p>
                 <p class="methods-list__listitem--right">{{ method.commission }}% Commission</p>
               </li>
-            </ul>
+            </ul> -->
           </div>
         </transition>
-      </div>
-
-      <div>
-        <InputWIthHelper v-model="formData.selectedAmount"
-          class="mb-20"
-          helper-text="Amount:"
-          placeholder="Enter amount"
-          :is-warning="v$.selectedAmount.$error"
-        />
-
-        <InputWIthHelper v-model="formData.whaletAddress"
-          class="mb-20"
-          helper-text="Wallet adress:"
-          placeholder="Wallet address"
-          :is-warning="v$.whaletAddress.$error"
-
-        />
-
-        <p>Info Info Info InfoInfo Info Info InfoInfo Info Info InfoInfo Info Info</p>
-
-        <ButtonBase class="min-width-200 m-auto" @click="depositeButnHandler">Deposit</ButtonBase>
       </div>
     </div>
 

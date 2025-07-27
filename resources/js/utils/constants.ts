@@ -4,3 +4,5 @@ export const componentOffsetsByVariant: Record<ComponentOffsetsVariants, { offse
   profileMenu: { offsetX: -208, offsetY: -25 },
   default: { offsetX: 0, offsetY: 0 },
 };
+
+export const outMethodsWithWalletAddress = [ 3 ];
