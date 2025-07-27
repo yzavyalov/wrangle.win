@@ -2,7 +2,7 @@
 import { computed, nextTick, onMounted, reactive, ref } from "vue";
 import { useLoading } from "@/composables/useLoading";
 import { notifyWarning } from "@/helpers/notify";
-import { createWidrawal, fetchOutPayments, getOutPaymentCode } from "@/services/payments";
+import { createWidrawal, fetchOutPayments, getOutPaymentCode, checkCode } from "@/services/payments";
 import { useUser } from "@/composables/useUser";
 import { cutTextLength } from "@/helpers/cutTextLength";
 import { required, minValue, maxValue, helpers, minLength, maxLength } from '@vuelidate/validators';
@@ -31,7 +31,6 @@ const { inform } = useInform();
 
 const methodList = ref([]);
 const selectedMethod = ref(null);
-const selectedPayment = ref(null);
 const verifyCodeSymbolsNumber = 6;
 
 const formData = reactive({
@@ -69,23 +68,6 @@ const selectMethod = async (method) => {
   }
 
   selectedMethod.value = method;
-
-  if (selectedPayment.value) {
-    selectedPayment.value = null;
-  }
-}
-
-const selectPayment = async (payment) => {
-  console.log(payment, 'payment');
-
-  if (selectPayment.value?.id === payment.id) {
-    return selectedPayment.value = null;
-  }
-
-  await v$.value.$validate();
-  if (v$.value.$invalid) {return};
-
-  selectedPayment.value = payment;
 }
 
 const submitHandler = async () => {
@@ -94,7 +76,7 @@ const submitHandler = async () => {
   if (v$.value.$invalid) {return};
 
   const codePayload = {
-    methodId: selectedPayment.value.id,
+    methodId: selectedMethod.value.id,
     amount: formData.selectedAmount
   }
 
@@ -110,24 +92,32 @@ const submitHandler = async () => {
   console.log(code, 'code - submitHandler');
   if (!code) {return;}
 
-  const widrawalPayload = {
-    methodId: selectedPayment.value.id,
+  const checkCodePayload = {
+    methodId: selectedMethod.value.id,
     code: code,
-    amount: formData.selectedAmount
+    amount: formData.selectedAmount,
+    currency: selectedMethod.value?.currency,
   }
 
-  const widrawalData = await createWidrawal(widrawalPayload)
-  console.log(widrawalData, 'widrawalData');
-
-  if (!widrawalData) {
-    await inform({
-      title: 'Warning',
-      text: 'Something went wrong',
-    })
-    return;
+  if (isNeewWalletAddress.value) {
+    checkCodePayload.card_number = formData.whaletAddress;
   }
 
-  window.location.href = widrawalData.link;
+  const checkCodeData = await checkCode(checkCodePayload)
+  console.log(checkCodeData, 'checkCodeData');
+
+  // if (!checkCodeData) {
+  //   await inform({
+  //     title: 'Warning',
+  //     text: 'Something went wrong',
+  //   })
+  //   return;
+  // }
+
+  // await inform({
+  //   title: 'Success',
+  //   text: 'Withdrawal successful',
+  // })
 }
 
 const fetchData = async () => {

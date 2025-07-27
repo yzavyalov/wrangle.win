@@ -67,6 +67,7 @@ const depositeBtnHandler = async () => {
   const payload = {
     methodId: selectedMethod.value.id,
     amount: formData.selectedAmount,
+    currency: selectedMethod.value?.currency,
   }
 
   const methodDetails = await createDeposit(payload);

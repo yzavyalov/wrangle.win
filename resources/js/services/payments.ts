@@ -1,7 +1,7 @@
 import { http } from "@/api/http";
 import { PAYMENTS, TRANSACTIONS } from "@/api/enpoints";
 import { notifyError } from "@/helpers/notify";
-import { GetOutPaymentCodePayload, CreateWidrawalPayload, ImportMetaEnv, ImportMeta, CreateDepositPayload } from "@/types/payments";
+import { GetOutPaymentCodePayload, CreateWidrawalPayload, ImportMetaEnv, ImportMeta, CreateDepositPayload, CheckCodePayload } from "@/types/payments";
 
 export const fetchOutPayments = async () => {
   return await http.get(PAYMENTS.URL_OUT)
@@ -72,8 +72,11 @@ export const getMethodsLogo = async () => {
 
 export const createDeposit = async (payload: CreateDepositPayload) => {
 
-  const currencyName: ImportMetaEnv["VITE_CURRENT_CURRENCY"] = (import.meta as unknown as ImportMeta).env.VITE_CURRENT_CURRENCY || "EUR";
-  payload.currency = currencyName;
+  // todo: temp code. delete after testing and API Fix
+  if (!payload.currency) {
+    const currencyName: ImportMetaEnv["VITE_CURRENT_CURRENCY"] = (import.meta as unknown as ImportMeta).env.VITE_CURRENT_CURRENCY || "EUR";
+    payload.currency = currencyName;
+  }
 
   const stringRequestBody = Object.entries(payload).reduce((acc, [key, value]) => {
     acc[key] = String(value);
@@ -91,3 +94,17 @@ export const createDeposit = async (payload: CreateDepositPayload) => {
   .catch(e => notifyError(e.message));
 };
 
+export const checkCode = async (payload: CheckCodePayload) => {
+
+  const { methodId } = payload;
+
+  const requestUrl = `${PAYMENTS.URL_PAYOUT}/${methodId}/check-code`;
+
+  return await http.post(requestUrl, payload)
+  .then(res => {
+    console.log(res, "res - checkCode");
+
+    return res?.data?.data;
+  })
+  .catch(e => notifyError(e.message));
+};

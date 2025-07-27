@@ -26,3 +26,11 @@ export interface CreateDepositPayload {
   amount: number;
   currency?: string;
 }
+
+export interface CheckCodePayload {
+  methodId: number;
+  currency: string;
+  amount: number;
+  code: string;
+  card_number?: string;
+}

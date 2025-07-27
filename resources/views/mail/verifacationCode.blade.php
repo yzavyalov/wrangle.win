@@ -31,21 +31,35 @@
                 <tr>
                     <td style="padding:30px 40px; color:#333;">
                         <p style="font-size:16px;">Dear {{ $userName ?? 'User' }},</p>
-                        <p style="font-size:16px;">To continue with your request, please use the <strong>verification code</strong> below:</p>
 
-                        <table cellpadding="0" cellspacing="10" align="center" style="margin:20px auto;">
+                        <p style="user-select: none;">
+                            asdfasdfasf
+                        </p>
+
+                        <!-- Код для копіювання одним блоком -->
+                        <p style="text-align:center; font-size:20px; font-weight:bold; letter-spacing:2px; margin: 10px 0;">
+                            {{ $code }}
+                        </p>
+
+                        <!-- Красива таблиця з кружечками -->
+                        <table cellpadding="0" cellspacing="10" align="center" style="margin: 10px auto;">
                             <tr>
                                 @foreach(str_split($code) as $digit)
-                                    <td style="background:#FFD700; padding:15px 20px; border-radius:50%; font-size:20px; font-weight:bold;">{{ $digit }}</td>
+                                    <td style="background:#FFD700; padding:15px 20px; border-radius:50%; font-size:20px; font-weight:bold;">
+                                        {{ $digit }}
+                                    </td>
                                 @endforeach
                             </tr>
                         </table>
 
-                        <p style="font-size:14px;">This code will expire in <strong>10 minutes</strong>.<br>
+                        <p style="font-size:14px;">
+                            This code will expire in <strong>10 minutes</strong>.<br>
                             If you did not request this code, please ignore this message.
                         </p>
 
-                        <p style="font-size:16px;">Best regards,<br>Wrangle.win team</p>
+                        <p style="font-size:16px;">
+                            Best regards,<br>Wrangle.win team
+                        </p>
                     </td>
                 </tr>
 
