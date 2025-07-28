@@ -15,6 +15,7 @@ import { useUser } from "@/composables/useUser";
 import { useLoading } from "@/composables/useLoading";
 import { getMethodsLogo } from "@/services/payments";
 import { getCSRFToken } from "@/services/user";
+import { onImageErrorWithLogo } from "@/helpers/onImageError";
 
 const TAB_KEY = 'tab';
 
@@ -38,7 +39,7 @@ const { isLoading, loadingStart, loadingStop } = useLoading();
 
 const activeTab = ref(false);
 
-const methodsLogo = ref([]);
+// const methodsLogo = ref([]);
 const methodsLogoPayIn = ref([]);
 const methodsLogoPayOut = ref([]);
 
@@ -172,24 +173,24 @@ onMounted(() => {
             {{ tab.name }}
           </ButtonBase>
 
-          <ul v-if="methodsLogo?.length" class="profile__methods">
+          <!-- <ul v-if="methodsLogo?.length" class="profile__methods">
             <li v-for="logo in methodsLogo" :key="logo" class="profile__methods--item">
               <img :src="logo" alt="logo">
             </li>
-          </ul>
+          </ul> -->
 
           <div class="payment-logos">
             <h5>Top Up Methods</h5>
             <ul v-if="methodsLogoPayIn.length" class="profile__methods spaced">
               <li v-for="logo in methodsLogoPayIn" :key="logo" class="profile__methods--item">
-                <img :src="logo" alt="Top up method logo">
+                <img :src="logo" alt="Top up method logo" @error="onImageErrorWithLogo">
               </li>
             </ul>
 
             <h5>Withdraw Methods</h5>
             <ul v-if="methodsLogoPayOut.length" class="profile__methods spaced">
               <li v-for="logo in methodsLogoPayOut" :key="logo" class="profile__methods--item">
-                <img :src="logo" alt="Withdraw method logo">
+                <img :src="logo" alt="Withdraw method logo" @error="onImageErrorWithLogo">
               </li>
             </ul>
           </div>
