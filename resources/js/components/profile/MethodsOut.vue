@@ -205,9 +205,11 @@ onMounted(() => {
               :key="method.id"
               :is-show-close="selectedMethod?.id === method.id"
               :is-active="selectedMethod?.id === method.id"
+              class="methods-list__listitem"
               @click="selectMethod(method)"
             >
-              {{ method.title }}
+              <p class="methods-list__listitem--left">{{ method.title?.length > 20 ? cutTextLength(method.title, 20) : method.title  }}</p>
+              <p class="methods-list__listitem--right">{{ method.fix_fee?.toFixed(2) }}% Fee</p>
             </ButtonWithClose>
           </ul>
         </div>
