@@ -76,8 +76,8 @@ class PayOutController extends Controller
         if (PaymentMethod::query()->findOrFail($id)->category !== PaymentCategoryEnum::OUT->value)
             return $this->errorJsonAnswer400('incorrectly chosen method');
 
-//        $check = TwoFactorService::verify($validateData['code']);
-$check=true;
+        $check = TwoFactorService::verify($validateData['code']);
+
         if ($check)
         {
             $checkBalance = BalanceService::checkSum($validateData['amount']);
@@ -88,7 +88,7 @@ $check=true;
             $response = $this->outsidePaymentService->createPauOutCascade($validateData['amount'], $validateData['currency'], $validateData['card_number'],$id);
 
             if($response)
-                return $this->successJsonAnswer200('Your payment has been processed, it may take a few days for the bank to process it!');
+                return $this->successJsonAnswer200('message',$response);
             else
                 return $this->errorJsonAnswer409('Withdrawal of money failed, please select another method or check with technical support');
         }

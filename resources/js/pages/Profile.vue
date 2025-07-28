@@ -2,19 +2,14 @@
 import { Head } from "@inertiajs/vue3";
 import { computed, defineAsyncComponent, onMounted, onBeforeMount, ref, shallowRef } from "vue";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
-import { useUserStore } from "@/store/user";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import { useConfirm } from '@/composables';
-import { triggerOpenNewModal } from "@/composables/useModalsTriggers";
-import { getCurrency } from '@/helpers/getCurrency';
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import { navigateTo } from "@/helpers/navigate";
 import { PAGE_ROUTES, profileTabs } from "@/utils/datasets";
 import BetItemSmall from "@/components/bet/BetItemSmall.vue";
-import { deleteBet, getOwnBets } from "@/services/bets";
 import { useOwnBets } from "@/composables/useOwnBets";
 import { useFavoriteBets } from "@/composables/useFavoriteBets";
-import { notifySuccess, notifyWarning } from "@/helpers/notify";
 import { useHistory } from "@/composables/useHistory";
 import { useUser } from "@/composables/useUser";
 import { useLoading } from "@/composables/useLoading";
@@ -44,6 +39,8 @@ const { isLoading, loadingStart, loadingStop } = useLoading();
 const activeTab = ref(false);
 
 const methodsLogo = ref([]);
+const methodsLogoPayIn = ref([]);
+const methodsLogoPayOut = ref([]);
 
 const dynamicProfileTab = computed(() => {
   if (!activeTab.value?.id) { return null }
@@ -87,24 +84,9 @@ const tabInit = () => {
 
 const fetchMethodsLogo = async () => {
   const res = await getMethodsLogo();
-  console.log(res, "res - fetchMethodsLogo");
-  methodsLogo.value = res;
-  console.log(methodsLogo.value, "methodsLogo.value");
-
-  if (methodsLogo.value[0]?.length) { return }
-
-  const testLogo = [
-    'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
-    'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
-    'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
-    'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
-    'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
-    'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
-  ]
-
-  methodsLogo.value = testLogo;
-  console.log(methodsLogo.value, "methodsLogo.value");
-}
+  methodsLogoPayIn.value = res.payin || [];
+  methodsLogoPayOut.value = res.payout || [];
+};
 
 onBeforeMount(() => {
   tabInit();
@@ -196,6 +178,22 @@ onMounted(() => {
             </li>
           </ul>
 
+          <div class="payment-logos">
+            <h5>Top Up Methods</h5>
+            <ul v-if="methodsLogoPayIn.length" class="profile__methods spaced">
+              <li v-for="logo in methodsLogoPayIn" :key="logo" class="profile__methods--item">
+                <img :src="logo" alt="Top up method logo">
+              </li>
+            </ul>
+
+            <h5>Withdraw Methods</h5>
+            <ul v-if="methodsLogoPayOut.length" class="profile__methods spaced">
+              <li v-for="logo in methodsLogoPayOut" :key="logo" class="profile__methods--item">
+                <img :src="logo" alt="Withdraw method logo">
+              </li>
+            </ul>
+          </div>
+
         </div>
       </div>
     </PageWrapperMain>
@@ -207,7 +205,7 @@ onMounted(() => {
 
 </template>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .profile {
   position: relative;
 
@@ -222,14 +220,12 @@ onMounted(() => {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-
   }
 
   &__header {
     display: flex;
     min-height: 170px;
     background: #ffe432c7;
-    // flex-wrap: wrap;
     flex-wrap: wrap-reverse;
 
     &--welcome {
@@ -245,7 +241,6 @@ onMounted(() => {
       h3 {
         font-weight: var(--font-weight-lighter);
         font-size: inherit;
-
       }
 
       @media screen and (max-width: 929px) {
@@ -352,7 +347,7 @@ onMounted(() => {
       border-bottom: 1px solid black;
       text-align: center;
       padding: 0 var(--profile-padding-secondary);
-      margin-bottom: 20px;
+      margin: 30px 0 20px;
     }
 
     p {
@@ -370,7 +365,8 @@ onMounted(() => {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 20px 20px; // увеличим отступ между логотипами
+    margin-bottom: 30px; // добавим отступ между списками
 
     &--item {
       max-width: 60px;

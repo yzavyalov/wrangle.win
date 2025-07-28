@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\Payment\Acquiring\WintecaExcahngeService;
 use App\Services\Payment\Acquiring\WintecaService;
 use App\Services\Payment\AlphaPoService;
+use App\Services\Payment\PaymentPayOutAnswerService;
 use Illuminate\Support\Facades\Auth;
 
 class PayOutService
@@ -18,6 +19,7 @@ class PayOutService
                                 WintecaExcahngeService $excahngeService,
                                 AlphaPoService $alphaPoService,
                                 CryptoProcessingService $cryptoProcessingService,
+                                PaymentPayOutAnswerService $paymentPayOutAnswerService,
     )
     {
         $this->wintecaService = $wintecaService;
@@ -29,6 +31,8 @@ class PayOutService
         $this->alphaPoService = $alphaPoService;
 
         $this->cryptoProcessingService = $cryptoProcessingService;
+
+        $this->paymentPayOutAnswerService = $paymentPayOutAnswerService;
 
         $this->base_currency = env('CURRENT_CURRENCY');
     }
@@ -79,8 +83,8 @@ class PayOutService
         $invoice = $this->wintecaService->CreatePayOutInvoice($payout,$newAmount,$currency, $cardNumber);
 
         $this->wintecaService->paymentLogsService->createLog($payout,json_encode($invoice));
-dd($invoice);
-        if ($invoice)
+
+        if (isset($invoice['response']))
         {
             $payout->transactionable()->create([
                 'id_winteca' => $invoice['data']['id'],
@@ -94,6 +98,8 @@ dd($invoice);
                 'fee' => $invoice['data']['attributes']['fee'],
             ]);
         }
+
+        $invoice = $this->paymentPayOutAnswerService->wintecaError($invoice);
 
         return $invoice;
     }

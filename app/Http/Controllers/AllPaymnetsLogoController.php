@@ -11,6 +11,23 @@ class AllPaymnetsLogoController extends Controller
      */
     public function __invoke()
     {
-        return  PaymentMethod::all()->pluck('logo');
+        $methods = PaymentMethod::all();
+
+        $grouped = [
+            'payin' => [],
+            'payout' => [],
+        ];
+
+        foreach ($methods as $method) {
+            $logoUrl = asset('storage/' . $method->logo);
+
+            if ($method->category == 1) {
+                $grouped['payin'][] = $logoUrl;
+            } elseif ($method->category == 2) {
+                $grouped['payout'][] = $logoUrl;
+            }
+        }
+
+        return $grouped;
     }
 }
