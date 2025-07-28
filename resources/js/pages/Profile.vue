@@ -363,17 +363,23 @@ onMounted(() => {
   &__methods {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start; // выравнивание по левому краю
     align-items: center;
-    gap: 20px 20px; // увеличим отступ между логотипами
-    margin-bottom: 30px; // добавим отступ между списками
+    gap: 20px 20px;
+    margin-bottom: 30px;
 
     &--item {
-      max-width: 60px;
-      max-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 30px; // фиксированная высота блока
+      max-height: 30px;
 
       img {
-        width: 100%;
+        height: 30px; // одинаковая высота всех логотипов
+        width: auto; // ширина автоматически подстраивается
+        object-fit: contain; // чтобы не растягивались
+        display: block;
       }
     }
   }
