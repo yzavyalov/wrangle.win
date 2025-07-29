@@ -59,7 +59,7 @@ class DepositPaymentService
                 'fee' => $invoice['data']['attributes']['fee'],
             ]);
         }
-dd($invoice);
+
         $invoice = $this->paymentAnswerService->wintecaPayInAnswer($invoice);
 
         return $invoice;
