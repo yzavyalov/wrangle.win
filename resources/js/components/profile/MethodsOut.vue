@@ -209,7 +209,7 @@ onMounted(() => {
               @click="selectMethod(method)"
             >
               <p class="methods-list__listitem--left">{{ method.title?.length > 20 ? cutTextLength(method.title, 20) : method.title  }}</p>
-              <p class="methods-list__listitem--right">Rate: {{ method.rate?.toFixed(2) }}%  Fee: {{ method.fix_fee?.toFixed(2)}} EUR</p>
+              <p class="methods-list__listitem--right">Rate: {{ method.rate?.toFixed(2) }}%  Fee: {{ method.fix_fee?.toFixed(2)}} {{ method.currency}}</p>
             </ButtonWithClose>
           </ul>
         </div>
@@ -218,7 +218,7 @@ onMounted(() => {
           <ul class="methods-list__list mb-30">
             <ButtonWithClose class="methods-list__listitem" is-active @click="selectMethod(selectedMethod)">
               <p class="methods-list__listitem--left">{{ selectedMethod.title?.length > 20 ? cutTextLength(selectedMethod.title, 20) : selectedMethod.title  }}</p>
-              <p class="methods-list__listitem--right">Rate: {{ selectedMethod.fix_fee?.toFixed(2) }}% Fix: {{ selectedMethod.fix_fee?.toFixed(2) }}EUR</p>
+              <p class="methods-list__listitem--right">Rate: {{ selectedMethod.fix_fee?.toFixed(2) }}% Fix: {{ selectedMethod.fix_fee?.toFixed(2) }}{{method.currency}}</p>
             </ButtonWithClose>
           </ul>
 
