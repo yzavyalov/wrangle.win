@@ -17,7 +17,7 @@ class PaymentAnswerService
                                 </p>
                                 <button onclick="window.location.href='/api/payments/in'"
                                         style="padding: 10px 20px; font-size: 16px; background-color: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                    Назад
+                                    BACK
                                 </button>
                             </div>
                         HTML;
@@ -29,7 +29,7 @@ class PaymentAnswerService
             $currency = htmlspecialchars($attributes['currency'] ?? '', ENT_QUOTES, 'UTF-8');
 
             $message = <<<HTML
-                            <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
+                            <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px; color: red;">
                                 <p style="font-size: 18px;">
                                     You have successfully created a deposit.
                                 </p>

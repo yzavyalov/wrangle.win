@@ -44,7 +44,7 @@ class DepositPaymentService
         $invoice = $this->wintecaService->createWintecaPaymentInvoice($newAmount, 'USD', $deposit->id);
 
         $this->wintecaService->paymentLogsService->createLog($deposit,json_encode($invoice));
-dd($invoice);
+
         if ($invoice)
         {
             $deposit->transactionable()->create([
@@ -59,7 +59,7 @@ dd($invoice);
                 'fee' => $invoice['data']['attributes']['fee'],
             ]);
         }
-
+dd($invoice);
         $invoice = $this->paymentAnswerService->wintecaPayInAnswer($invoice);
 
         return $invoice;
