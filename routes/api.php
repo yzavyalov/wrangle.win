@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\{BetCategoryController,
     FavouriteBetController,
     OwnBetController,
     PaymnetsController,
+    ProfileController,
     TransactionController,
     UserDataController};
 use App\Http\Controllers\Payment\{
@@ -93,10 +94,12 @@ Route::middleware([EnsureFrontendRequestsAreStateful::class,'auth:sanctum', 'bad
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('web');
 
     // Profile
-    Route::put('/update-profile', [UserDataController::class, 'updateProfile']);
+    Route::get('show-my-profile',[ProfileController::class,'showProfile']);
+    Route::put('update-profile', [ProfileController::class, 'updateProfile']);
     Route::put('/user/password', [UserDataController::class, 'changeUserPassword']);
     Route::get('user-data', [UserDataController::class, 'getUser']);
     Route::post('/verify-age', [AgeVerificationController::class, 'verifyAge']);
+    Route::get('user-del',[ProfileController::class,'delProfile']);
 
     // Bets
     Route::post('/bet-categories', [BetCategoryController::class, 'store']);

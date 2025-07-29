@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserDataResource;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
@@ -13,24 +11,6 @@ use Illuminate\Validation\Rules\Password;
 
 class UserDataController extends Controller
 {
-    public function getUser()
-    {
-        return $this->successJsonAnswer200('User',UserDataResource::make(Auth::user()));
-    }
-
-    public function updateProfile(Request $request)
-    {
-        $user = $request->user();
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-
-        $user->update($validated);
-
-        return $this->successJsonAnswer200('Your profile was updated!', UserDataResource::make($user));
-    }
-
 
     public function changeUserPassword(Request $request)
     {
