@@ -77,7 +77,7 @@ class WintecaController extends Controller
 
     public function payInPending(Request $request)
     {
-        dd($request);
+        dd($request->json());
         $message = 'Тут будет сообщение от сервера';
 
         return Inertia::location(route('profile', ['tab' => 'paymentAnswer', 'message' => $message]));

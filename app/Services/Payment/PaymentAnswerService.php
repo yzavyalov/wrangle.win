@@ -19,7 +19,7 @@ class PaymentAnswerService
             $message = <<<HTML
                             <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px; color: red;">
                                 <p style="font-size: 18px;">
-                                    Withdrawal of money failed. Please select another method or contact technical support.
+                                    Failed to create a deposit. Please select another method or contact technical support.
                                 </p>
                                 <button onclick="window.location.href= '{$this->backUrl}'"
                                         style="padding: 10px 20px; font-size: 16px; background-color: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">
