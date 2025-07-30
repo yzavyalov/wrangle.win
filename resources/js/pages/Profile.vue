@@ -31,13 +31,16 @@ const profileTabCompoenents = shallowRef({
   paymentAnswer: defineAsyncComponent(() => import("@/components/profile/PaymentAnswer.vue"))
 })
 
+const props = defineProps({
+  transactionMessage: { type: String, default: '<div><p>Transaction message - demo</p><p>Transaction message - demo</p></div>' }
+})
+
 const { confirm } = useConfirm();
 const { ownBets, fetchOwnBets, fetchMoreOwnBets, openBetHandler, deleteOwnBetHandler } = useOwnBets();
 const { favoriteBets, fetchFavoriteBets, fetchMoreFavoriteBets, toggleBetToFavoriteHandler } = useFavoriteBets();
 const { setQueryParam, removeQueryParam, getQueryParam } = useHistory();
 const { userBalanceWithCurrency, currentUser, userBalance } = useUser();
 const { isLoading, loadingStart, loadingStop } = useLoading();
-// const message = computed(() => page.props.value.message || null);
 
 const activeTab = ref(false);
 
@@ -202,6 +205,11 @@ onMounted(() => {
 
         </div>
       </div>
+
+      <div class="profile__footer" v-if="transactionMessage">
+        <p class="text-center">======== test zone ========</p>
+        <div v-html="transactionMessage"></div>
+      </div>
     </PageWrapperMain>
 
     <PageWrapperMain v-else-if="activeTab">
@@ -364,6 +372,15 @@ onMounted(() => {
   &__footer {
     position: relative;
     z-index: 1;
+    background: #FFEC1C;
+    min-width: 100%;
+    padding: var(--profile-padding-main);
+    // padding-left: var(--profile-padding-secondary);
+    // padding-right: var(--profile-padding-secondary);
+    // font-size: 20px;
+    // font-weight: var(--font-weight-light);
+    // font-style: italic;
+    // text-align: center;
   }
 
   &__methods {
