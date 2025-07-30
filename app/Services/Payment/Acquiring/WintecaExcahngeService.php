@@ -44,7 +44,7 @@ class WintecaExcahngeService
 
         $rate = $response['data'][$this->baseCurrency][$paymentCurrency];
 
-        return $sum*$rate;
+        return ['sum' => $sum*$rate, 'currency' => $paymentCurrency];
     }
 
     public function exchangePayOut($sum)

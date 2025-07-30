@@ -10,7 +10,7 @@ class PaymentAnswerService
 
     public function __construct()
     {
-        $this->backUrl = env('APP_URL').'/api/payments/in';
+        $this->backUrl = env('APP_URL').'/profile';
     }
     public function wintecaPayInAnswer($answer)
     {

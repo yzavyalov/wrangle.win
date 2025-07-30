@@ -39,9 +39,9 @@ class DepositPaymentService
 
         $exchangeSum = $this->excahngeService->exchangePayIn($amount);
 
-        $newAmount = PaymentAmountService::amountPayInWithoutComission($payment_id,$exchangeSum);
+        $newAmount = PaymentAmountService::amountPayInWithoutComission($payment_id,$exchangeSum['sum']);
 
-        $invoice = $this->wintecaService->createWintecaPaymentInvoice($newAmount, 'USD', $deposit->id);
+        $invoice = $this->wintecaService->createWintecaPaymentInvoice($newAmount, $exchangeSum['currency'], $deposit->id);
 
         $this->wintecaService->paymentLogsService->createLog($deposit,json_encode($invoice));
 
