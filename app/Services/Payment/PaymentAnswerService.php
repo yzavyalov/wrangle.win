@@ -6,11 +6,11 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class PaymentAnswerService
 {
-    public $baseUrl;
+    public $backUrl;
 
     public function __construct()
     {
-        $this->baseUrl = env('APP_URL');
+        $this->backUrl = env('APP_URL').'/api/payments/in';
     }
     public function wintecaPayInAnswer($answer)
     {
@@ -21,7 +21,7 @@ class PaymentAnswerService
                                 <p style="font-size: 18px;">
                                     Withdrawal of money failed. Please select another method or contact technical support.
                                 </p>
-                                <button onclick="window.location.href= $this->baseUrl.'/api/payments/in'"
+                                <button onclick="window.location.href= {$this->backUrl}"
                                         style="padding: 10px 20px; font-size: 16px; background-color: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">
                                     BACK
                                 </button>
@@ -50,7 +50,7 @@ class PaymentAnswerService
                                 <p style="font-size: 16px;">
                                     <strong>Amount:</strong> {$amount} {$currency}
                                 </p>
-                                <button onclick="window.location.href= $this->baseUrl.'/api/payments/in'"
+                                <button onclick="window.location.href= {$this->backUrl}"
                                         style="margin-top: 20px; padding: 10px 20px; font-size: 16px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
                                     OK
                                 </button>
