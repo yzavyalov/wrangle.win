@@ -67,18 +67,21 @@ class WintecaController extends Controller
 
     public function payInSuccess()
     {
-        return $this->successJsonAnswer200('Your deposit has been sent to the bank for processing.',['status' => 1]);
+        $message = 'Your transaction has been successfully created. Your balance will be replenished shortly.';
+
+        return Inertia::location(route('profile', ['tab' => 'paymentAnswer', 'message' => $message]));
     }
 
     public function payInFail()
     {
-        return $this->errorJsonAnswer403('The bank cannot process your payment.',['status' => 0]);
+        $message = 'Your transaction was declined. Please try again later or choose another method.';
+
+        return Inertia::location(route('profile', ['tab' => 'paymentAnswer', 'message' => $message]));
     }
 
     public function payInPending(Request $request)
     {
-        dd($request->json());
-        $message = 'Тут будет сообщение от сервера';
+        $message = 'The payment has been created, once the bank processes the transaction, your balance will be replenished.';
 
         return Inertia::location(route('profile', ['tab' => 'paymentAnswer', 'message' => $message]));
     }
