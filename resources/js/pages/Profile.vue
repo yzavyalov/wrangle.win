@@ -37,7 +37,7 @@ const { favoriteBets, fetchFavoriteBets, fetchMoreFavoriteBets, toggleBetToFavor
 const { setQueryParam, removeQueryParam, getQueryParam } = useHistory();
 const { userBalanceWithCurrency, currentUser, userBalance } = useUser();
 const { isLoading, loadingStart, loadingStop } = useLoading();
-const message = computed(() => page.props.value.message || null);
+// const message = computed(() => page.props.value.message || null);
 
 const activeTab = ref(false);
 
