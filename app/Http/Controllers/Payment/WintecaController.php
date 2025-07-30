@@ -8,6 +8,7 @@ use App\Services\WintecaCallbackService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
+use Inertia\Inertia;
 
 class WintecaController extends Controller
 {
@@ -77,6 +78,8 @@ class WintecaController extends Controller
     public function payInPending(Request $request)
     {
         dd($request);
-        return $this->errorJsonAnswer403('The bank cannot process your payment.',['status' => 2]);
+        $message = 'Тут будет сообщение от сервера';
+
+        return Inertia::location(route('profile', ['tab' => 'paymentAnswer', 'message' => $message]));
     }
 }

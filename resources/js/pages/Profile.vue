@@ -28,6 +28,7 @@ const profileTabCompoenents = shallowRef({
   transactions: defineAsyncComponent(() => import("@/components/profile/TransactionTable.vue")),
   withdraw: defineAsyncComponent(() => import("@/components/profile/MethodsOut.vue")),
   deposit: defineAsyncComponent(() => import("@/components/profile/MethodsIn.vue")),
+  paymentAnswer: defineAsyncComponent(() => import("@/components/profile/PaymentAnswer.vue"))
 })
 
 const { confirm } = useConfirm();
@@ -55,6 +56,9 @@ const dynamicProfileTab = computed(() => {
 
     case 'deposit':
       return profileTabCompoenents.value.deposit;
+
+    case 'paymentAnswer':
+      return profileTabCompoenents.value.paymentAnswer;
 
     default:
       console.warn(`No handle for such tab: ${activeTab.value?.id}`);
