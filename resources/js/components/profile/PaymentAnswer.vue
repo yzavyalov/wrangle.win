@@ -15,11 +15,8 @@ defineEmits(["close"])
 const { isLoading, loadingStart, loadingStop } = useLoading();
 
 const page = usePage();
-const message = computed(() => {
-  const url = new URL(page.url.value, window.location.origin);
-  return url.searchParams.get('message');
-});
 
+const message = computed(() => page.props.value.message || null);
 
 const fetchData = async () => {
   const fetchMethods = await fetchInPayments();

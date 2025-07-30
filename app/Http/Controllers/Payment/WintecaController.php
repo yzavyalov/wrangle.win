@@ -69,20 +69,29 @@ class WintecaController extends Controller
     {
         $message = 'Your transaction has been successfully created. Your balance will be replenished shortly.';
 
-        return redirect()->route('profile', ['tab' => 'paymentAnswer', 'message' => $message]);
+        return Inertia::render('Profile', [
+            'tab' => 'paymentAnswer',
+            'message' => $message,
+        ]);
     }
 
     public function payInFail()
     {
         $message = 'Your transaction was declined. Please try again later or choose another method.';
 
-        return redirect()->route('profile', ['tab' => 'paymentAnswer', 'message' => $message]);
+        return Inertia::render('Profile', [
+            'tab' => 'paymentAnswer',
+            'message' => $message,
+        ]);
     }
 
     public function payInPending(Request $request)
     {
         $message = 'The payment has been created, once the bank processes the transaction, your balance will be replenished.';
 
-        return redirect()->route('profile', ['tab' => 'paymentAnswer', 'message' => $message]);
+        return Inertia::render('Profile', [
+            'tab' => 'paymentAnswer',
+            'message' => $message,
+        ]);
     }
 }
