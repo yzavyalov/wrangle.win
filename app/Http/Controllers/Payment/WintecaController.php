@@ -71,12 +71,12 @@ class WintecaController extends Controller
 
     public function payInFail()
     {
-        dd('fhskfhksfs');
         return $this->errorJsonAnswer403('The bank cannot process your payment.',['status' => 0]);
     }
 
-    public function payInPending()
+    public function payInPending(Request $request)
     {
+        dd($request);
         return $this->errorJsonAnswer403('The bank cannot process your payment.',['status' => 2]);
     }
 }
