@@ -89,7 +89,7 @@ class WintecaController extends Controller
     {
         $message = 'The payment has been created, once the bank processes the transaction, your balance will be replenished.';
 
-        return Inertia::render('Profile', [
+        return redirect()->route('profile')->with([
             'tab' => 'paymentAnswer',
             'message' => $message,
         ]);
