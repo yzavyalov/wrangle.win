@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
+use App\Models\Winteca_transaction;
 use App\Services\Payment\Acquiring\WintecaService;
 use App\Services\WintecaCallbackService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Inertia\Inertia;
@@ -88,8 +90,24 @@ class WintecaController extends Controller
 
     public function payInPending(Request $request)
     {
+//        $amount = $request->query('amount'); // 13.24
+//        $created = $request->query('created'); // 1753981814
+//        $currency = $request->query('currency'); // USD
+        $id = $request->query('id'); // cpi_W63UkZRrTRetAkcW
+
+        $winteca_transaction = Winteca_transaction::query()->where('id_winteca')->first();
+
+        if ($winteca_transaction)
+        {
+            $operation = $winteca_transaction->transactionable;
+
+            $user = $operation->user;
+
+            Auth::login($user);
+        }
+
         $message = 'The payment has been created, once the bank processes the transaction, your balance will be replenished.';
 
-        return Inertia::render('Profile',['transactionMessage' => $message,]);
+        return Inertia::render('Profile',['transactionMessage' => $message]);
     }
 }
