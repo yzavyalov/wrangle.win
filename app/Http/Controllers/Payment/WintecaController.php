@@ -96,7 +96,7 @@ class WintecaController extends Controller
         $id = $request->query('id'); // cpi_W63UkZRrTRetAkcW
 
         $winteca_transaction = Winteca_transaction::query()->where('id_winteca')->first();
-
+dd($winteca_transaction);
         if ($winteca_transaction)
         {
             $operation = $winteca_transaction->transactionable;
