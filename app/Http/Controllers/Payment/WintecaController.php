@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Inertia\Inertia;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 
 class WintecaController extends Controller
 {
@@ -89,8 +90,6 @@ class WintecaController extends Controller
     {
         $message = 'The payment has been created, once the bank processes the transaction, your balance will be replenished.';
 
-        return redirect()->route('profile')->with([
-            'transactionMessage' => $message,
-        ]);
+        return Inertia::render('Profile',['transactionMessage' => $message,]);
     }
 }
