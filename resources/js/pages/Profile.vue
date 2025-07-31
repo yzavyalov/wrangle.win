@@ -31,7 +31,7 @@ const profileTabCompoenents = shallowRef({
 })
 
 const props = defineProps({
-  transactionMessage: { type: String, default: '<div><p>Transaction message - demo</p><p>Transaction message - demo</p></div>' }
+  transactionMessage: { type: String, default: null }
 })
 
 const { confirm } = useConfirm();
