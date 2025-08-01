@@ -83,7 +83,7 @@ class PayOutController extends Controller
             return $this->errorJsonAnswer400('incorrectly chosen method');
 
         $check = TwoFactorService::verify($validateData['code']);
-
+dd($check);
         if ($check)
         {
             $checkBalance = BalanceService::checkSum($validateData['amount']);

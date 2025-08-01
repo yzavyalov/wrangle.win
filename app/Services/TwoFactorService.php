@@ -43,7 +43,7 @@ class TwoFactorService
         $cacheName = 'code' . $user->id;
 
         $cachedCode = Cache::get($cacheName);
-dd($cachedCode, $inputCode);
+
         if ($cachedCode && $inputCode === $cachedCode) {
             // Удалим код после успешной проверки для безопасности
             Cache::forget($cacheName);
