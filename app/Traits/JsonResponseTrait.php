@@ -16,7 +16,7 @@ trait JsonResponseTrait
      * @param ResourceCollection|JsonResource|\Illuminate\Support\Collection|JsonResponse|EloquentCollection|array $data
      * @return JsonResponse
      */
-    protected function successJsonAnswer200(string $message, ResourceCollection|JsonResource|\Illuminate\Support\Collection|JsonResponse|EloquentCollection|array $data = []): JsonResponse
+    protected function successJsonAnswer200(string $message, ResourceCollection|JsonResource|\Illuminate\Support\Collection|JsonResponse|EloquentCollection|string|array $data = []): JsonResponse
     {
         return response()->json(
             $this->responseArray(StatusCodeEnum::CODE_200, true, $message, $data)
