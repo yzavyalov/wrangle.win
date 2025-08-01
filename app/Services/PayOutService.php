@@ -101,7 +101,7 @@ class PayOutService
 
         $invoice = $this->paymentPayOutAnswerService->wintecaError($invoice);
 
-        return $invoice;
+        return $this->paymentPayOutAnswerService->wintecaSuccsess($invoice);
     }
 
 

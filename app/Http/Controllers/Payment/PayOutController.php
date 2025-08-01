@@ -96,11 +96,11 @@ class PayOutController extends Controller
             if($response)
                 return $this->successJsonAnswer200('message',$response);
             else
-                return $this->errorJsonAnswer409('Withdrawal of money failed, please select another method or check with technical support');
+                return $this->successJsonAnswer200('message',PaymentPayOutAnswerService::withdrawFailed());
         }
         else
         {
-            return $this->errorJsonAnswer403('the code is not correct');
+            return $this->successJsonAnswer200('message',PaymentPayOutAnswerService::codeNotCorrect());
         }
     }
 }
