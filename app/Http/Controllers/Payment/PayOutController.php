@@ -73,6 +73,12 @@ class PayOutController extends Controller
     {
         $validateData = $request->validated();
 
+        $amount = $validateData['amount'];
+
+        $currency = $validateData['currency'] ?? 'EUR';
+
+        $card_number = $validateData['card_number'];
+
         if (PaymentMethod::query()->findOrFail($id)->category !== PaymentCategoryEnum::OUT->value)
             return $this->errorJsonAnswer400('incorrectly chosen method');
 
@@ -85,7 +91,7 @@ class PayOutController extends Controller
             if (!$checkBalance)
                 return PaymentPayOutAnswerService::lessBalance();
 
-            $response = $this->outsidePaymentService->createPauOutCascade($validateData['amount'], $validateData['currency'], $validateData['card_number'],$id);
+            $response = $this->outsidePaymentService->createPauOutCascade($amount, $currency, $card_number,$id);
 
             if($response)
                 return $this->successJsonAnswer200('message',$response);

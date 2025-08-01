@@ -104,6 +104,7 @@ class WintecaService
             'customer' => [
                 'reference_id' => (string)$user->id,
                 'email' => $user->email,
+                'metadata' => ['key' => WintecaTokenService::createToken()],
             ],
             'return_url' => $this->myUrl.'/api/profile',
             'return_urls' => [

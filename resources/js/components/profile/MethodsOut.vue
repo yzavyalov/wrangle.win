@@ -225,7 +225,7 @@ onMounted(() => {
           <InputWIthHelper v-if="isNeedWalletAddress"
             v-model="formData.whaletAddress"
             class="mb-20"
-            :helper-text="selectedMethod?.type === METHOD_TYPES.CARD ? 'Card number:' : 'Wallet adress:'"
+            :helper-text="selectedMethod?.type === METHOD_TYPES.CARD ? 'Card number:' : 'Wallet address:'"
             :placeholder="selectedMethod?.type === METHOD_TYPES.CARD ? 'Card number' : 'Wallet address'"
             :type="selectedMethod?.type === METHOD_TYPES.CARD ? 'number' : 'text'"
             :is-warning="v$.whaletAddress.$error"
