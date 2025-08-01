@@ -227,7 +227,7 @@ onMounted(() => {
             class="mb-20"
             :helper-text="selectedMethod?.type === METHOD_TYPES.CARD ? 'Card number:' : 'Wallet adress:'"
             :placeholder="selectedMethod?.type === METHOD_TYPES.CARD ? 'Card number' : 'Wallet address'"
-            :type="selectedMethod?.type === METHOD_TYPES.CARD ? 'number' : 'text'"
+            :type="selectedMethod?.type === METHOD_TYPES.CARD ? 'text' : 'text'"
             :is-warning="v$.whaletAddress.$error"
             :warning-text="v$.whaletAddress.$errors[0]?.$message"
           />
