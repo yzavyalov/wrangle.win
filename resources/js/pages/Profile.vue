@@ -16,6 +16,8 @@ import { useLoading } from "@/composables/useLoading";
 import { getMethodsLogo } from "@/services/payments";
 import { getCSRFToken } from "@/services/user";
 import { onImageErrorWithLogo } from "@/helpers/onImageError";
+import { useModalsStore } from "@/store/modals";
+import { triggerOpenNewModal } from '@/composables/useModalsTriggers';
 
 const TAB_KEY = 'tab';
 
@@ -31,7 +33,8 @@ const profileTabCompoenents = shallowRef({
 })
 
 const props = defineProps({
-  transactionMessage: { type: String, default: null }
+  // transactionMessage: { type: String, default: null }
+  transactionMessage: { type: String, default: '<div><p>test</p><p>test2</p><p>test3</p></div>' }
 })
 
 const { confirm } = useConfirm();
@@ -104,6 +107,10 @@ onMounted(() => {
   fetchFavoriteBets();
 
   fetchMethodsLogo();
+
+  if (props.transactionMessage) {
+    triggerOpenNewModal('tranzaction-modal', { setModalContent: { transactionMessage: props.transactionMessage } });
+  }
 })
 
 </script>
