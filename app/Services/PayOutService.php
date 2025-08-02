@@ -97,11 +97,11 @@ class PayOutService
                 'reference_id' => $invoice['data']['attributes']['reference_id'],
                 'fee' => $invoice['data']['attributes']['fee'],
             ]);
+
+            return $this->paymentPayOutAnswerService->wintecaSuccsess($invoice);
         }
 
-        $invoice = $this->paymentPayOutAnswerService->wintecaError($invoice);
-
-        return $invoice;
+        return $this->paymentPayOutAnswerService->wintecaError($invoice);
     }
 
 

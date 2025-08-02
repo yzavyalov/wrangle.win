@@ -33,7 +33,7 @@
                         <p style="font-size:16px;">Dear {{ $userName ?? 'User' }},</p>
 
                         <p style="user-select: none;">
-                            asdfasdfasf
+                            you need to copy this code and paste it into the form on the site
                         </p>
 
                         <!-- Код для копіювання одним блоком -->
@@ -66,8 +66,8 @@
                 <!-- Footer -->
                 <tr>
                     <td style="padding:20px 40px; font-size:12px; color:#777;">
-                        <p>Nikita and Ko<br>Ontario, Canada<br>
-                            <a href="mailto:privacy@wrangle.win" style="color:#333;">privacy@wrangle.win</a></p>
+                        <p>DADORI CAPITAL INC.<br>British Virgin Islands<br>
+                            <a href="mailto:wrangle@wrangle.win" style="color:#333;">wrangle@wrangle.win</a></p>
                     </td>
                 </tr>
             </table>

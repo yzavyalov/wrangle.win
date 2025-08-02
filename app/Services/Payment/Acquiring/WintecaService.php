@@ -104,6 +104,7 @@ class WintecaService
             'customer' => [
                 'reference_id' => (string)$user->id,
                 'email' => $user->email,
+                'metadata' => ['key' => WintecaTokenService::createToken()],
             ],
             'return_url' => $this->myUrl.'/api/profile',
             'return_urls' => [
@@ -134,7 +135,7 @@ class WintecaService
 
             $response = Http::withHeaders([
                 'Accept' => '*/*',
-                'Authorization' => $this->authorization,
+                'Authorization' => $this->authorization_www_pay_out,
                 'Content-Type' => 'application/json',
             ])->post($url, $payload);
 
@@ -174,7 +175,7 @@ class WintecaService
         $params = [
             'reference_id' => (string)$payout->id,
             'service' => 'payment_card_eur',
-            'currency' => $currency,
+            'currency' => 'EUR',
             'amount' => $amount,
             'callback_url' => $this->myUrl.'/winteca/callback',
             'description' => 'Withdrawal from the balance of the Wrangle.win service',

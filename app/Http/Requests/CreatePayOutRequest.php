@@ -23,7 +23,7 @@ class CreatePayOutRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'currency' => 'required|string|max:10',
+            'currency' => 'nullable|string|max:10',
             'amount' => 'required|integer',
             'code' => 'required|string|max:10',
             'card_number' => 'nullable|string|max:16'
