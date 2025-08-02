@@ -104,7 +104,7 @@ export const checkPaymentCode = async (payload: CheckCodePayload) => {
   .then(res => {
     console.log(res, "res - checkCode");
 
-    return res?.data;
+    return res?.data.data;
   })
   .catch(e => notifyError(e.message));
 };

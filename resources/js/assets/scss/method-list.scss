@@ -86,7 +86,8 @@
   &__listitem {
     background: var(--bg-color-secondary);
     border-radius: var(--border-radius-main);
-    height: 45px;
+    // height: 45px;
+    min-height: 45px;
     display: grid;
     grid-template-columns: 1fr 175px;
     align-items: center;

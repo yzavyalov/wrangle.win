@@ -122,8 +122,8 @@ const submitHandler = async () => {
     console.log(checkCodeResult, 'checkCodeResult');
 
 
-    if (checkCodeResult.message) {
-      formData.widrawalMessage = checkCodeResult.message;
+    if (checkCodeResult?.original?.message) {
+      formData.widrawalMessage = checkCodeResult.original.message;
     }
 
     console.log(formData.widrawalMessage, 'formData.widrawalMessage');
@@ -218,7 +218,7 @@ onMounted(() => {
           <ul class="methods-list__list mb-30">
             <ButtonWithClose class="methods-list__listitem" is-active @click="selectMethod(selectedMethod)">
               <p class="methods-list__listitem--left">{{ selectedMethod.title?.length > 20 ? cutTextLength(selectedMethod.title, 20) : selectedMethod.title  }}</p>
-              <p class="methods-list__listitem--right">Rate: {{ selectedMethod.rate?.toFixed(2) }}% Fix: {{ selectedMethod.fix_fee?.toFixed(2) }}{{method?.currency}}</p>
+              <p class="methods-list__listitem--right">Rate: {{ selectedMethod.rate?.toFixed(2) }}% Fix: {{ selectedMethod.fix_fee?.toFixed(2) }}{{selectedMethod?.currency}}</p>
             </ButtonWithClose>
           </ul>
 

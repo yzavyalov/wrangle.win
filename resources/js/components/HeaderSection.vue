@@ -33,6 +33,8 @@ const navButtonsEl = ref([]);
 
 const isSticky = ref(false);
 
+const innerWidth = ref(window.innerWidth);
+
 const handleScroll = () => {
   isSticky.value = window.scrollY > 200;
 };
@@ -46,13 +48,13 @@ const sideBarClickHandler = (link) => {
 }
 
 const recalculateLinks = () => {
-  const width = window.innerWidth;
+  innerWidth.value = window.innerWidth;
 
-  if (width >= 1299) {
+  if (innerWidth.value >= 1299) {
     dynamicHeaderLinks.value = [...headerLinks];
     dynamicSidebarLinks.value = [...sideBarLinks];
 
-  } else if (width > 700) {
+  } else if (innerWidth.value > 700) {
     dynamicHeaderLinks.value = headerLinks.filter((_, i) => i !== 1 && i !== 2);
     dynamicSidebarLinks.value = [...sideBarLinks, ...headerLinks.slice(1, 3)];
 
@@ -69,19 +71,13 @@ const updateSearchQuery = useDebounceFn((event) => {
 }, 100)
 
 onMounted(() => {
-  nextTick(() => {
-    nextTick(() => {
-      recalculateLinks();
-      window.addEventListener('resize', recalculateLinks);
-    });
-  });
-
   console.log(dynamicHeaderLinks.value, 'dynamicHeaderLinks.value - onMounted');
   console.log(dynamicSidebarLinks.value, 'dynamicSidebarLinks.value - onMounted');
 
   resetFilters();
 
   window.addEventListener('scroll', handleScroll);
+  window.addEventListener('resize', recalculateLinks);
 });
 
 onUnmounted(() => {
@@ -129,16 +125,16 @@ onUnmounted(() => {
         </button>
       </nav>
 
-      <div v-if="currentUser" class="search hide_on_mobile">
+      <div v-if="currentUser && innerWidth > 929" class="search">
         <input type="text" :value="searchQuery" placeholder="Search Events" @input="updateSearchQuery" />
       </div>
 
       <div class="auth">
-        <button v-if="currentUser" class="auth__btn" @click="navigateTo(PAGE_ROUTES.PROFILE)">{{ currentUser?.name }}</button>
-        <button  v-if="currentUser" class="auth__btn" @click="openProfileMenu">Profile</button>
+        <button v-if="currentUser && innerWidth > 449" class="auth__btn" @click="navigateTo(PAGE_ROUTES.PROFILE)">{{ currentUser?.name }}</button>
+        <button v-if="currentUser" class="auth__btn" @click="openProfileMenu">Profile</button>
 
-        <button  v-if="!currentUser" class="auth__btn" @click="navigateTo(PAGE_ROUTES.REGISTER)">Signup</button>
-        <button  v-if="!currentUser" class="auth__btn" @click="navigateTo(PAGE_ROUTES.LOGIN)">Login</button>
+        <button v-if="!currentUser" class="auth__btn " @click="navigateTo(PAGE_ROUTES.REGISTER)">Signup</button>
+        <button v-if="!currentUser" class="auth__btn" @click="navigateTo(PAGE_ROUTES.LOGIN)">Login</button>
       </div>
     </div>
   </header>
@@ -151,15 +147,7 @@ onUnmounted(() => {
   --header-height: 45px;
 
   position: relative;
-  // // top: 0px;
   z-index: 2;
-  // display: flex;
-  // gap: 10px;
-  // justify-content: start;
-  // align-items: center;
-  // padding: 10px 20px;
-  // font-weight: var(--font-weight-light);
-  // transition: all ease 0.3s;
 
   &__burdger {
     flex: 0 0 48px;
@@ -319,12 +307,6 @@ onUnmounted(() => {
         border: 1px solid black;
         text-decoration: underline;
       }
-    }
-  }
-
-  @media screen and (max-width: 929px) {
-    .hide_on_mobile {
-      display: none;
     }
   }
 }
