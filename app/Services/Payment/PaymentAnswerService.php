@@ -74,7 +74,7 @@ class PaymentAnswerService
                         <p style="font-size: 18px;">
                             <strong>Ошибка:</strong> {$errorMessage}
                         </p>
-                        <button onclick="window.location.href='/api/payments/in'"
+                        <button onclick="window.location.href='{$this->backUrl}'"
                                 style="padding: 10px 20px; font-size: 16px; background-color: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">
                             Назад
                         </button>
@@ -94,7 +94,7 @@ class PaymentAnswerService
                         <p style="font-size: 18px;">
                             <strong>Ошибка:</strong> Не удалось получить адрес кошелька.
                         </p>
-                        <button onclick="window.location.href='/api/payments/in'"
+                        <button onclick="window.location.href='{$this->backUrl}'"
                                 style="padding: 10px 20px; font-size: 16px; background-color: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">
                             Назад
                         </button>
@@ -114,7 +114,7 @@ class PaymentAnswerService
                     </p>
                     <p style="font-size: 20px; font-weight: bold; word-break: break-all;">{$wallet}</p>
                     <div style="margin: 20px 0;">{$qr}</div>
-                    <button onclick="window.location.href='/api/payments/in'"
+                    <button onclick="window.location.href='{$this->backUrl}'"
                             style="padding: 10px 20px; font-size: 16px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
                         OK
                     </button>
