@@ -125,7 +125,7 @@ class AlphaPoService
     {
 
         $list = $this->cryptoProcessingService->pare();
-
+dd($list);
         $ammount = $this->convertCurrency($list,$fromCurrency,$toCurrency,$amount);
 
         if ($ammount !== null)
