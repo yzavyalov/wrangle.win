@@ -35,7 +35,7 @@ const rules = computed(() => {
   return {
     selectedAmount: {
       required: helpers.withMessage('This field is required', required),
-      minSum: helpers.withMessage('Minimum sun to top up 1', minValue(1)),
+      minSum: helpers.withMessage('Minimum sum to top up 1', minValue(1)),
     },
     // whaletAddress: {
     //   required: helpers.withMessage('This field is required', required),

@@ -16,7 +16,7 @@ class AlphaPoExcechangeService
     public function exchangeCrypto($amount, $currency)
     {
         $exchange = $this->alphaPoService->exchange($currency,$this->baseCurrency,$amount);
-
+dd($exchange);
         return $exchange;
     }
 
