@@ -2,12 +2,14 @@
 
 namespace App\Mail;
 
+use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Auth;
 
 class VerificationCodeEmail extends Mailable implements ShouldQueue
 {
@@ -42,6 +44,7 @@ class VerificationCodeEmail extends Mailable implements ShouldQueue
             view: 'mail.verifacationCode',
             with: [
                 'code' => $this->code,
+                'userName' => Auth::user()->name,
             ]
         );
     }
