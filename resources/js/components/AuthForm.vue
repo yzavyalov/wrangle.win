@@ -6,7 +6,7 @@ import ButtonBaseWithIcon from '@/components/details/ButtonBaseWithIcon.vue';
 import { navigateTo } from '@/helpers/navigate';
 import useVuelidate from '@vuelidate/core';
 import { required, sameAs, email, minLength } from '@vuelidate/validators';
-import { register, login, loginWithSocial } from '@/services/user';
+import { register, login, loginWithSocial, getCSRFToken } from '@/services/user';
 import { PAGE_ROUTES } from '@/utils/datasets';
 import { useInform } from "@/composables/useInform"
 import { notifyWarning } from '@/helpers/notify';
@@ -57,6 +57,9 @@ const loginInHandle = async () => {
 
   try {
     loadingStart();
+
+    await getCSRFToken();
+
     const paylaod = {
       email: formData.email,
       password: formData.password,
@@ -82,6 +85,8 @@ const loginWithSocialHandler = async (socialName) => {
 
   try {
     loadingStart();
+
+    await getCSRFToken();
 
     const result = await loginWithSocial(socialName);
     console.log(result, 'result - loginWithSocialHandler');
@@ -110,6 +115,8 @@ const registerHandle = async () => {
 
   try {
     loadingStart();
+
+    await getCSRFToken();
 
     const paylaod = {
       name: formData.name,

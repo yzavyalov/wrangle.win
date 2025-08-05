@@ -3,6 +3,7 @@ import { AUTH, USER } from "@/api/enpoints";
 import { useUserStore } from "@/store/user";
 import { HTTPResponse } from "@/types/http";
 import { notifyWarning } from "@/helpers/notify";
+import { handleErrorNotify } from "@/helpers/errorHandlers";
 
 const AUTH_ACCESS_TOKEN_KEY = "access_token";
 
@@ -26,8 +27,7 @@ export const register = async (payload: RegisterPayload) => {
 
   })
   .catch(e => {
-    notifyWarning(e?.response?.data?.message || e?.message);
-    console.error(e?.response?.data?.message || e?.message);
+    return handleErrorNotify(e);
   });
 }
 
