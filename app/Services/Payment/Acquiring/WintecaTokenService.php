@@ -9,7 +9,7 @@ class WintecaTokenService
 {
     public static function createToken()
     {
-        $tempToken = Str::uuid();
+        $tempToken = Str::uuid()->toString();
 
         Cache::put(
             'auth_token:' . $tempToken,    // ключ
