@@ -13,21 +13,10 @@ export const register = async (payload: RegisterPayload) => {
     console.log(res, "res - register");
     if (!res?.data?.data) { return false; }
 
-    // const user = res.data.data;
-
-    // const { token } = user;
-
-    // token && localStorage.setItem(AUTH_ACCESS_TOKEN_KEY, token);
-
-    // useUserStore().updateUser(user);
-
-    // return user;
-
     return !!res?.data?.data;
-
   })
   .catch(e => {
-    return handleErrorNotify(e);
+    handleErrorNotify(e);
   });
 }
 
@@ -49,8 +38,7 @@ export const login = async (payload: LoginPayload) => {
     return user;
   })
   .catch(e => {
-    notifyWarning(e?.response?.data?.message || e?.message);
-    console.error(e?.response?.data?.message || e?.message);
+    handleErrorNotify(e);
   });
 };
 
@@ -94,8 +82,7 @@ export const logout = async () => {
     return ;
   })
   .catch(e => {
-    notifyWarning(e?.response?.data?.message || e?.message);
-    console.error(e?.response?.data?.message || e?.message);
+    handleErrorNotify(e);
   });
 };
 
@@ -112,8 +99,7 @@ export const getUserData = async () => {
     return res.data;
   })
   .catch(e => {
-    notifyWarning(e?.response?.data?.message || e?.message);
-    console.error(e?.response?.data?.message || e?.message);
+    handleErrorNotify(e);
   });
 };
 
@@ -130,8 +116,7 @@ export const changeUserPassword = async (payload) => {
     return res.data;
   })
   .catch(e => {
-    notifyWarning(e?.response?.data?.message || e?.message);
-    console.error(e?.response?.data?.message || e?.message);
+    handleErrorNotify(e);
   });
 };
 
@@ -148,8 +133,7 @@ export const updateUserProfile = async (payload) => {
     return user;
   })
   .catch(e => {
-    notifyWarning(e?.response?.data?.message || e?.message);
-    console.error(e?.response?.data?.message || e?.message);
+    handleErrorNotify(e);
   });
 };
 
@@ -161,8 +145,7 @@ export const resetUserPassword = async (payload: ResetUserPassword) => {
     return res?.data?.success;
   })
   .catch(e => {
-    notifyWarning(e?.response?.data?.message || e?.message);
-    console.error(e?.response?.data?.message || e?.message);
+    handleErrorNotify(e);
   });
 }
 
@@ -174,8 +157,7 @@ export const forgotUserPassword = async (payload: ForgotUserPassword) => {
     return res.data.success;
   })
   .catch(e => {
-    notifyWarning(e?.response?.data?.message || e?.message);
-    console.error(e?.response?.data?.message || e?.message);
+    handleErrorNotify(e);
   });
 }
 
@@ -187,7 +169,6 @@ export const getCSRFToken = async () => {
     return res.data.data;
   })
   .catch(e => {
-    notifyWarning(e?.response?.data?.message || e?.message);
-    console.error(e?.response?.data?.message || e?.message);
+    handleErrorNotify(e);
   });
 }

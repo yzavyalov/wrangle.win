@@ -131,7 +131,7 @@ const registerHandle = async () => {
     if (!result) {
       await inform({
         title: 'Warning',
-        text: 'Wrong data...',
+        text: 'Wrong credentials...',
       })
       return console.warn('Register error');
     }
