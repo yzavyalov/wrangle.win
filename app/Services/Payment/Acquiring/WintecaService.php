@@ -114,7 +114,7 @@ class WintecaService
             ],
             'callback_url' => $this->myUrl.'/api/winteca/callback',
         ];
-dd($params);
+
         $response = $this->callWintecaApiPrivatPost($params,$endpoint);
 
         return $response;
