@@ -68,6 +68,7 @@ class DepositPaymentService
 
     public function createAlphaPoDeposit($amount,$currency,$payment_id)
     {
+        dd($amount, $currency, $payment_id);
         $exchangeSum = $this->alphaPoExcechangeService->exchangeCrypto($amount,$currency);
 
         if (!$exchangeSum)
