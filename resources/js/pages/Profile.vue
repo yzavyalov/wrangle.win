@@ -1,6 +1,6 @@
 <script setup>
 import { Head } from "@inertiajs/vue3";
-import { computed, defineAsyncComponent, onMounted, onBeforeMount, ref, shallowRef } from "vue";
+import { computed, defineAsyncComponent, onMounted, onBeforeMount, ref, shallowRef, nextTick } from "vue";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import { useConfirm } from '@/composables';
@@ -33,8 +33,8 @@ const profileTabCompoenents = shallowRef({
 })
 
 const props = defineProps({
-  // transactionMessage: { type: String, default: null }
-  transactionMessage: { type: String, default: '<div><p>test</p><p>test2</p><p>test3</p></div>' }
+  transactionMessage: { type: String, default: null }
+  // transactionMessage: { type: String, default: '<div><p>test</p><p>test2</p><p>test3</p></div>' }
 })
 
 const { confirm } = useConfirm();
@@ -109,7 +109,9 @@ onMounted(() => {
   fetchMethodsLogo();
 
   if (props.transactionMessage) {
-    triggerOpenNewModal('tranzaction-modal', { setModalContent: { transactionMessage: props.transactionMessage } });
+    nextTick(() => {
+      triggerOpenNewModal('tranzaction-modal', { setModalContent: { transactionMessage: props.transactionMessage } });
+    })
   }
 })
 
