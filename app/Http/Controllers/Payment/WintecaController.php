@@ -90,6 +90,7 @@ class WintecaController extends Controller
 
     public function payInPending(Request $request)
     {
+        dd($request);
 //        $amount = $request->query('amount'); // 13.24
 //        $created = $request->query('created'); // 1753981814
 //        $currency = $request->query('currency'); // USD
