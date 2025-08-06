@@ -61,13 +61,14 @@ class WintecaService
                 ],
             ];
 
+            dd(json_encode($payload));
+
             $response = Http::withHeaders([
                 'Accept' => '*/*',
                 'Authorization' => $this->authorization,
                 'Content-Type' => 'application/json',
             ])->post($url, $payload);
 
-            dd($response->json());
 
             // Проверка на HTTP-ошибку
             if (!$response->successful()) {
