@@ -66,7 +66,7 @@ class WintecaService
                 'Authorization' => $this->authorization,
                 'Content-Type' => 'application/json',
             ])->post($url, $payload);
-dd($response->json());
+
             // Проверка на HTTP-ошибку
             if (!$response->successful()) {
                 return false;
@@ -114,7 +114,7 @@ dd($response->json());
             ],
             'callback_url' => $this->myUrl.'/api/winteca/callback',
         ];
-
+dd($params);
         $response = $this->callWintecaApiPrivatPost($params,$endpoint);
 
         return $response;
