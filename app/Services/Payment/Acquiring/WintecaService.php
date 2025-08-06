@@ -67,7 +67,7 @@ class WintecaService
                 'Content-Type' => 'application/json',
             ])->post($url, $payload);
 
-dd($response->json());
+dd(json_encode($payload), $response->json());
             // Проверка на HTTP-ошибку
             if (!$response->successful()) {
                 return false;
