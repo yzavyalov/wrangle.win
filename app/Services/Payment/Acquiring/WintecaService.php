@@ -61,8 +61,6 @@ class WintecaService
                 ],
             ];
 
-            dd(json_encode($payload));
-
             $response = Http::withHeaders([
                 'Accept' => '*/*',
                 'Authorization' => $this->authorization,
