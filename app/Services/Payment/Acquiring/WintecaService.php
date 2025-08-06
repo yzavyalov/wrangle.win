@@ -60,7 +60,7 @@ class WintecaService
                     'attributes' => $params,
                 ],
             ];
-
+dd($payload);
             $response = Http::withHeaders([
                 'Accept' => '*/*',
                 'Authorization' => $this->authorization,
@@ -114,7 +114,7 @@ class WintecaService
             ],
             'callback_url' => $this->myUrl.'/api/winteca/callback',
         ];
-dd($params);
+
         $response = $this->callWintecaApiPrivatPost($params,$endpoint);
 
         return $response;
