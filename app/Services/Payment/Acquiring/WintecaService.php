@@ -101,7 +101,7 @@ class WintecaService
             'service' => 'payment_card_usd_hpp',
             'currency' => $currency,
             'amount' => number_format((float)$amount, 2, '.', ''),
-            'test_mode' => true,
+            'test_mode' => false,
             'customer' => [
                 'reference_id' => (string)$user->id,
                 'email' => $user->email,
