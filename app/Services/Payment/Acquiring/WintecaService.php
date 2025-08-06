@@ -56,7 +56,7 @@ class WintecaService
 
             $payload = [
                 'data' => [
-                    'type' => 'payment-invoice',
+                    'type' => 'payment-invoices',
                     'attributes' => $params,
                 ],
             ];
