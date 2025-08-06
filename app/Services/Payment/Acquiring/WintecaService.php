@@ -101,7 +101,7 @@ dd($response->json());
             'service' => 'payment_card_usd_hpp',
             'currency' => $currency,
             'amount' => number_format((float)$amount, 2, '.', ''),
-            'test_mode' => false,
+            'test_mode' => true,
             'customer' => [
                 'reference_id' => (string)$user->id,
                 'email' => $user->email,
