@@ -98,7 +98,8 @@ dd(json_encode($payload), $response->json());
 
         $params = [
             'reference_id' => (string)$reference_id,
-            'service' => 'payment_card_usd_hpp',
+            'service' => 'payment_card',
+//            'service' => 'payment_card_usd_hpp',
             'currency' => $currency,
             'amount' => number_format((float)$amount, 2, '.', ''),
             'test_mode' => true,
