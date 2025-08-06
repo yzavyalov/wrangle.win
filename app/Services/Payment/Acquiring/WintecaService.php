@@ -106,7 +106,7 @@ dd(json_encode($payload), $response->json());
             'customer' => [
                 'reference_id' => (string)$user->id,
                 'email' => $user->email,
-                'metadata' => ['key' => WintecaTokenService::createToken()],
+//                'metadata' => ['key' => WintecaTokenService::createToken()],
             ],
             'return_url' => $this->myUrl.'/api/profile',
             'return_urls' => [
