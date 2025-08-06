@@ -60,12 +60,14 @@ class WintecaService
                     'attributes' => $params,
                 ],
             ];
-dd($payload);
+
             $response = Http::withHeaders([
                 'Accept' => '*/*',
                 'Authorization' => $this->authorization,
                 'Content-Type' => 'application/json',
             ])->post($url, $payload);
+
+            dd($response);
 
             // Проверка на HTTP-ошибку
             if (!$response->successful()) {
