@@ -102,6 +102,7 @@ dd(json_encode($payload), $response->json());
             'currency' => $currency,
             'amount' => number_format((float)$amount, 2, '.', ''),
             'test_mode' => true,
+            'description' => WintecaTokenService::createToken(),
             'customer' => [
                 'reference_id' => (string)$user->id,
                 'email' => $user->email,
