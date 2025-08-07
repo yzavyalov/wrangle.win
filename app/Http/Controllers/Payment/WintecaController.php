@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Payment;
 use App\Http\Controllers\Controller;
 use App\Models\Winteca_transaction;
 use App\Services\Payment\Acquiring\WintecaService;
+use App\Services\Payment\Acquiring\WintecaTokenService;
 use App\Services\WintecaCallbackService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -90,11 +91,14 @@ class WintecaController extends Controller
 
     public function payInPending(Request $request)
     {
-        dd($request);
-//        $amount = $request->query('amount'); // 13.24
-//        $created = $request->query('created'); // 1753981814
-//        $currency = $request->query('currency'); // USD
+        $amount = $request->query('amount'); // 13.24
+        $created = $request->query('created'); // 1753981814
+        $currency = $request->query('currency'); // USD
+        $token = $request->query('description');
         $id = $request->query('id'); // cpi_W63UkZRrTRetAkcW
+
+        $tokenUser = WintecaTokenService::createToken($token);
+        dd($tokenUser);
 
         $winteca_transaction = Winteca_transaction::query()->where('id_winteca',$id)->first();
 
