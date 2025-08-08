@@ -23,7 +23,7 @@ class WintecaTokenService
     public static function checkToken($token)
     {
         $cacheKey = 'auth_token:' . $token;
-
+dd($cacheKey);
         // Получаем user_id, связанный с токеном
         $cachedUserId = Cache::get($cacheKey);
 

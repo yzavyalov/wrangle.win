@@ -97,8 +97,8 @@ class WintecaController extends Controller
         $token = $request->query('description');
         $id = $request->query('id'); // cpi_W63UkZRrTRetAkcW
 
-        $tokenUser = WintecaTokenService::createToken($token);
-        dd($tokenUser);
+        $tokenUser = WintecaTokenService::checkToken($token);
+        dd($tokenUser, $token, $amount);
 
         $winteca_transaction = Winteca_transaction::query()->where('id_winteca',$id)->first();
 
