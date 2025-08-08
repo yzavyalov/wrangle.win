@@ -118,7 +118,7 @@ class WintecaController extends Controller
             return redirect()->route('index');
         }
 
-        Auth::login($user, false);
+        Auth::login($user);
 
         $message = 'The payment '.$amount.' '. $currency .' has been created, once the bank processes the transaction, your balance will be replenished.';
 
