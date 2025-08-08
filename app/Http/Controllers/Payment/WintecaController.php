@@ -106,7 +106,7 @@ class WintecaController extends Controller
         $winteca_transaction = Winteca_transaction::query()
             ->where('id_winteca', $id)
             ->first();
-
+dd($tokenUserID, $winteca_transaction);
         if (! $winteca_transaction) {
             return redirect()->route('index');
         }
