@@ -113,12 +113,12 @@ class WintecaController extends Controller
 
         $operation = $winteca_transaction->transactionable;
         $user = $operation->user ?? null;
-dd($user, $tokenUserID, $user->id !== $tokenUserID);
-        if (! $user || $user->id !== $tokenUserID) {
+
+        if (! $user || $user->id !== (int)$tokenUserID) {
             return redirect()->route('index');
         }
 
-        Auth::login($user);
+        Auth::login($user,false);
 
         $message = 'The payment '.$amount.' '. $currency .' has been created, once the bank processes the transaction, your balance will be replenished.';
 
