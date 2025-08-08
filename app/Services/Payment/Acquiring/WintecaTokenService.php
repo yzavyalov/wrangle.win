@@ -26,7 +26,7 @@ class WintecaTokenService
 
         // Получаем user_id, связанный с токеном
         $cachedUserId = Cache::get($cacheKey);
-        dd($cacheKey, $cachedUserId);
+
         // Проверяем, совпадает ли с текущим авторизованным пользователем
         return $cachedUserId === auth()->id();
     }
