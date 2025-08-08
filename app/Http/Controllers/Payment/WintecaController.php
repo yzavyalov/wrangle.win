@@ -91,26 +91,36 @@ class WintecaController extends Controller
 
     public function payInPending(Request $request)
     {
-        $amount = $request->query('amount'); // 13.24
-        $created = $request->query('created'); // 1753981814
-        $currency = $request->query('currency'); // USD
+
+        $id    = $request->query('id');
         $token = $request->query('description');
-        $id = $request->query('id'); // cpi_W63UkZRrTRetAkcW
+        $amount = $request->query('amount');
+        $currency = $request->query('currency');
 
         $tokenUserID = WintecaTokenService::checkToken($token);
-        dd($tokenUserID);
-        $winteca_transaction = Winteca_transaction::query()->where('id_winteca',$id)->first();
 
-        if ($winteca_transaction)
-        {
-            $operation = $winteca_transaction->transactionable;
-
-            $user = $operation->user;
-
-            Auth::login($user);
+        if (! $tokenUserID) {
+            return redirect()->route('index');
         }
 
-        $message = 'The payment has been created, once the bank processes the transaction, your balance will be replenished.';
+        $winteca_transaction = Winteca_transaction::query()
+            ->where('id_winteca', $id)
+            ->first();
+
+        if (! $winteca_transaction) {
+            return redirect()->route('index');
+        }
+
+        $operation = $winteca_transaction->transactionable;
+        $user = $operation->user ?? null;
+
+        if (! $user || $user->id !== $tokenUserID) {
+            return redirect()->route('index');
+        }
+
+        Auth::login($user, false);
+
+        $message = 'The payment '.$amount.' '. $currency .' has been created, once the bank processes the transaction, your balance will be replenished.';
 
         return Inertia::render('Profile',['transactionMessage' => $message]);
     }
