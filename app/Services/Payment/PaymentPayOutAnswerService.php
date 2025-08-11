@@ -72,6 +72,7 @@ class PaymentPayOutAnswerService
 
     public function wintecaSuccsess($answer)
     {
+        dd($answer);
         $invoiceId = $answer['data']['id'] ?? null;
         $amount = $answer['data']['attributes']['payout_amount'] ?? null;
         $currency = $answer['data']['attributes']['currency'] ?? 'USD';
