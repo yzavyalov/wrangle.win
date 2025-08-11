@@ -86,17 +86,16 @@ class PayOutService
 
         if (isset($invoice['response']))
         {
-            dd($invoice);
             $payout->transactionable()->create([
-                'id_winteca' => $invoice['data']['id'],
-                'status' => $invoice['data']['attributes']['status'],
-                'resolution' => $invoice['data']['attributes']['resolution'],
-                'amount' => $invoice['data']['attributes']['amount'],
-                'payment_amount' => $invoice['data']['attributes']['payout_amount'],
-                'deposit' => $invoice['data']['attributes']['writeoff'],
-                'currency' => $invoice['data']['attributes']['currency'],
-                'reference_id' => $invoice['data']['attributes']['reference_id'],
-                'fee' => $invoice['data']['attributes']['fee'],
+                'id_winteca' => $invoice['response']['data']['id'],
+                'status' => $invoice['response']['data']['attributes']['status'],
+                'resolution' => $invoice['response']['data']['attributes']['resolution'],
+                'amount' => $invoice['response']['data']['attributes']['amount'],
+                'payment_amount' => $invoice['response']['data']['attributes']['payout_amount'],
+                'deposit' => $invoice['response']['data']['attributes']['writeoff'],
+                'currency' => $invoice['response']['data']['attributes']['currency'],
+                'reference_id' => $invoice['response']['data']['attributes']['reference_id'],
+                'fee' => $invoice['response']['data']['attributes']['fee'],
             ]);
 
             return $this->paymentPayOutAnswerService->wintecaSuccsess($invoice);
