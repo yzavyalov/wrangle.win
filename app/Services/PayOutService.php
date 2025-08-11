@@ -110,7 +110,7 @@ class PayOutService
             $payout->save();
 
             $deposit = $this->depositService->createDeposit($amount,$currency,$paymentId);
-dd($deposit, $payout);
+
             return $this->paymentPayOutAnswerService->wintecaError($invoice);
         }
     }
