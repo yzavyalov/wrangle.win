@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Http\Enums\DepositStatusEnum;
+use App\Http\Enums\TransactionMethodEnum;
 use App\Models\Payout;
 use App\Models\User;
 use App\Services\Payment\Acquiring\WintecaExcahngeService;
@@ -81,7 +82,9 @@ class PayOutService
 
         $newAmount = PaymentAmountService::amountPayOutWithoutComission($paymentId,$exchangeSum);
 
-        $payout = $this->createPayOut($paymentId, $amount, $currency, Auth::id());
+        $userID = Auth::id();
+
+        $payout = $this->createPayOut($paymentId, $amount, $currency, $userID);
 
         $invoice = $this->wintecaService->CreatePayOutInvoice($payout,$newAmount,$currency, $cardNumber);
 
@@ -109,7 +112,9 @@ class PayOutService
 
             $payout->save();
 
-            $deposit = $this->depositService->createDeposit($amount,$currency,$paymentId);
+            $this->depositService->createDeposit($amount,$currency,$paymentId);
+
+            $this->transactionService->debit($userID, $amount, 'Cancellation of the payment system for withdrawing money to a bank card', $method = TransactionMethodEnum::CARD);
 
             return $this->paymentPayOutAnswerService->wintecaError($invoice);
         }
