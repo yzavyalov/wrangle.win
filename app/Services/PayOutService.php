@@ -105,13 +105,12 @@ class PayOutService
         }
         else
         {
-            dd('312312312');
             $payout->status = DepositStatusEnum::CANCELED;
 
             $payout->save();
 
             $deposit = $this->depositService->createDeposit($amount,$currency,$paymentId);
-
+dd($deposit, $payout);
             return $this->paymentPayOutAnswerService->wintecaError($invoice);
         }
     }
