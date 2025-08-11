@@ -20,6 +20,7 @@ class PayOutService
                                 AlphaPoService $alphaPoService,
                                 CryptoProcessingService $cryptoProcessingService,
                                 PaymentPayOutAnswerService $paymentPayOutAnswerService,
+                                DepositService $depositService,
     )
     {
         $this->wintecaService = $wintecaService;
@@ -33,6 +34,8 @@ class PayOutService
         $this->cryptoProcessingService = $cryptoProcessingService;
 
         $this->paymentPayOutAnswerService = $paymentPayOutAnswerService;
+
+        $this->depositService = $depositService;
 
         $this->base_currency = env('CURRENT_CURRENCY');
     }
@@ -100,8 +103,16 @@ class PayOutService
 
             return $this->paymentPayOutAnswerService->wintecaSuccsess($invoice);
         }
+        else
+        {
+            $payout->status = DepositStatusEnum::CANCELED;
 
-        return $this->paymentPayOutAnswerService->wintecaError($invoice);
+            $payout->save();
+
+            $deposit = $this->depositService->createDeposit($amount,$currency,$paymentId);
+
+            return $this->paymentPayOutAnswerService->wintecaError($invoice);
+        }
     }
 
 
