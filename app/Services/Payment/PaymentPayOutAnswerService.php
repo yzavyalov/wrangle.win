@@ -35,38 +35,70 @@ class PaymentPayOutAnswerService
     {
         $rawError = $answer['error'];
 
-        if (preg_match('/\{.*\}$/', $rawError, $matches))
-        {
+        // Пытаемся вытащить JSON-часть из строки
+        if (preg_match('/\{.*\}$/', $rawError, $matches)) {
             $jsonPart = $matches[0];
-
             $decoded = json_decode($jsonPart, true);
 
-            $errorText = $decoded['errors'][0]['title'] ?? 'Unknown error';
-        }
-        else
-        {
+            $errorText = $this->extractErrorMessage($decoded) ?? 'Unknown error';
+        } else {
             $errorText = 'Unknown error';
         }
 
         $escapedText = htmlspecialchars($errorText, ENT_QUOTES, 'UTF-8');
 
         $message = <<<HTML
-                    <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
-                        <p style="font-size: 18px; color: red;">
-                            Error
-                        </p>
-                        <p style="font-size: 18px;">
-                            {$escapedText}
-                        </p>
-                        <br>
-                        <button onclick="window.location.href='{$this->backUrl}'"
-                                style="margin-top: 20px; padding: 10px 20px; font-size: 16px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                            BACK
-                        </button>
-                    </div>
-                HTML;
+        <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
+            <p style="font-size: 18px; color: red;">Error</p>
+            <p style="font-size: 18px;">{$escapedText}</p>
+            <br>
+            <button onclick="window.location.href='{$this->backUrl}'"
+                    style="margin-top: 20px; padding: 10px 20px; font-size: 16px;
+                    background-color: #28a745; color: white; border: none;
+                    border-radius: 5px; cursor: pointer;">
+                BACK
+            </button>
+        </div>
+    HTML;
 
         return response()->json(['message' => $message]);
+    }
+
+    /**
+     * Универсальный рекурсивный поиск текста ошибки в массиве
+     */
+    private function extractErrorMessage(array $data)
+    {
+        // 1. Если есть массив errors
+        if (isset($data['errors'][0]['title'])) {
+            return $data['errors'][0]['title'];
+        }
+
+        // 2. Если есть "message"
+        if (isset($data['message']) && is_string($data['message'])) {
+            return $data['message'];
+        }
+
+        // 3. Если есть статус или причина
+        if (isset($data['data']['attributes']['status'])) {
+            $status = $data['data']['attributes']['status'];
+            if ($status === 'expired') {
+                return 'The payout invoice has expired';
+            }
+            return "Status: $status";
+        }
+
+        // 4. Рекурсивно ищем строку с текстом ошибки
+        foreach ($data as $value) {
+            if (is_array($value)) {
+                $found = $this->extractErrorMessage($value);
+                if ($found) {
+                    return $found;
+                }
+            }
+        }
+
+        return null;
     }
 
 
