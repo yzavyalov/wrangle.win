@@ -100,7 +100,7 @@ class OutsidePaymentService
             }
 
             $payOut = $this->payOutService->$function($amount,$currency,$cardNumber,$payment->id);
-dd($payOut);
+
             if ($payOut)
             {
                 return $payOut;

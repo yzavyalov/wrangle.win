@@ -102,7 +102,7 @@ class PaymentPayOutAnswerService
         </div>
     HTML;
 
-        return response($message);
+        return response()->json(['message' => $message]);;
     }
 
     public static function withdrawFailed()
