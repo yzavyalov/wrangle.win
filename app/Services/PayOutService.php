@@ -86,6 +86,7 @@ class PayOutService
 
         if (isset($invoice['response']))
         {
+            dd($invoice);
             $payout->transactionable()->create([
                 'id_winteca' => $invoice['data']['id'],
                 'status' => $invoice['data']['attributes']['status'],
@@ -97,7 +98,7 @@ class PayOutService
                 'reference_id' => $invoice['data']['attributes']['reference_id'],
                 'fee' => $invoice['data']['attributes']['fee'],
             ]);
-dd($payout);
+
             return $this->paymentPayOutAnswerService->wintecaSuccsess($invoice);
         }
 
