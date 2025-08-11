@@ -120,7 +120,7 @@ class WintecaController extends Controller
 
         Auth::login($user,false);
 
-        $message = 'The payment '.$amount.' '. $currency .' has been created, once the bank processes the transaction, your balance will be replenished.';
+        $message = "A payment of {{ $amount }} {{ $currency }} has been created. Once the bank processes the transaction, your balance will be credited with {{ $operation->sum }} {{ $operation->currency }}, as payment processing fees will be deducted.";
 
         return Inertia::render('Profile',['transactionMessage' => $message]);
     }
