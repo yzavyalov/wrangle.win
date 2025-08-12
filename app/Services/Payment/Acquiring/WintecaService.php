@@ -177,7 +177,7 @@ class WintecaService
             'service' => 'payment_card_eur',
             'currency' => 'EUR',
             'amount' => $amount,
-            'callback_url' => $this->myUrl.'/winteca/callback',
+            'callback_url' => $this->myUrl.'/api/winteca/callback',
             'description' => 'Withdrawal from the balance of the Wrangle.win service',
             'test_mode' => true,
             'fields' => [
