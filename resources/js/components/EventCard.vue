@@ -33,13 +33,7 @@ const showMoreDetailsHandler = () => {
     <EventCardFavoriteBar :item="item" class="event-card__favorite" />
 
     <div class="event-card__overlay">
-      <div v-if="item.img" class="event-card__overlay--image"
-        :style="{
-          backgroundImage: `url(/storage/${item.img})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }"
-      ></div>
+      <div v-if="item?.image" class="event-card__overlay--image" :style="{ backgroundImage: `url('${item.image}')` }"></div>
 
       <div class="event-card__overlay--gradient"></div>
     </div>
@@ -87,6 +81,9 @@ const showMoreDetailsHandler = () => {
       left: 0;
       width: 60%;
       height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
 
     &--gradient {

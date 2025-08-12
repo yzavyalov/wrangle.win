@@ -34,12 +34,8 @@ const biggestProfit = Math.max(...currentBet.value.answers.map(item => item.prof
   <div :class="['event-card', { hot: dynamicHot }]">
     <div class="event-card__main">
       <div class="event-card__overlay">
-        <div v-if="currentBet.img" class="event-card__overlay--image"
-          :style="{
-            backgroundImage: `url(/storage/${currentBet.img})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }"
+        <div v-if="currentBet.image" class="event-card__overlay--image"
+          :style="{ backgroundImage: `url('${currentBet.image}')`, }"
         ></div>
 
         <div class="event-card__overlay--gradient"></div>
@@ -121,6 +117,9 @@ const biggestProfit = Math.max(...currentBet.value.answers.map(item => item.prof
       width: 60%;
       height: 100%;
       max-height: var(--card-height-main);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
 
     &--gradient {
