@@ -71,7 +71,7 @@ class WintecaCallbackService
         $this->wintransactionService->updateWintecaTransaction($data);
 
         if ($deposit->status === DepositStatusEnum::PAYED->value)
-            $this->transactionService->debit($deposit->user_id, $deposit->sum, 'Top up with a bank card', $method = TransactionMethodEnum::CARD);
+            $this->transactionService->debit($deposit->user_id, $deposit->sum, 'Top up with a bank card', $method = TransactionMethodEnum::CARD->value);
 
         return response()->json(['success' => 'Ok'],200);
     }
