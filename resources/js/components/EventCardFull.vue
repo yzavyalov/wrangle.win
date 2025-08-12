@@ -36,7 +36,7 @@ const biggestProfit = Math.max(...currentBet.value.answers.map(item => item.prof
       <div class="event-card__overlay">
         <div v-if="currentBet.img" class="event-card__overlay--image"
           :style="{
-            backgroundImage: `url(${currentBet.img})`,
+            backgroundImage: `url(/storage/${currentBet.img})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }"
