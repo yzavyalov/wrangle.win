@@ -104,7 +104,7 @@ class PayOutService
                 'fee' => $invoice['response']['data']['attributes']['fee'],
             ]);
 
-            return $this->paymentPayOutAnswerService->wintecaSuccsess($invoice);
+            return $this->paymentPayOutAnswerService->wintecaSuccsess($invoice['response']);
         }
         else
         {
