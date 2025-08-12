@@ -106,5 +106,9 @@ export const checkPaymentCode = async (payload: CheckCodePayload) => {
 
     return res?.data.data;
   })
-  .catch(e => notifyError(e.message));
+  .catch(e => {
+    notifyError(e.message);
+
+    return e.response?.data?.data;
+  });
 };
