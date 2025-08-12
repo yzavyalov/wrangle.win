@@ -35,7 +35,7 @@ const showMoreDetailsHandler = () => {
     <div class="event-card__overlay">
       <div v-if="item.img" class="event-card__overlay--image"
         :style="{
-          backgroundImage: `url(/storage/${item.img})`,
+          backgroundImage: `url(${item.img})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }"
