@@ -18,7 +18,7 @@ const emit = defineEmits(['delete', 'detail'])
       <img :src="'/images/trash.svg'" alt="delete">
     </div>
 
-    <div class="bet-small__main">
+    <div class="bet-small__main" @click.stop.prevent="emit('detail', item)">
       <TruncateText :text="item?.title" />
     </div>
 
@@ -57,6 +57,8 @@ const emit = defineEmits(['delete', 'detail'])
       justify-content: center;
       align-items: center;
       overflow: hidden;
+      text-decoration: underline;
+      cursor: pointer;
     }
 
     &__right {

@@ -32,6 +32,12 @@ const biggestProfit = computed(() => {
   return Math.max(...props.item.answers.map(item => item.profit)).toFixed(2)
 });
 
+const headerBackground = computed(() => {
+  return props.item?.image
+    ? `linear-gradient(180deg,#ffec1c00 0%, #ffe4323b 86%, #FFE432 100%), url('${props.item.image}') no-repeat top / cover`
+    : `linear-gradient(180deg,#ffec1c00 0%, #ffe4323b 86%, #FFE432 100%)`;
+});
+
 const toggleIsShowSorces = () => {
   isShowSorces.value = !isShowSorces.value;
 }
@@ -48,7 +54,7 @@ onMounted(() => {
       <EventCardFavoriteBar class="p-item__details--favorite" :item="item" p-item__details--favorite />
 
       <div class="p-item__content">
-        <div class="p-item__details--header">
+        <div class="p-item__details--header" :style="{ background: headerBackground }" >
           <div v-if="dynamicHot" class="p-item__details--hot">#HOT!</div>
         </div>
 
@@ -152,7 +158,6 @@ onMounted(() => {
     &--header {
       position: relative;
       height: 250px;
-      background: linear-gradient(180deg,#ffec1c00 0%, #ffe4323b 86%, #FFE432 100%), url('https://picsum.photos/500/300?random=2') no-repeat top / cover;
     }
 
     &--main {
