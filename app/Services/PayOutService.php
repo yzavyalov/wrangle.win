@@ -108,7 +108,7 @@ class PayOutService
         }
         else
         {
-            $payout->status = DepositStatusEnum::CANCELED;
+            $payout->status = DepositStatusEnum::CANCELED->value;
 
             $payout->save();
 
