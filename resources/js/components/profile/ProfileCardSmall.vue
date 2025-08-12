@@ -37,8 +37,8 @@ const currencyName = getCurrency();
 
 
     <div v-if="currentUser" class="profile-card__buttons">
-      <ButtonBase>Top up</ButtonBase>
-      <ButtonBase>Withdraw</ButtonBase>
+      <ButtonBase @click="navigateTo(PAGE_ROUTES.PROFILE + '?tab=deposit')">Top up</ButtonBase>
+      <ButtonBase @click="navigateTo(PAGE_ROUTES.PROFILE + '?tab=withdraw')">Withdraw</ButtonBase>
     </div>
   </div>
 </template>
