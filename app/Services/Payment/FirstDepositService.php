@@ -6,16 +6,11 @@ use Illuminate\Support\Facades\Auth;
 
 class FirstDepositService
 {
-    public function firstOrNot()
+    public function isFirstDeposit(): bool
     {
         $user = Auth::user();
 
-        return $user->deposits->isEmpty();
-    }
-
-    public function checkFirstDeposit()
-    {
-        if ($this->firstOrNot())
-            return 'delayem foto';
+        // Используем exists(), чтобы не грузить всю коллекцию
+        return !$user->deposits()->exists();
     }
 }
