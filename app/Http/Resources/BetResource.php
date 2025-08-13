@@ -19,7 +19,7 @@ class BetResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'title' => $this->title,
-            'image' => $this->image,
+            'image' => $this->image ? asset('storage/'.$this->image) : null,
             'status' => $this->status,
             'status_type' => $this->status instanceof BetStatusEnum
                 ? $this->status->label()
