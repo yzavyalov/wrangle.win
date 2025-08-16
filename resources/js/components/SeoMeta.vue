@@ -25,9 +25,13 @@ const href   = typeof window !== 'undefined' ? window.location.href   : ''
 const appName = (import.meta?.env?.VITE_APP_NAME) || 'wrangle.win'
 
 const title = computed(() => props.title || appName)
-const description = computed(
-  () => props.description || `The marketplace for resolving disputes — fast, fair, and transparent on ${appName}.`
-)
+const stripHtml = (html) => {
+  if (!html) return ''
+  // Remove tags and collapse whitespace
+  const text = String(html).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+  return text.slice(0, 300)
+}
+
 
 // робимо абсолютні URL
 const absolutize = (val, base = origin) => {
@@ -38,8 +42,12 @@ const absolutize = (val, base = origin) => {
 }
 
 const url = computed(() => props.url ? absolutize(props.url) : href ? absolutize(href) : '')
-const image = computed(() => absolutize(props.image || '/images/logo.png'))
+const image = computed(() => absolutize(props.image || '/images/logo.svg'))
 const siteName = computed(() => props.siteName || appName)
+const description = computed(() => {
+  const base = props.description || `The marketplace for resolving disputes — fast, fair, and transparent on ${appName}.`
+  return stripHtml(base)
+})
 </script>
 
 <template>
