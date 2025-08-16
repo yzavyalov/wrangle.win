@@ -2,6 +2,7 @@
 import { Head } from "@inertiajs/vue3";
 import AuthForm from "@/components/AuthForm.vue";
 import BaseLayout from "@/layouts/BaseLayout.vue";
+import SeoMeta from "@/components/SeoMeta.vue";
 
 defineOptions({
   name: "Register",
@@ -10,7 +11,10 @@ defineOptions({
 </script>
 
 <template>
-  <Head title="Register" />
+  <SeoMeta
+    title="Register"
+    description="Create an account"
+  />
 
   <div class="login-page">
     <div class="login-page__wrapper">

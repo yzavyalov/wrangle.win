@@ -5,6 +5,7 @@ import ButtonBase from "@/components/details/ButtonBase.vue";
 import { navigateTo } from '@/helpers/navigate';
 import { PAGE_ROUTES } from '@/utils/datasets';
 import BaseLayout from "@/layouts/BaseLayout.vue";
+import SeoMeta from "@/components/SeoMeta.vue";
 
 defineOptions({
   name: "Page404",
@@ -14,7 +15,10 @@ defineOptions({
 </script>
 
 <template>
-  <Head title="404" />
+  <SeoMeta
+    title="404"
+    description="404 page"
+  />
 
   <PageWrapperMain class="page-404">
     <div class="page-404__wrapper">

@@ -7,6 +7,7 @@ import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import PredictionComp from "@/components/bet/PredictionComp.vue";
 import { useFilters } from '@/composables/useFilters';
 import BaseLayout from "@/layouts/BaseLayout.vue";
+import SeoMeta from "@/components/SeoMeta.vue";
 
 defineOptions({
   name: "Prediction",
@@ -19,7 +20,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <Head title="Prediction" />
+  <SeoMeta
+    title="Prediction"
+    description="Prediction page"
+  />
 
   <PageWrapperMain>
 

@@ -1,8 +1,8 @@
 <script setup>
 import { Head } from "@inertiajs/vue3";
 import PageWrapperText from "@/components/PageWrapperText.vue";
-
 import BaseLayout from "@/layouts/BaseLayout.vue";
+import SeoMeta from "@/components/SeoMeta.vue";
 
 defineOptions({
   name: "About",
@@ -32,7 +32,10 @@ const pageText = `
 </script>
 
 <template>
-  <Head :title="pageTitle" />
+  <SeoMeta
+    :title="pageTitle"
+    :description="pageText"
+  />
 
   <PageWrapperText
     :title="pageTitle"

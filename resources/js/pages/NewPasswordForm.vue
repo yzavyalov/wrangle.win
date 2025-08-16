@@ -1,6 +1,5 @@
 <script setup>
 import { reactive, computed, onMounted } from "vue";
-import { Head } from "@inertiajs/vue3";
 import { required, sameAs, email, minLength, helpers } from '@vuelidate/validators';
 import { resetUserPassword } from "@/services/user";
 import { useLoading } from "@/composables/useLoading";
@@ -9,7 +8,7 @@ import { navigateTo } from "@/helpers/navigate";
 import { PAGE_ROUTES } from "@/utils/datasets";
 import { useInform } from "@/composables/useInform"
 import { passwordRegex } from "@/utils/regex";
-
+import SeoMeta from "@/components/SeoMeta.vue";
 import LoaderComponent from "@/components/LoaderComponent.vue";
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
@@ -116,7 +115,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <Head title="New password form" />
+  <SeoMeta
+    title="New password form"
+    description="New password form page"
+  />
 
   <PageWrapperMain>
     <div class="form__wrapper">

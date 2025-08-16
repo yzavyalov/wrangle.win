@@ -18,6 +18,7 @@ import { getCSRFToken } from "@/services/user";
 import { onImageErrorWithLogo } from "@/helpers/onImageError";
 import { useModalsStore } from "@/store/modals";
 import { triggerOpenNewModal } from '@/composables/useModalsTriggers';
+import SeoMeta from "@/components/SeoMeta.vue";
 
 const TAB_KEY = 'tab';
 
@@ -118,7 +119,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <Head title="Profile" />
+  <SeoMeta
+    title="Profile"
+    description="Profile page"
+  />
 
   <Transition name="fade" mode="out-in">
 

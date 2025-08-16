@@ -7,6 +7,7 @@ import ActiveEventsSection from '@/components/ActiveEventsSection.vue';
 import CategoriesSection from "@/components/CategoriesSection.vue";
 import { useFilters } from '@/composables/useFilters';
 import BaseLayout from "@/layouts/BaseLayout.vue";
+import SeoMeta from "@/components/SeoMeta.vue";
 
 defineOptions({
   name: "Categories",
@@ -21,7 +22,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <Head title="Categories" />
+  <SeoMeta
+    title="Categories"
+    description="Categories page"
+  />
 
   <CategoriesSection />
 

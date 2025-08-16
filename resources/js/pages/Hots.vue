@@ -5,6 +5,7 @@ import TopEventsSection from '@/components/TopEventsSection.vue';
 import CategoriesSection from "@/components/CategoriesSection.vue";
 import { useFilters } from '@/composables/useFilters';
 import BaseLayout from "@/layouts/BaseLayout.vue";
+import SeoMeta from "@/components/SeoMeta.vue";
 
 defineOptions({
   name: "Hots",
@@ -19,7 +20,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <Head title="Hots" />
+  <SeoMeta
+    title="Hots"
+    description="Hots page"
+  />
 
   <CategoriesSection />
 

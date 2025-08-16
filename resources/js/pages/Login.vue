@@ -2,6 +2,7 @@
 import { Head } from "@inertiajs/vue3";
 import AuthForm from "@/components/AuthForm.vue";
 import BaseLayout from "@/layouts/BaseLayout.vue";
+import SeoMeta from "@/components/SeoMeta.vue";
 
 defineOptions({
   name: "Login",
@@ -11,7 +12,10 @@ defineOptions({
 </script>
 
 <template>
-  <Head title="Login" />
+  <SeoMeta
+    title="Login"
+    description="Login to your account"
+  />
 
   <div class="login-page">
     <div class="login-page__wrapper">

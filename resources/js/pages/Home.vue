@@ -4,8 +4,8 @@ import ActiveEventsSection from '@/components/ActiveEventsSection.vue';
 import { Head } from "@inertiajs/vue3";
 import { onBeforeUnmount } from 'vue';
 import { useFilters } from '@/composables/useFilters';
-
 import BaseLayout from "@/layouts/BaseLayout.vue";
+import SeoMeta from "@/components/SeoMeta.vue";
 
 defineOptions({
   name: "Home",
@@ -19,7 +19,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <Head title="Home" />
+  <SeoMeta />
 
   <WelcomeSection />
 

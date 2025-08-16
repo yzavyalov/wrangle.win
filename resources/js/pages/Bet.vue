@@ -13,6 +13,7 @@ import BetItem from "@/components/bet/BetItem.vue";
 import LoaderComponent from '@/components/LoaderComponent.vue';
 import { router } from "@inertiajs/vue3";
 import BaseLayout from "@/layouts/BaseLayout.vue";
+import SeoMeta from "@/components/SeoMeta.vue";
 
 defineOptions({
   name: "Bet",
@@ -95,7 +96,11 @@ console.log('👤 User from Inertia:', user);
 </script>
 
 <template>
-  <Head title="Bet" />
+  <SeoMeta
+    :title="betFullData?.title"
+    :description="betFullData?.description"
+    :image="betFullData?.image"
+  />
 
   <PageWrapperMain>
 

@@ -11,6 +11,7 @@ import { useLoading } from "@/composables/useLoading";
 import { useFilters } from '@/composables/useFilters';
 import NewBet from "@/components/NewBet.vue";
 import BaseLayout from "@/layouts/BaseLayout.vue";
+import SeoMeta from "@/components/SeoMeta.vue";
 
 defineOptions({
   name: "NewBet",
@@ -20,7 +21,10 @@ defineOptions({
 </script>
 
 <template>
-  <Head title="New bet" />
+  <SeoMeta
+    title="New bet"
+    description="New bet page"
+  />
 
   <PageWrapperMain class="new-bet">
 
