@@ -44,9 +44,15 @@ Route::fallback(function () {
 });
 
 Route::get('/', function () {
-    return Inertia::render('Home');
-})->name('index');
-
+    return Inertia::render('Home')
+        ->withViewData([
+            'meta' => [
+                'title' => 'wrangle.win - Marketplace',
+                'description' => 'The marketplace for resolving disputes — fast, fair, and transparent',
+                'image' => asset('images/logo.svg'),
+            ]
+        ]);
+});
 
 
 

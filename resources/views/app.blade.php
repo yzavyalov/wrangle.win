@@ -5,6 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
+        <meta property="og:title" content="{{ $meta['title'] ?? 'WRANGLE.WIN' }}">
+        <meta property="og:description" content="{{ $meta['description'] ?? '' }}">
+        <meta property="og:image" content="{{ $meta['image'] ?? '' }}">
+
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&family=Racing+Sans+One&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
