@@ -47,7 +47,7 @@ Route::get('/', function () {
     return Inertia::render('Home')
         ->withViewData([
             'meta' => [
-                'title' => 'wrangle.win - Marketplace',
+                'title' => 'wrangle.win - Marketplace for disputes!',
                 'description' => 'The marketplace for resolving disputes - fast, fair, and transparent',
                 'image' => asset('images/LinkImage.jpg'),
             ]
@@ -57,7 +57,14 @@ Route::get('/', function () {
 
 
 Route::get('/login', function () {
-    return Inertia::render('Login');
+    return Inertia::render('Login')
+        ->withViewData([
+            'meta' => [
+                'title' => 'wrangle.win - Marketplace for disputes!',
+                'description' => 'Login to your account',
+                'image' => asset('images/LinkImage.jpg'),
+            ]
+        ]);
 });
 
 Route::get('/register', function () {
