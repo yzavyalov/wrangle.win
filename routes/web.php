@@ -142,16 +142,18 @@ Route::get('/privacy_policy', function () {
 Route::get('/bet/{id}', function ($id) {
     $bet = Bet::findOrFail($id);
 
+    // OG мета
     $meta = [
         'title' => "wrangle.win - {$bet->title}",
         'description' => $bet->description,
         'image' => $bet->image ? asset('storage/' . $bet->image) : asset('images/default-1200x630.jpg'),
     ];
 
+    // передаём OG мета в Blade через viewData
     return Inertia::render('Bet', [
         'bet' => $bet,
-    ])->toResponse(request())
-        ->withViewData(['meta' => $meta]);
+        'meta' => $meta, // передаём сразу в props
+    ]);
 });
 
 
