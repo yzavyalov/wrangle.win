@@ -9,7 +9,7 @@
         <meta property="og:description" content="{{ $meta['description'] ?? '' }}">
         <meta property="og:image" content="{{ $meta['image'] ?? '' }}">
 
-        <meta property="og:url" content="{{ url('/') }}">
+        <meta property="og:url" content="{{ url()->current() }}">
         <meta property="og:type" content="website">
         <meta property="og:site_name" content="Wrangle.win">
         <meta name="twitter:card" content="{{ $meta['image'] ?? '' }}">
