@@ -49,7 +49,7 @@ Route::get('/', function () {
             'meta' => [
                 'title' => 'wrangle.win - Marketplace',
                 'description' => 'The marketplace for resolving disputes — fast, fair, and transparent',
-                'image' => asset('images/logo.svg'),
+                'image' => asset('images/LinkImage.jpg'),
             ]
         ]);
 });
