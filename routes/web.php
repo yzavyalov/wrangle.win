@@ -142,18 +142,17 @@ Route::get('/privacy_policy', function () {
 Route::get('/bet/{id}', function ($id) {
     $bet = Bet::findOrFail($id);
 
+    $meta = [
+        'title' => "wrangle.win - {$bet->title}",
+        'description' => $bet->description,
+        'image' => $bet->image ? asset('storage/' . $bet->image) : asset('images/default-1200x630.jpg'),
+    ];
+
     return Inertia::render('Bet', [
         'bet' => $bet,
-    ])
-        ->withViewData([
-            'meta' => [
-                'title' => "wrangle.win - {$bet->title}",
-                'description' => "{$bet->description}",
-                'image' => asset('storage/' . $bet->image),
-            ]
-        ]);
+    ])->toResponse(request())
+        ->withViewData(['meta' => $meta]);
 });
-
 
 
 Route::get('/categories', function () {
