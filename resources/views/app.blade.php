@@ -9,6 +9,14 @@
         <meta property="og:description" content="{{ $meta['description'] ?? '' }}">
         <meta property="og:image" content="{{ $meta['image'] ?? '' }}">
 
+        <meta property="og:url" content="{{ url('/') }}">
+        <meta property="og:type" content="website">
+        <meta property="og:site_name" content="Wrangle.win">
+        <meta name="twitter:card" content="{{ $meta['image'] ?? '' }}">
+        <meta name="twitter:title" content="{{ $meta['title'] ?? 'WRANGLE.WIN' }}">
+        <meta name="twitter:description" content="{{ $meta['description'] ?? '' }}">
+        <meta name="twitter:image" content="{{ $meta['image'] ?? '' }}">
+
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&family=Racing+Sans+One&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
