@@ -48,7 +48,7 @@ Route::get('/', function () {
         ->withViewData([
             'meta' => [
                 'title' => 'wrangle.win - Marketplace',
-                'description' => 'The marketplace for resolving disputes — fast, fair, and transparent',
+                'description' => 'The marketplace for resolving disputes - fast, fair, and transparent',
                 'image' => asset('images/LinkImage.jpg'),
             ]
         ]);
