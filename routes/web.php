@@ -68,7 +68,14 @@ Route::get('/login', function () {
 });
 
 Route::get('/register', function () {
-    return Inertia::render('Register');
+    return Inertia::render('Register')
+        ->withViewData([
+        'meta' => [
+            'title' => 'wrangle.win - Marketplace for disputes!',
+            'description' => 'Create an account',
+            'image' => asset('images/LinkImage.jpg'),
+        ]
+    ]);
 });
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login')->name('login');
 Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register')->name('register');
@@ -78,23 +85,58 @@ Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 've
     ->name('verification.verify');
 
 Route::get('/prediction', function () {         // temp route
-    return Inertia::render('Prediction');
+    return Inertia::render('Prediction')
+        ->withViewData([
+            'meta' => [
+                'title' => 'wrangle.win - Marketplace for disputes!',
+                'description' => 'Prediction page',
+                'image' => asset('images/LinkImage.jpg'),
+            ]
+        ]);
 });
 
 Route::get('/about', function () {
-    return Inertia::render('About');
+    return Inertia::render('About')
+        ->withViewData([
+            'meta' => [
+                'title' => 'wrangle.win - Marketplace for disputes!',
+                'description' => 'Let\'s get acquainted',
+                'image' => asset('images/LinkImage.jpg'),
+            ]
+        ]);
 });
 
 Route::get('/terms', function () {
-    return Inertia::render('Terms');
+    return Inertia::render('Terms')
+        ->withViewData([
+            'meta' => [
+                'title' => 'wrangle.win - Marketplace for disputes!',
+                'description' => 'Our terms',
+                'image' => asset('images/LinkImage.jpg'),
+            ]
+        ]);
 });
 
 Route::get('/rules', function () {
-    return Inertia::render('Rules');
+    return Inertia::render('Rules')
+        ->withViewData([
+            'meta' => [
+                'title' => 'wrangle.win - Marketplace for disputes!',
+                'description' => 'Our rules',
+                'image' => asset('images/LinkImage.jpg'),
+            ]
+        ]);
 });
 
 Route::get('/privacy_policy', function () {
-    return Inertia::render('PrivacyPolicy');
+    return Inertia::render('PrivacyPolicy')
+        ->withViewData([
+            'meta' => [
+                'title' => 'wrangle.win - Marketplace for disputes!',
+                'description' => 'Our policy',
+                'image' => asset('images/LinkImage.jpg'),
+            ]
+        ]);
 });
 
 Route::get('/bet/{id}', function ($id) {
@@ -102,17 +144,38 @@ Route::get('/bet/{id}', function ($id) {
 
     return Inertia::render('Bet', [
         'bet' => $bet,
-    ]);
+    ])
+        ->withViewData([
+            'meta' => [
+                'title' => "wrangle.win - {$bet->title}",
+                'description' => "{$bet->description}",
+                'image' => asset('storage/' . $bet->image),
+            ]
+        ]);
 });
 
 
 
 Route::get('/categories', function () {
-    return Inertia::render('Categories');
+    return Inertia::render('Categories')
+        ->withViewData([
+            'meta' => [
+                'title' => 'wrangle.win - Marketplace for disputes!',
+                'description' => 'Choose disputes by categories',
+                'image' => asset('images/LinkImage.jpg'),
+            ]
+        ]);
 });
 
 Route::get('/hots', function () {
-    return Inertia::render('Hots');
+    return Inertia::render('Hots')
+        ->withViewData([
+            'meta' => [
+                'title' => 'wrangle.win - Marketplace for disputes!',
+                'description' => 'The hottest disputes',
+                'image' => asset('images/LinkImage.jpg'),
+            ]
+        ]);
 });
 
 Route::get('/404', function () {
@@ -133,7 +196,14 @@ Route::middleware('authentication')->group(function (){
     })->name('profile');
 
     Route::get('/new_bet', function () {
-        return Inertia::render('NewBet');
+        return Inertia::render('NewBet')
+            ->withViewData([
+                'meta' => [
+                    'title' => 'wrangle.win - Marketplace for disputes!',
+                    'description' => 'Let\'s get acquainted',
+                    'image' => asset('images/LinkImage.jpg'),
+                ]
+            ]);
     });
 
 });
