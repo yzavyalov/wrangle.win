@@ -52,7 +52,7 @@ Route::get('/', function () {
                 'image' => asset('images/LinkImage.jpg'),
             ]
         ]);
-});
+})->name('index');
 
 
 
