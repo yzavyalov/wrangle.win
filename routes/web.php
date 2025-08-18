@@ -145,11 +145,12 @@ Route::get('/bet/{id}', function ($id) {
     $meta = [
         'title' => "wrangle.win - {$bet->title}",
         'description' => $bet->description,
-        'image' => $bet->image ? asset('storage/' . $bet->image) : asset('images/LinkImage.jpg'),
+        'image' => $bet->image ? asset('storage/'.$bet->image) : asset('images/default-1200x630.jpg'),
     ];
 
-    return view('bet', [
+    return Inertia::render('Bet', [
         'bet' => $bet,
+    ])->with([
         'meta' => $meta,
     ]);
 });
