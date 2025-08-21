@@ -30,6 +30,8 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/103793659" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
+    <script src="//code.jivo.ru/widget/Hc0HvQ3p73" async></script>
+
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @inertiaHead

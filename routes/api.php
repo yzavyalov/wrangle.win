@@ -60,6 +60,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login')->name('login');
+Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register')->name('register');
+
+
 Route::get('/bets/carousel', [BetSortController::class, 'carousel']);
 Route::get('/bets', [BetController::class, 'index']);
 Route::get('/bets/{id}', [BetController::class, 'show']);

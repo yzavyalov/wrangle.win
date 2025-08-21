@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class BalanceService
 {
+    const MIN_BALANCE = 50;
     public static function createBalance()
     {
         Auth::user()->balance()->create(['balance' => 0]);
@@ -36,7 +37,7 @@ class BalanceService
 
         $balance = Auth::user()->balance->balance;
 
-        if ($balance >= $sum)
+        if ($balance - self::MIN_BALANCE > $sum)
             return true;
         else
             return  false;

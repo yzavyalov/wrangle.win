@@ -77,8 +77,8 @@ Route::get('/register', function () {
         ]
     ]);
 });
-Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login')->name('login');
-Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register')->name('register');
+//Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login')->name('login');
+//Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register')->name('register');
 
 Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
     ->middleware(['signed','web'])

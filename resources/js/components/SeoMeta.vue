@@ -82,7 +82,7 @@ const description = computed(() => {
       <meta v-if="meta.name" :name="meta.name" :content="meta.content" />
       <meta v-else-if="meta.property" :property="meta.property" :content="meta.content" />
       <link v-else-if="meta.rel" :rel="meta.rel" :href="meta.href" />
-      <script v-else-if="meta.type === 'application/ld+json'" type="application/ld+json">{{ meta.json }}</script>
+<!--      <script v-else-if="meta.type === 'application/ld+json'" type="application/ld+json">{{ meta.json }}</script>-->
     </template>
   </Head>
 </template>

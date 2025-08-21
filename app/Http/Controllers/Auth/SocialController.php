@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AuthResource;
 use App\Models\Auth\SocialAccount;
+use App\Models\Bonus;
 use App\Models\User;
 use App\Services\BalanceService;
+use App\Services\BonusServices;
 use App\Services\CheckUserService;
 use App\Traits\JsonResponseTrait;
 use Illuminate\Http\Request;
@@ -16,6 +18,10 @@ use Laravel\Socialite\Facades\Socialite;
 
 class SocialController extends Controller
 {
+    public function __construct(BonusServices $bonusServices)
+    {
+        $this->bonusServices = $bonusServices;
+    }
     public function redirect($provider)
     {
         return Socialite::driver($provider)->redirect();
@@ -35,6 +41,11 @@ class SocialController extends Controller
 
 //            return $this->successJsonAnswer200('User',AuthResource::make($user));
             Auth::login($user);
+
+            //Начисляем бонус при регистрации
+            $bonus = Bonus::query()->where('title','registration bonus')->first();
+
+            $this->bonusServices->addBonus($bonus);
 
             return redirect()->route('profile');
         }
@@ -71,12 +82,23 @@ class SocialController extends Controller
 //                    return $this->successJsonAnswer200('User',AuthResource::make($user));
                     Auth::login($user);
 
+                    //Начисляем бонус при регистрации
+                    $bonus = Bonus::query()->where('title','registration bonus')->first();
+
+                    $this->bonusServices->addBonus($bonus);
+
                     return redirect()->route('profile');
                 }
             }
             else
             {
                 Auth::login($user);
+
+                //Начисляем бонус при регистрации
+                $bonus = Bonus::query()->where('title','registration bonus')->first();
+
+                $this->bonusServices->addBonus($bonus);
+
                 session(['user' => $user]);
                 return redirect()->route('profile');
 //                return $this->successJsonAnswer200('User',AuthResource::make($user));
