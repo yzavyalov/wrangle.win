@@ -42,11 +42,6 @@ class SocialController extends Controller
 //            return $this->successJsonAnswer200('User',AuthResource::make($user));
             Auth::login($user);
 
-            //Начисляем бонус при регистрации
-            $bonus = Bonus::query()->where('title','registration bonus')->first();
-
-            $this->bonusServices->addBonus($bonus);
-
             return redirect()->route('profile');
         }
         else
@@ -93,11 +88,6 @@ class SocialController extends Controller
             else
             {
                 Auth::login($user);
-
-                //Начисляем бонус при регистрации
-                $bonus = Bonus::query()->where('title','registration bonus')->first();
-
-                $this->bonusServices->addBonus($bonus);
 
                 session(['user' => $user]);
                 return redirect()->route('profile');
