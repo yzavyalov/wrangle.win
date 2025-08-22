@@ -12,21 +12,21 @@ class TwoFactorService
     public static function enter()
     {
         $user = Auth::user();
-
-        $randomCode = self::codeGenerate();
-
-//        Mail::to($user->email)->queue(new VerificationCodeEmail($randomCode));
-//        Mail::to($user->email)->send(new VerificationCodeEmail($randomCode));
-        try {
-            Mail::to($user->email)->send(new VerificationCodeEmail($randomCode));
-        } catch (\Exception $e) {
-            \Log::error('Mail error: '.$e->getMessage());
-            return $e->getMessage();
+        if (!$user) {
+            throw new \Exception('User not authenticated');
         }
 
-        $cachename = 'code'.$user->id;
+        // Генерация кода
+        $randomCode = self::codeGenerate();
 
-        Cache::put($cachename,$randomCode,600);
+        // Отправка письма с пользователем и кодом
+        Mail::to($user->email)->queue(new VerificationCodeEmail($user, $randomCode));
+        // Если нужно сразу без очереди:
+        // Mail::to($user->email)->send(new VerificationCodeEmail($user, $randomCode));
+
+        // Кеширование кода на 10 минут
+        $cachename = 'code' . $user->id;
+        Cache::put($cachename, $randomCode, 600);
 
         return $cachename;
     }

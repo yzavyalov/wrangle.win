@@ -17,11 +17,15 @@ class VerificationCodeEmail extends Mailable implements ShouldQueue
 
     public string $code;
 
+    public $user;
+
     /**
      * Create a new message instance.
      */
-    public function __construct($code)
+    public function __construct($user,$code)
     {
+        $this->user = $user;
+
         $this->code = $code;
     }
 
@@ -44,7 +48,7 @@ class VerificationCodeEmail extends Mailable implements ShouldQueue
             view: 'mail.verifacationCode',
             with: [
                 'code' => $this->code,
-                'userName' => Auth::user()->name,
+                'userName' => $this->user->name,
             ]
         );
     }
