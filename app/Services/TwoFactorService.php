@@ -16,7 +16,13 @@ class TwoFactorService
         $randomCode = self::codeGenerate();
 
 //        Mail::to($user->email)->queue(new VerificationCodeEmail($randomCode));
-        Mail::to($user->email)->send(new VerificationCodeEmail($randomCode));
+//        Mail::to($user->email)->send(new VerificationCodeEmail($randomCode));
+        try {
+            Mail::to($user->email)->send(new VerificationCodeEmail($randomCode));
+        } catch (\Exception $e) {
+            \Log::error('Mail error: '.$e->getMessage());
+            return $e->getMessage();
+        }
 
         $cachename = 'code'.$user->id;
 
