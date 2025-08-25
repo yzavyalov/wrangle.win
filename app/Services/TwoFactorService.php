@@ -21,8 +21,6 @@ class TwoFactorService
 
         // Отправка письма с пользователем и кодом
         Mail::to($user->email)->queue(new VerificationCodeEmail($user, $randomCode));
-        // Если нужно сразу без очереди:
-        // Mail::to($user->email)->send(new VerificationCodeEmail($user, $randomCode));
 
         // Кеширование кода на 10 минут
         $cachename = 'code' . $user->id;

@@ -13,7 +13,7 @@
                 <!-- Header -->
                 <tr>
                     <td align="center" style="background:#FFD700; padding:40px 20px;">
-                        <img src="https://wrangle.win/images/logo.svg" alt="Wrangle Logo" width="60" style="display:block; margin-bottom:10px;">
+                        <img src="{{ $message->embed(public_path('images/LogoWrangle.png')) }}" alt="Wrangle Logo" width="60" style="display:block; margin-bottom:10px;">
                         <h1 style="margin:0; font-size:24px; color:#000;">WRANGLE WIN</h1>
                     </td>
                 </tr>
