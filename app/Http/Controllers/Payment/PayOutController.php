@@ -86,7 +86,7 @@ class PayOutController extends Controller
 
         if ($check)
         {
-            $checkBalance = BalanceService::checkSum($validateData['amount']);
+            $checkBalance = BalanceService::checkSumWithDraw($validateData['amount']);
 
             if (!$checkBalance)
                 return PaymentPayOutAnswerService::lessBalance();

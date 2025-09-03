@@ -39,7 +39,7 @@ class BitController extends Controller
         }
 
         // Отдельно проверка на достаточность средств
-        if (!BalanceService::checkSum($sum)) {
+        if (!BalanceService::checkSumBit($sum)) {
             return $this->errorJsonAnswer400('Insufficient balance. Please top up your balance.');
         }
 

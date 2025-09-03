@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Auth;
 
 class BalanceService
 {
-    const MIN_BALANCE = 50;
+    const MIN_BALANCE_WITHDRAW = 50;
+    const MIN_BALANCE_BIT = 0;
     public static function createBalance()
     {
         Auth::user()->balance()->create(['balance' => 0]);
@@ -28,7 +29,7 @@ class BalanceService
     }
 
 
-    public static function checkSum($sum)
+    public static function checkSumWithDraw($sum)
     {
         if (!isset(Auth::user()->balance))
         {
@@ -37,7 +38,22 @@ class BalanceService
 
         $balance = Auth::user()->balance->balance;
 
-        if ($balance - self::MIN_BALANCE > $sum)
+        if ($balance - self::MIN_BALANCE_WITHDRAW > $sum)
+            return true;
+        else
+            return  false;
+    }
+
+    public static function checkSumBit($sum)
+    {
+        if (!isset(Auth::user()->balance))
+        {
+            BalanceService::createBalance();
+        }
+
+        $balance = Auth::user()->balance->balance;
+
+        if ($balance - self::MIN_BALANCE_BIT > $sum)
             return true;
         else
             return  false;
