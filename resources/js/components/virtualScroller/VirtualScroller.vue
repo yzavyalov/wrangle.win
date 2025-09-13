@@ -26,7 +26,9 @@ const emit = defineEmits(['fetchMore'])
         :active="active"
         :size-dependencies="[item.text]"
       >
-        <EventCard :item="item" :data-index="index" />
+        <div class="vs-item-spacer">
+          <EventCard :item="item" :data-index="index" />
+        </div>
       </DynamicScrollerItem>
     </template>
 
@@ -48,5 +50,10 @@ const emit = defineEmits(['fetchMore'])
 .item {
   padding: 16px;
   border-bottom: 1px solid #ccc;
+}
+
+.vs-item-spacer {
+  padding-bottom: 12px;
+  box-sizing: border-box;
 }
 </style>
