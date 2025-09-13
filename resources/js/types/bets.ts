@@ -1,3 +1,11 @@
+export interface Pagination {
+  page: number
+  per_page: number
+  sort_order: "asc" | "desc"
+  sort_by:  "finish" | "title" | "budget"       // finish - default
+  is_last_page: boolean
+}
+
 export interface SearchBetsPayload {
   title?: string
   categories?: number[]

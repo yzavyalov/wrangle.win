@@ -1,6 +1,6 @@
-import { onMounted, Ref, ref } from "vue";
+import { onMounted, reactive, Ref, ref, computed } from "vue";
 import { getFavoriteBets, toggleToFavorite } from "@/services/bets";
-import { BetItem, SearchBetsPayload } from "@/types/bets";
+import { BetItem, Pagination, SearchBetsPayload } from "@/types/bets";
 import { useLoading } from "@/composables/useLoading";
 import { useConfirm } from '@/composables/useConfirm';
 import { notifySuccess, notifyWarning } from "@/helpers/notify";
@@ -12,10 +12,15 @@ export const useFavoriteBets = () => {
 
   const favoriteBets: Ref<BetItem[]> = ref([]);
 
-  const pagination = ref({
+  const pagination: Pagination = reactive({
     page: 1,
-    per_page: 20,
+    per_page: 10,
+    sort_order: "asc",
+    sort_by: "finish",
+    is_last_page: false,
   });
+
+  const isLastPage = computed(() => pagination.is_last_page);
 
   const fetchFavoriteBets = async () => {
     console.log('fetchFavoriteBets');
@@ -25,16 +30,20 @@ export const useFavoriteBets = () => {
       loadingStart();
 
       const payload: SearchBetsPayload = {
-        page: 1,
-        per_page: 50,
-        sort_order: "asc",
-        sort_by: "finish",
+        page: pagination.page || 1,
+        per_page: pagination.per_page,
+        sort_order: pagination.sort_order,
+        sort_by: pagination.sort_by,
       }
 
       const bets = await getFavoriteBets(payload) || [];
       console.log(bets, 'bets');
 
-      if (!bets.length) return;
+      if (bets?.length < pagination?.per_page) {
+        pagination.is_last_page = true;
+      }
+
+      if (!bets?.length) return;
 
       favoriteBets.value = bets;
 
@@ -51,7 +60,9 @@ export const useFavoriteBets = () => {
 
     if (isLoading.value) {return console.warn("Loading, plese wait");}
 
-    pagination.value.page += 1;
+    if (isLastPage.value) {return console.warn("Last page");}
+
+    pagination.page = pagination.page + 1;
 
     fetchFavoriteBets();
   }
@@ -86,6 +97,7 @@ export const useFavoriteBets = () => {
   return {
     favoriteBets,
     isLoading,
+    isLastPage,
 
     fetchFavoriteBets,
     fetchMoreFavoriteBets,

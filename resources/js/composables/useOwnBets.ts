@@ -1,6 +1,6 @@
 import { deleteBet, getOwnBets } from "@/services/bets";
-import { BetItem, SearchBetsPayload } from "@/types/bets";
-import { onMounted, Ref, ref } from "vue";
+import { BetItem, Pagination, SearchBetsPayload } from "@/types/bets";
+import { onMounted, Ref, ref, reactive, computed } from "vue";
 import { useLoading } from "@/composables/useLoading";
 import { navigateTo } from "@/helpers/navigate";
 import { useConfirm } from '@/composables/useConfirm';
@@ -15,10 +15,15 @@ export const useOwnBets = () => {
 
   const ownBets: Ref<BetItem[]> = ref([]);
 
-  const pagination = ref({
+  const pagination: Pagination = reactive({
     page: 1,
-    per_page: 20,
+    per_page: 10,
+    sort_order: "asc",
+    sort_by: "finish",
+    is_last_page: false,
   });
+
+  const isLastPage = computed(() => pagination.is_last_page);
 
   const fetchOwnBets = async () => {
     console.log('fetchOwnBets');
@@ -28,18 +33,26 @@ export const useOwnBets = () => {
       loadingStart();
 
       const payload: SearchBetsPayload = {
-        page: 1,
-        per_page: 50,
-        sort_order: "asc",
-        sort_by: "finish",
+        page: pagination.page || 1,
+        per_page: pagination.per_page,
+        sort_order: pagination.sort_order,
+        sort_by: pagination.sort_by,
       }
 
       const bets = await getOwnBets(payload) || [];
       console.log(bets, 'bets');
 
-      if (!bets.length) return;
+      if (bets?.length < pagination?.per_page) {
+        pagination.is_last_page = true;
+      }
 
-      ownBets.value = bets;
+      if (!bets?.length) return;
+
+      if (ownBets.value?.length) {
+        ownBets.value = [...ownBets.value, ...bets];
+      } else {
+        ownBets.value = bets;
+      }
 
     } catch (error) {
       console.warn(error);
@@ -54,7 +67,9 @@ export const useOwnBets = () => {
 
     if (isLoading.value) {return console.warn("Loading, plese wait");}
 
-    pagination.value.page += 1;
+    if (isLastPage.value) {return console.warn("Last page");}
+
+    pagination.page = pagination.page + 1;
 
     fetchOwnBets();
   }
@@ -118,6 +133,7 @@ export const useOwnBets = () => {
   return {
     ownBets,
     isLoading,
+    isLastPage,
 
     fetchOwnBets,
     fetchMoreOwnBets,

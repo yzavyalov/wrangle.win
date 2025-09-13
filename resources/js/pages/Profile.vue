@@ -19,7 +19,9 @@ import { onImageErrorWithLogo } from "@/helpers/onImageError";
 import { useModalsStore } from "@/store/modals";
 import { triggerOpenNewModal } from '@/composables/useModalsTriggers';
 import SeoMeta from "@/components/SeoMeta.vue";
-
+import VirtualScrollerList from "@/components/virtualScroller/VirtualScrollerList.vue";
+import OwnBestList from "@/components/profile/OwnBestList.vue";
+import FavoriteBestList from "@/components/profile/FavoriteBestList.vue";
 const TAB_KEY = 'tab';
 
 defineOptions({
@@ -39,8 +41,6 @@ const props = defineProps({
 })
 
 const { confirm } = useConfirm();
-const { ownBets, fetchOwnBets, fetchMoreOwnBets, openBetHandler, deleteOwnBetHandler } = useOwnBets();
-const { favoriteBets, fetchFavoriteBets, fetchMoreFavoriteBets, toggleBetToFavoriteHandler } = useFavoriteBets();
 const { setQueryParam, removeQueryParam, getQueryParam } = useHistory();
 const { userBalanceWithCurrency, currentUser, userBalance } = useUser();
 const { isLoading, loadingStart, loadingStop } = useLoading();
@@ -104,9 +104,6 @@ onBeforeMount(() => {
 onMounted(() => {
   userBalanceHandler();
 
-  fetchOwnBets();
-  fetchFavoriteBets();
-
   fetchMethodsLogo();
 
   if (props.transactionMessage) {
@@ -150,36 +147,10 @@ onMounted(() => {
       </div>
 
       <div class="profile__body">
-        <div class="profile__history first">
-          <h4>Favorite Events</h4>
 
-          <BetItemSmall v-for="item in favoriteBets"
-            :key="item.id"
-            :item="item"
-            class="profile__history__item"
-            @delete="toggleBetToFavoriteHandler(item)"
-            @detail="openBetHandler(item)"
-          />
+        <FavoriteBestList class="first" />
 
-          <p class="mt-40">Haven't found interesting bet yet?</p>
-          <ButtonBase class="m-auto mt-10 min-width-60" @click="navigateTo(PAGE_ROUTES.HOTS)">To Events</ButtonBase>
-
-        </div>
-
-        <div class="profile__history">
-          <h4>My events</h4>
-
-          <BetItemSmall v-for="item in ownBets"
-            :key="item.id"
-            :item="item"
-            class="profile__history__item"
-            @delete="deleteOwnBetHandler(item)"
-            @detail="openBetHandler(item)"
-          />
-
-          <p class="mt-40">Want to create your own bet?</p>
-          <ButtonBase class="m-auto mt-10 min-width-60" @click="navigateTo(PAGE_ROUTES.NEW_BET)">Create Event</ButtonBase>
-        </div>
+        <OwnBestList />
 
         <div class="profile__history last">
           <ButtonBase v-for="tab in profileTabs"
@@ -189,12 +160,6 @@ onMounted(() => {
           >
             {{ tab.name }}
           </ButtonBase>
-
-          <!-- <ul v-if="methodsLogo?.length" class="profile__methods">
-            <li v-for="logo in methodsLogo" :key="logo" class="profile__methods--item">
-              <img :src="logo" alt="logo">
-            </li>
-          </ul> -->
 
           <div class="payment-logos">
             <h5>Top Up Methods</h5>
@@ -335,6 +300,8 @@ onMounted(() => {
   }
 
   &__history {
+    padding-bottom: 20px;
+
     &__item {
       margin: 0 5px 5px 5px;
     }
