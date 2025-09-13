@@ -29,19 +29,21 @@ onMounted(() => {
   <div class="profile__history">
     <h4>My events</h4>
 
-    <VirtualScrollerList :items="ownBets" :is-loading="isLoadingOwnBets" @fetch-more="fetchMoreOwnBets">
-      <template #item="{ item }">
-        <BetItemSmall :item="item" class="mb-10" />
-      </template>
+    <PerfectScrollbar>
+      <VirtualScrollerList :items="ownBets" :is-loading="isLoadingOwnBets" @fetch-more="fetchMoreOwnBets">
+        <template #item="{ item }">
+          <BetItemSmall :item="item" class="mb-10" />
+        </template>
 
-      <template #after>
-        <ButtonBase v-if="!isLastPageOwnBets" class="m-auto mb-10" @click="fetchMoreOwnBets">Fetch more</ButtonBase>
-        <p v-else class="text-center mt-10 mb-10">No more events</p>
-      </template>
-    </VirtualScrollerList>
+        <template #after>
+          <ButtonBase v-if="!isLastPageOwnBets" class="m-auto mb-10" @click="fetchMoreOwnBets">Fetch more</ButtonBase>
+          <p v-else class="text-center mt-10 mb-10">No more events</p>
+        </template>
+      </VirtualScrollerList>
 
-    <p class="mt-40">Want to create your own bet?</p>
-    <ButtonBase class="m-auto mt-10 min-width-60" @click="navigateTo(PAGE_ROUTES.NEW_BET)">Create Event</ButtonBase>
+      <p class="mt-40">Want to create your own bet?</p>
+      <ButtonBase class="m-auto mt-10 min-width-60" @click="navigateTo(PAGE_ROUTES.NEW_BET)">Create Event</ButtonBase>
+    </PerfectScrollbar>
   </div>
 </template>
 

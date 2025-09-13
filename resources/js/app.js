@@ -11,6 +11,9 @@ import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 
 import Notifications from '@kyvg/vue3-notification';
 
+import { PerfectScrollbarPlugin } from 'vue3-perfect-scrollbar';
+import 'vue3-perfect-scrollbar/style.css';
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
@@ -27,6 +30,7 @@ createInertiaApp({
       .use(VirtualScroller)
       .use(vClickOutside)
       .use(Notifications)
+      .use(PerfectScrollbarPlugin)
       .mount(el);
   },
 });

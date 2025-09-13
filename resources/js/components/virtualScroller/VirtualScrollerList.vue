@@ -51,12 +51,13 @@ const emit = defineEmits(['fetchMore'])
 <style scoped>
 .virtual-scroller-list {
   position: relative;
+  max-height: 100dvh;
 }
 
 .dynamic-scroller {
   height: 100%;
   min-height: 200px;
-  max-height: calc(100dvh - 200px);
+  max-height: calc(100dvh - 300px);
   overflow-y: auto;
   position: relative;
 }
