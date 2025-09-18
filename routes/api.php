@@ -31,8 +31,8 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 |--------------------------------------------------------------------------
 */
 
-Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
-Route::post('/reset-password', [PasswordResetController::class, 'reset']);
+//Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
+//Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 
 /*
 |--------------------------------------------------------------------------
@@ -60,8 +60,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login')->name('login');
-Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register')->name('register');
+//Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login')->name('login');
+//Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register')->name('register');
 
 
 Route::get('/bets/carousel', [BetSortController::class, 'carousel']);

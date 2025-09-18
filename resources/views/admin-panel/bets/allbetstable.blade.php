@@ -51,5 +51,13 @@
 
 
 @section('scripts')
-
+    <script>
+        $(function () {
+            $("#example1").DataTable({
+                responsive: true,
+                autoWidth: false,
+                scrollX: true // ✅ фикс переполнения
+            }).columns.adjust();
+        });
+    </script>
 @endsection
