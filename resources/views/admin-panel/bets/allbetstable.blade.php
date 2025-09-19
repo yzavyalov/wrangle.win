@@ -4,7 +4,7 @@
 
 @section('content')
             <!-- Форма поиска -->
-        <div class="card-body">
+        <div class="card">
             <form id="quickForm" action="{{ route('bet-select') }}" method="get">
                 @csrf
                 <div class="card-body">
