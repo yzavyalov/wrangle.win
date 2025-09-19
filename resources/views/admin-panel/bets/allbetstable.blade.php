@@ -7,7 +7,7 @@
         <div class="card-body">
             <form id="quickForm" action="{{ route('bet-select') }}" method="get">
                 @csrf
-                <div class="card-body">
+
                     <div class="row">
                         <div class="col">
                             <div class="form-group">
@@ -66,7 +66,7 @@
                             @endforeach
                         </div>
                     </div>
-                </div>
+
                 <div class="text-center mb-4">
                     <button type="submit" class="btn btn-primary al">Submit</button>
                 </div>
