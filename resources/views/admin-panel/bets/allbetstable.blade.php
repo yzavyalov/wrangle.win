@@ -119,18 +119,18 @@
 @endsection
 
 @section('scripts')
-    <script>
-        $(document).ready(function() {
-            $('#betsTable').DataTable({
-                responsive: true,
-                autoWidth: false,
-                scrollX: true,
-                pageLength: 15,
-                lengthChange: false,
-                searching: true,
-                ordering: true,
-                order: [[0, 'desc']],
-            });
-        });
-    </script>
+{{--    <script>--}}
+{{--        $(document).ready(function() {--}}
+{{--            $('#betsTable').DataTable({--}}
+{{--                responsive: true,--}}
+{{--                autoWidth: false,--}}
+{{--                scrollX: true,--}}
+{{--                pageLength: 15,--}}
+{{--                lengthChange: false,--}}
+{{--                searching: true,--}}
+{{--                ordering: true,--}}
+{{--                order: [[0, 'desc']],--}}
+{{--            });--}}
+{{--        });--}}
+{{--    </script>--}}
 @endsection
