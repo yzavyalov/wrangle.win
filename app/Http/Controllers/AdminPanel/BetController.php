@@ -27,7 +27,7 @@ class BetController extends Controller
 
         foreach ($bets as $bet)
         {
-            if (!BetService::checkFinishDate($bet->id))
+            if (!BetService::checkFinishDate($bet->id) && $bet->status === BetStatusEnum::APPROVED->value)
             {
                 $bet->status = BetStatusEnum::FINISHED->value;
             }
