@@ -22,7 +22,7 @@ export const getActualBets = async (payload: SearchBetsPayload) => {
   .then(res => {
     console.log(res, "res - getActualBets");
 
-    return res.data.data;
+    return res?.data?.data;
   })
   .catch(e => console.error(e.message));
 };
@@ -70,7 +70,7 @@ export const getHotBets = async (payload: SearchBetsPayload) => {
   .then(res => {
     console.log(res, "res - getHotBets");
 
-    return res.data;
+    return res?.data?.data?.bets;
   })
   .catch(e => console.error(e.message));
 };

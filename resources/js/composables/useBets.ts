@@ -32,9 +32,7 @@ export const useBets = (options: UseBetsOptions = {}) => {
 
   const dynamicBets = computed(() => {
     if (!bets.value?.length) {return [];}
-    // if (!searchQuery.value?.trim()) {return bets.value;}
 
-    // return bets.value.filter(bet => bet.title.toLowerCase().includes(searchQuery.value.toLowerCase() || bet.description.toLowerCase().includes(searchQuery.value.toLowerCase())));
     return sortArr(bets.value, sortBy, 'finish');
   });
 
@@ -56,7 +54,6 @@ export const useBets = (options: UseBetsOptions = {}) => {
       sort_order: sortBy.value,
     }
 
-    // filters.value?.finish?.length && (payload.sort_by = filters.value.finish);
     searchQuery.value && (payload.title = searchQuery.value);
     selectedCategories.value.length && (payload.categories = selectedCategories.value.map(category => category.id));
 
@@ -102,7 +99,7 @@ export const useBets = (options: UseBetsOptions = {}) => {
       const payload = await makeSearchPayload();
 
       const fetchedBets = await betsHandler(payload) || [];
-      // console.log(fetchedBets, 'fetchedBets - getActualBets');
+      console.log(fetchedBets, 'fetchedBets - getActualBets');
 
       if (!fetchedBets.length) {return console.warn("No fetchedBets");}
 
