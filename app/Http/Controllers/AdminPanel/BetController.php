@@ -25,7 +25,19 @@ class BetController extends Controller
     {
         $bets = Bet::paginate(15);
 
-        return view('admin-panel.bets.allbetstable',compact('bets'));
+        foreach ($bets as $bet)
+        {
+            if (!BetService::checkFinishDate($bet->id) && $bet->status === BetStatusEnum::APPROVED->value)
+            {
+                $bet->status = BetStatusEnum::FINISHED->value;
+            }
+        }
+
+        $statuses = BetStatusEnum::cases();
+
+        $categories = BetCategory::orderBy('name')->get();
+
+        return view('admin-panel.bets.allbetstable',compact('bets','statuses','categories'));
     }
 
     public function show($id)
@@ -81,7 +93,13 @@ class BetController extends Controller
         $bets= Bet::filter($filter)->paginate(15)->withQueryString();
 
         if ($request['table'] == 1)
-            return view('admin-panel.bets.allbetstable',compact('bets'));
+        {
+            $statuses = BetStatusEnum::cases();
+
+            $categories = BetCategory::orderBy('name')->get();
+
+            return view('admin-panel.bets.allbetstable',compact('bets','statuses','categories'));
+        }
         else
             return view('admin-panel.bets.bets-and-bits-table',compact('bets'));
     }

@@ -5,7 +5,6 @@ use App\Http\Controllers\AllPaymnetsLogoController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Api\{BetCategoryController,
     BetCategorySearchController,
     BetController,
@@ -31,8 +30,8 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 |--------------------------------------------------------------------------
 */
 
-Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
-Route::post('/reset-password', [PasswordResetController::class, 'reset']);
+//Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
+//Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 
 /*
 |--------------------------------------------------------------------------
@@ -60,8 +59,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login')->name('login');
-Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register')->name('register');
+//Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login')->name('login');
+//Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register')->name('register');
 
 
 Route::get('/bets/carousel', [BetSortController::class, 'carousel']);

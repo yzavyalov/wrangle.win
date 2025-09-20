@@ -26,6 +26,7 @@ class AdminTwoFactorAuthController extends Controller
         $systemCode = Cache::get('code'.Auth::id());
 
         if ($systemCode === $request->code)
+//        if (true)
         {
             session(['admin' => 1]);
 
