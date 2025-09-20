@@ -1,18 +1,25 @@
 import ButtonBase from "@/components/details/ButtonBase.vue";
-import { getAllCtegories } from "@/services/categories";
+import { fetchCategories as fetchCategoriesApi } from "@/services/categories";
 import { computed, onMounted, ref, watch, nextTick } from "vue";
 import { useLoading } from "@/composables/useLoading";
 import { useSettingsStore } from "@/store/settings";
+import { notifyWarning } from "@/helpers/notify";
 
-export const useCategories = () => {
+export const useCategories = (options: UseCategoriesOptions = {}) => {
+  const { fetchOnInit = true } = options;
+
   const { isLoading, loadingStart, loadingStop } = useLoading();
-
-  const { setCategories, toggleSelectedCategory, addCategory } = useSettingsStore();
+  const { setCategories, toggleSelectedCategory, addCategories, setPagination, setIsLastPage } = useSettingsStore();
 
   const selectedCategoryId = ref(null);
+
+  const pagination = computed(() => useSettingsStore().getPagination);
   const categories = computed(() => useSettingsStore().getCategories);
   const selectedCategories = computed(() => useSettingsStore().getSelectedCategories);
   const selectedCategoriesIds = computed(() => selectedCategories.value.map(category => category.id));
+
+  const isLastPage = computed(() => useSettingsStore().getIsLastPage);
+  const isFirstPage = computed(() => pagination.value.page === 1);
 
   const categoriesOptions = computed(() => {
     return categories.value
@@ -21,15 +28,28 @@ export const useCategories = () => {
   });
 
   const fetchCategories = async () => {
-    if (categories.value?.length) {return;}
+    console.log('fetchCategories');
+    if (isLoading.value) {return console.warn("Loading, plese wait");}
 
     try {
       loadingStart();
 
-      const fetchedCategories = await getAllCtegories() || [];
-      // console.log(fetchedCategories, "fetchedCategories");
+      const payload: FetchCategoriesPayload = {
+        page: pagination.value.page,
+        per_page: pagination.value.per_page,
+      };
 
-      fetchedCategories.length && setCategories(fetchedCategories);
+      const fetchedCategories = await fetchCategoriesApi(payload) || [];
+      console.log(fetchedCategories, "fetchedCategories");
+
+      if (!fetchedCategories?.length || fetchedCategories?.length < pagination.value?.per_page) {
+        setIsLastPage(true);
+        return;
+      }
+
+      isFirstPage.value
+        ? setCategories(fetchedCategories)
+        : addCategories(fetchedCategories);
 
     } catch (error) {
       console.warn(error);
@@ -37,6 +57,20 @@ export const useCategories = () => {
     } finally {
       loadingStop();
     }
+  }
+
+  const fetchMoreCategories = async () => {
+    if (isLoading.value) {return console.warn("Loading, plese wait");}
+
+    if (isLastPage.value) {
+      notifyWarning("No more categories");
+      console.warn("No more categories");
+      return;
+    }
+
+    setPagination({ ...pagination.value, page: pagination.value.page + 1 });
+
+    fetchCategories();
   }
 
   const selectCategoryHandler = categoryId => {
@@ -52,7 +86,7 @@ export const useCategories = () => {
   }
 
   onMounted(() => {
-    fetchCategories();
+    fetchOnInit && fetchCategories();
   })
 
   return {
@@ -68,5 +102,8 @@ export const useCategories = () => {
     setCategories,
     toggleSelectedCategory,
     selectCategoryHandler,
+
+    fetchCategories,
+    fetchMoreCategories,
   };
 }

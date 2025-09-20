@@ -1,13 +1,22 @@
 import { http } from "@/api/http";
 import { CATEGORIES } from "@/api/enpoints";
 
-export const getAllCtegories = async () => {
+export const fetchCategories = async (payload: FetchCategoriesPayload) => {
+  console.log(payload, 'payload - fetchCategories');
 
-  return await http.get(CATEGORIES.URL_CATEGORIES)
+  const stringRequestBody = Object.entries(payload).reduce((acc, [key, value]) => {
+    acc[key] = String(value);
+    return acc;
+  }, {} as Record<string, string>);
+
+  const requestUrl = CATEGORIES.URL_CATEGORIES + "?" + new URLSearchParams(stringRequestBody).toString();
+
+
+  return await http.get(requestUrl)
   .then(res => {
-    console.log(res, "res - getAllCtegories");
+    console.log(res, "res - fetchCategories");
 
-    return res.data.data;
+    return res?.data?.data;
   })
   .catch(e => console.error(e.message));
 };

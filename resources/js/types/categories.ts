@@ -12,3 +12,12 @@ interface CategoryItem {
   name: string;
   menu_status: number;
 }
+
+interface FetchCategoriesPayload {
+  page: number;
+  per_page: number;
+}
+
+interface UseCategoriesOptions {
+  fetchOnInit?: boolean;
+}

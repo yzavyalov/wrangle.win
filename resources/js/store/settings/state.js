@@ -13,4 +13,11 @@ export default () => ({
 
   sortBy: 'asc', // desc | asc
 
+  isLastPage: false,
+
+  pagination: {
+    page: 1,
+    per_page: 20,
+  },
+
 });

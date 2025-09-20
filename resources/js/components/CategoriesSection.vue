@@ -1,14 +1,9 @@
 <script setup>
-import ButtonBase from "@/components/details/ButtonBase.vue";
-import { getAllCtegories } from "@/services/categories";
 import { computed, onMounted, ref, onBeforeUnmount, watch, nextTick } from "vue";
-import { useLoading } from "@/composables/useLoading";
-import { useSettingsStore } from "@/store/settings";
 import LoaderComponent from "@/components/LoaderComponent.vue";
 import DynamicSelector from "@/components/details/DynamicSelector.vue";
 import ButtonWithClose from "@/components/details/ButtonWithClose.vue";
 import { useCategories } from "@/composables/useCategories";
-import { triggerOpenNewModal } from "@/composables/useModalsTriggers";
 
 const {
   categories,
@@ -17,9 +12,11 @@ const {
   categoriesOptions,
   toggleSelectedCategory,
   isLoading,
+  fetchMoreCategories,
 } = useCategories();
 
 const selectedCategoryId = ref(null);
+const footerText = ref("Fetch more");
 
 const selectCategoryHandler = categoryId => {
   const selectedCategory = categories.value.find(category => category.id === categoryId);
@@ -43,10 +40,16 @@ watch(
 
 <template>
   <div class="categories">
-    <LoaderComponent v-if="isLoading" />
+    <LoaderComponent style="z-index: 1000;" v-if="isLoading" />
 
     <div class="categories__header">
-      <DynamicSelector v-model="selectedCategoryId" :options="categoriesOptions" class="categories__header--input" />
+      <DynamicSelector v-model="selectedCategoryId"
+        :options="categoriesOptions"
+        class="categories__header--input"
+        :is-show-footer="true"
+        :footer-text="footerText"
+        @footerAction="fetchMoreCategories"
+      />
     </div>
 
     <div class="categories__list">

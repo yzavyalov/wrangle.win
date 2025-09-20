@@ -31,6 +31,13 @@ export default {
     this.categories.push(newCategory);
   },
 
+  addCategories(newCategories) {
+    console.log(newCategories, 'newCategories - addCategories - from store');
+    this.categories.push(...newCategories);
+    console.log(this.categories, 'this.categories - addCategories - from store');
+
+  },
+
   setSelectedCategories(categories) {
     this.selectedCategories = selectedCategories;
   },
@@ -58,5 +65,13 @@ export default {
 
     const sortByFromLocalStore = getFromLocalStorage('sortBy');
     this.sortBy = sortByFromLocalStore || 'asc';
+  },
+
+  setIsLastPage(isLastPage) {
+    this.isLastPage = isLastPage;
+  },
+
+  setPagination(pagination) {
+    this.pagination = pagination;
   },
 };
