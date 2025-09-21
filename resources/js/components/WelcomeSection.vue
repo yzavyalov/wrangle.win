@@ -3,14 +3,18 @@ import { computed } from "vue";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import ProfileCardSmall from  '@/components/profile/ProfileCardSmall.vue';
 import ButtonBase from "@/components/details/ButtonBase.vue";
+import ButtonWithNumber from "@/components/details/ButtonWithNumber.vue";
 import { useUserStore } from "@/store/user";
 import { navigateTo } from '@/helpers/navigate';
 import { PAGE_ROUTES } from '@/utils/datasets';
+import { notifyWarning } from '@/helpers/notify';
 
 const APP_NAME = import.meta.env.VITE_APP_NAME;
 
 
 const currentUser = computed(() => useUserStore().getUser);
+
+const noActionYet = () => notifyWarning("No action yet");
 
 </script>
 
@@ -23,21 +27,28 @@ const currentUser = computed(() => useUserStore().getUser);
         </h1>
         <ProfileCardSmall class="wellcome-section__header--profile"/>
       </div>
+
       <div class="wellcome-section__body">
         <div class="wellcome-section__section">
           <h3>Predict & Get Rewarded!</h3>
           <p>Make predictions on real-world events and earn rewards for accuracy.</p>
+
+          <ButtonWithNumber class="mt-auto" :number="100" :icon="'/images/dollar.svg'" @click="noActionYet">Total bet amount</ButtonWithNumber>
           <ButtonBase v-if="!currentUser" @click="navigateTo(PAGE_ROUTES.LOGIN)">Login</ButtonBase>
           <ButtonBase v-else @click="navigateTo(PAGE_ROUTES.PROFILE)">Profile</ButtonBase>
         </div>
         <div class="wellcome-section__section">
           <h3>A Wide Range of Events</h3>
           <p>Sports, politics, entertainment, technology – choose from multiple categories and predict the hottest topics.</p>
+
+          <ButtonWithNumber class="mt-auto" :number="100" :icon="'/images/arrow-up.svg'" @click="noActionYet">Events created</ButtonWithNumber>
           <ButtonBase @click="navigateTo(PAGE_ROUTES.CATEGORIES)">View Events</ButtonBase>
         </div>
         <div class="wellcome-section__section">
           <h3>Fair Rules & Honest Payouts!</h3>
           <p>Transparent system, reliable payouts, and fair conditions – we ensure your security and comfort.</p>
+
+          <ButtonWithNumber class="mt-auto" :number="100" :icon="'/images/avatar-sample-grey.svg'" @click="noActionYet">Users trust us</ButtonWithNumber>
           <ButtonBase @click="navigateTo(PAGE_ROUTES.POLITICS)">Our Politics</ButtonBase>
         </div>
       </div>
@@ -102,7 +113,7 @@ const currentUser = computed(() => useUserStore().getUser);
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
 
     h3 {
       font-size: 32px;
@@ -116,7 +127,7 @@ const currentUser = computed(() => useUserStore().getUser);
     }
 
     button {
-      margin-top: auto;
+      // margin-top: auto;
       font-weight: var(--font-weight-light);
       font-size: 32px;
     }
@@ -144,6 +155,10 @@ const currentUser = computed(() => useUserStore().getUser);
       background-position: top, center;
       background-size: cover, 150% auto;
     }
+  }
+
+  .mt-auto {
+    margin-top: auto;
   }
 }
 </style>
