@@ -22,7 +22,7 @@ export const sideBarLinks = [
   { id: 'politics', name: "Politics", path: PAGE_ROUTES.POLITICS },
   { id: 'rules', name: "Rules", path: PAGE_ROUTES.RULES },
   { id: 'privacy', name: "Privacy policy", path: PAGE_ROUTES.PRIVACY },
-  { id: 'events', name: "All Events", path: PAGE_ROUTES.CATEGORIES },
+  // { id: 'events', name: "All Events", path: PAGE_ROUTES.CATEGORIES },
   { id: 'account', name: "To Account", path: PAGE_ROUTES.PROFILE },
 ];
 
