@@ -22,28 +22,34 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="active_events">
+  <div class="top_events">
 
     <SectionHeader :title="'Hot Events'">
 
       <LoaderComponent v-if="isLoading" />
 
-      <FilterAndSort v-if="isShowFilters" class="active_events__filters" />
+      <FilterAndSort v-if="isShowFilters" class="top_events__filters" />
 
     </SectionHeader>
 
-    <SwiperList v-if="dynamicBets?.length" :items="dynamicBets" @reach-end="fetchMoreBets">
+    <!-- <SwiperList v-if="dynamicBets?.length" :items="dynamicBets" @reach-end="fetchMoreBets">
       <template v-slot:item="{ item }">
         <EventCard :item="item" />
       </template>
-    </SwiperList>
+    </SwiperList> -->
+
+    <ul v-if="dynamicBets?.length" class="top_events__list">
+      <li v-for="card in dynamicBets" :key="card.id">
+        <EventCard :item="card" />
+      </li>
+    </ul>
 
     <p v-else class="text-center">No events found</p>
   </div>
 </template>
 
 <style scoped lang='scss'>
-.active_events {
+.top_events {
   position: relative;
   z-index: 1;
 
