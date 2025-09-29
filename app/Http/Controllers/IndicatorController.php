@@ -10,7 +10,7 @@ use App\Models\User;
 
 class IndicatorController extends Controller
 {
-    protected $deltaBit = 50;
+    protected $deltaBit = 500;
 
     protected $deltaEvents = 2;
 
