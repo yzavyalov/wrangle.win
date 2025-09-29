@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AgeVerificationController;
 use App\Http\Controllers\AllPaymnetsLogoController;
+use App\Http\Controllers\IndicatorController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
@@ -52,6 +53,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
         return response()->json(['message' => 'Verification email sent.']);
     })->name('verification.send');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Indicators
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/indicators', [IndicatorController::class, 'index']);
 
 /*
 |--------------------------------------------------------------------------
