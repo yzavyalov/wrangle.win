@@ -87,6 +87,7 @@
                         <th>description</th>
                         <th>finish</th>
                         <th>created_at</th>
+                        @hasrole(['admin', 'finance manager'])<th>winner</th>@endhasrole
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -102,6 +103,50 @@
                             <td>{{ $bet->description }}</td>
                             <td>{{ $bet->finish }}</td>
                             <td>{{ $bet->created_at }}</td>
+                            @hasrole(['admin', 'finance manager'])
+                            <td>
+                                @if(!empty($bet->winnerAnswer))
+                                    {{$bet->winnerAnswer->description}}
+                                @else
+                                <!-- Кнопка для открытия модалки -->
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nominateWinnerModal{{ $bet->id }}">
+                                    Nominate a winner
+                                </button>
+
+                                <!-- Модальное окно для выбора победителя -->
+                                <div class="modal fade" id="nominateWinnerModal{{ $bet->id }}" tabindex="-1" aria-labelledby="nominateWinnerModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="nominateWinnerModalLabel">Nominate a winner for Bet #{{ $bet->id }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Форма для выбора победителя -->
+                                                <form action="{{ route('bet-add-winner') }}" method="POST">
+                                                    @csrf
+                                                    <div class="mb-3">
+                                                        <label for="winnerAnswer{{ $bet->id }}" class="form-label">Select winner</label>
+                                                        <select class="form-select" name="winner_answer_id" id="winnerAnswer{{ $bet->id }}" required>
+                                                            <option value="">Select an answer</option>
+                                                            @foreach($bet->answers as $answer)
+                                                                <option value="{{ $answer->id }}">{{ $answer->description }} - {{ $answer->bits()->sum('sum') }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <input type="hidden" name="bet_id" value="{{ $bet->id }}">
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Nominate Winner</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            @endif
+                            @endhasrole
                             <td>
                                 <button class="btn btn-sm btn-primary mb-1" onclick="window.location.href='{{ route('bet-show',$bet->id) }}'">EDIT</button>
                                 <button class="btn btn-sm btn-danger" onclick="if(confirm('Are you sure?')) window.location.href='{{ route('bet-del',$bet->id) }}'">DELETE</button>
