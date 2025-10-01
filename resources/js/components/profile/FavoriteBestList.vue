@@ -19,6 +19,7 @@ const {
   toggleBetToFavoriteHandler,
   isLastPage: isLastPageFavoriteBets,
   isLoading: isLoadingFavoriteBets,
+  openBetHandler,
 } = useFavoriteBets();
 
 

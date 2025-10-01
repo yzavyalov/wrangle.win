@@ -18,6 +18,7 @@ const {
   fetchMoreOwnBets,
   isLastPage: isLastPageOwnBets,
   isLoading: isLoadingOwnBets,
+  openBetHandler,
 } = useOwnBets();
 
 onMounted(() => {
@@ -32,7 +33,7 @@ onMounted(() => {
     <PerfectScrollbar>
       <VirtualScrollerList :items="ownBets" :is-loading="isLoadingOwnBets" @fetch-more="fetchMoreOwnBets">
         <template #item="{ item }">
-          <BetItemSmall :item="item" class="mb-10" />
+          <BetItemSmall :item="item" class="mb-10" @detail="openBetHandler(item)" />
         </template>
 
         <template #after>

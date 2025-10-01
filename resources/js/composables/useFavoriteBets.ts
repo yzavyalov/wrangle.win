@@ -4,6 +4,8 @@ import { BetItem, Pagination, SearchBetsPayload } from "@/types/bets";
 import { useLoading } from "@/composables/useLoading";
 import { useConfirm } from '@/composables/useConfirm';
 import { notifySuccess, notifyWarning } from "@/helpers/notify";
+import { navigateTo } from "@/helpers/navigate";
+import { PAGE_ROUTES } from "@/utils/datasets";
 
 export const useFavoriteBets = () => {
 
@@ -90,6 +92,23 @@ export const useFavoriteBets = () => {
     notifySuccess('Bet removed from favorites');
   }
 
+  const openBetHandler = async (bet) => {
+    console.log(bet, 'bet');
+
+    const shortBetTitle = bet.title.length > 30 ? `${bet.title.substring(0, 30)}...` : bet.title;
+
+    const result = await confirm({
+      title: 'Are you sure?',
+      text: `You will be redirected to this page - '${shortBetTitle}'?`,
+      confirmText: 'Yes',
+      cancelText: 'No'
+    })
+
+    if (!result) {return}
+
+    navigateTo(`${PAGE_ROUTES.BET}/${bet.id}`);
+  }
+
   onMounted(() => {
     fetchFavoriteBets();
   })
@@ -102,5 +121,6 @@ export const useFavoriteBets = () => {
     fetchFavoriteBets,
     fetchMoreFavoriteBets,
     toggleBetToFavoriteHandler,
+    openBetHandler,
   };
 };
