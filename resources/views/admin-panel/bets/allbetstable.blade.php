@@ -5,14 +5,31 @@
 @section('content')
             <!-- Форма поиска -->
         <div class="card">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+
             <form id="quickForm" action="{{ route('bet-select') }}" method="get">
                 @csrf
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
                             <div class="form-group">
-                                <label for="bet_id">Bet ID</label>
-                                <input type="text" name="bet_id" class="form-control" id="bet_id" placeholder="Enter bet ID" value="{{ request('bet_id') }}">
+                                <label for="id">Bet ID</label>
+                                <input type="text" name="id" class="form-control" id="bet_id" placeholder="Enter bet ID" value="{{ request('id') }}">
                             </div>
                             <input type="hidden" name="table" value="1">
                             <div class="form-group">

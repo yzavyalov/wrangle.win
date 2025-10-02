@@ -121,25 +121,28 @@ class BetController extends Controller
 
         $bet = Bet::findOrFail($validated['bet_id']);
 
-        if ($bet->status !== BetStatusEnum::PAID->value) {
+        if ($bet->status === BetStatusEnum::PAID->value) {
             return redirect()->back()->with('error', 'The reward for this event has already been paid.');
         }
 
-        if ($bet->finish > now()) {
+        if ($bet->finish > now())
+        {
             // Если уже назначен победитель — обнуляем
-            if ($bet->winner_answer_id) {
+            if ($bet->winner_answer_id)
+            {
                 $bet->winner_answer_id = null;
                 $bet->save();
             }
 
+            $bet->winner_answer_id = $validated['winner_answer_id'];
+            $bet->save();
+
+            return redirect()->back()->with('success', 'Winner nominated successfully!');
+        }
+        else
+        {
             return redirect()->back()->with('error', 'Finish date has not been reached yet!');
         }
-
-        // Назначаем победителя
-        $bet->winner_answer_id = $validated['winner_answer_id'];
-        $bet->save();
-
-        return redirect()->back()->with('success', 'Winner nominated successfully!');
     }
 
 }
