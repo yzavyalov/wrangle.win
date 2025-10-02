@@ -125,7 +125,7 @@ class BetController extends Controller
             return redirect()->back()->with('error', 'The reward for this event has already been paid.');
         }
 
-        if ($bet->finish > now())
+        if ($bet->finish <= now())
         {
             // Если уже назначен победитель — обнуляем
             if ($bet->winner_answer_id)
