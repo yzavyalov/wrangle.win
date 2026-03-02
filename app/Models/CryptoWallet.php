@@ -5,18 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AlphaPoWallet extends Model
+class CryptoWallet extends Model
 {
     use HasFactory;
+
+    protected $table = 'crypto_wallets';
 
     protected $fillable = [
         'id',
         'user_id',
-        'foreign_id',
+        'payment_methods_id',
         'currency',
-        'convert_to',
         'address',
-        'tag',
     ];
 
 

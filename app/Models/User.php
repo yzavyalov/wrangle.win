@@ -102,7 +102,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function cryptoWallets()
     {
-        return $this->hasMany(AlphaPoWallet::class);
+        return $this->hasMany(CryptoWallet::class);
     }
 
     public function deposits()

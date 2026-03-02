@@ -7,6 +7,7 @@ use App\Models\Payment_log;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class CryptoProcessingService
 {
@@ -17,82 +18,6 @@ class CryptoProcessingService
 
         $this->base_currency = env('CURRENT_CURRENCY');
     }
-
-
-    public function callAlphaPoApi(array $params, string $endpoint)
-    {
-        // Подготавливаем тело запроса
-        $body = json_encode($params);
-
-        // Генерируем подпись
-        $signature = hash_hmac('sha512', $body, env('CRYPTOPROCESSING_SECRET_KEY'));
-
-        // Отправляем POST-запрос
-        $response = Http::withHeaders([
-            'X-Processing-Key' => env('CRYPTOPROCESSING_PUBLIC_KEY'),
-            'X-Processing-Signature' => $signature,
-            'Content-Type' => 'application/json',
-        ])->post($endpoint, $params);
-
-        // Возвращаем структурированный результат
-        if ($response->successful()) {
-            return [
-                'success' => true,
-                'code' => $response->status(),
-                'data' => $response->json(),
-            ];
-        } else {
-            return [
-                'success' => false,
-                'code' => $response->status(),
-                'message' => "AlphaPo API error: " . $response->body(),
-            ];
-        }
-    }
-
-
-
-    public function currencyList()
-    {
-        $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/currencies/list';
-
-        $params = ['visible' => true ];
-
-        return $this->callAlphaPoApi($params,$url);
-    }
-
-
-    public function pare()
-    {
-        $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/currencies/pairs';
-
-        $params = [];
-
-        return $this->callAlphaPoApi($params,$url);
-    }
-
-
-    public function createInvoice($sender_currency,$sum)
-    {
-        $url = 'https://app.sandbox.cryptoprocessing.com/api/v2/invoices/create';
-
-        $user = Auth::user();
-
-        $params = [
-            'timer' => true,
-            'title'=>'Deposit to Wrangle.win',
-            'currency' =>$sender_currency,
-            'sender_currency' => $sender_currency,
-            'amount' => str($sum),
-            'foreign_id' => str($user->id),
-            'url_success' => 'https://wrangle.win/1',
-            'url_failed' => 'https://wrangle.win/2',
-            'email_user' => str($user->email),
-        ];
-
-        return $this->callAlphaPoApi($params, $url);
-    }
-
 
     public function createDeposit(Deposit $deposit, $currency)
     {
@@ -131,6 +56,20 @@ class CryptoProcessingService
     }
 
 
+    public function checkUserDepositAddress($paymentId, $currency)
+    {
+        $user = Auth::user();
+
+        $oldWallet = $user->cryptoWallets()
+            ->where([
+                'payment_methods_id' => $paymentId,
+                'currency'   => $currency,
+            ])
+            ->where('created_at', '>=', now()->subMonths(3))
+            ->first();
+
+        return $oldWallet->address ?? null;
+    }
 
     public function newAdres($currency)
     {

@@ -7,6 +7,7 @@ use App\Models\Deposit;
 use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class DepositService
 {

@@ -44,31 +44,31 @@
       </div>
     </div>
   </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <script>
-    // Функция для отображения таймера
-    function startTimer(duration, display) {
-      var timer = duration, minutes, seconds;
-      setInterval(function () {
-        minutes = parseInt(timer / 60, 10);
-        seconds = parseInt(timer % 60, 10);
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+      <script>
+        // Функция для отображения таймера
+        function startTimer(duration, display) {
+          var timer = duration, minutes, seconds;
+          setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
 
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
 
-        display.textContent = "The code sent to you by email will be valid: " + minutes + ":" + seconds;
+            display.textContent = "The code sent to you by email will be valid: " + minutes + ":" + seconds;
 
-        if (--timer < 0) {
-          timer = duration;
+            if (--timer < 0) {
+              timer = duration;
+            }
+          }, 1000);
         }
-      }, 1000);
-    }
 
-    // Запуск таймера при загрузке страницы
-    window.onload = function () {
-      var tenMinutes = 60 * 10,
-        display = document.querySelector('#timer');
-      startTimer(tenMinutes, display);
-    };
-  </script>
+        // Запуск таймера при загрузке страницы
+        window.onload = function () {
+          var tenMinutes = 60 * 10,
+            display = document.querySelector('#timer');
+          startTimer(tenMinutes, display);
+        };
+      </script>
 

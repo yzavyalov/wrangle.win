@@ -7,7 +7,10 @@ use App\Services\DepositService;
 use App\Services\Payment\Acquiring\WintecaExcahngeService;
 use App\Services\Payment\Acquiring\WintecaService;
 use App\Services\Payment\Crypto\AlphaPoExcechangeService;
+use App\Services\Payment\Crypto\CryptoZayaService;
 use App\Services\PaymentAmountService;
+use Illuminate\Support\Facades\Log;
+
 
 class DepositPaymentService
 {
@@ -15,21 +18,21 @@ class DepositPaymentService
                                 DepositService $depositService,
                                 WintecaService $wintecaService,
                                 WintecaExcahngeService $excahngeService,
-                                AlphaPoExcechangeService $alphaPoExcechangeService,
                                 PaymentAnswerService $paymentAnswerService,
+                                CryptoZayaService $cryptoZayaService,
     )
     {
         $this->cryptoProcessingService = $cryptoProcessingService;
 
         $this->depositService = $depositService;
 
-        $this->alphaPoExcechangeService = $alphaPoExcechangeService;
-
         $this->wintecaService = $wintecaService;
 
         $this->excahngeService = $excahngeService;
 
         $this->paymentAnswerService = $paymentAnswerService;
+
+        $this->cryptoZayaService = $cryptoZayaService;
 
         $this->baseCurrency = env('CURRENT_CURRENCY');
     }
@@ -66,18 +69,28 @@ class DepositPaymentService
     }
 
 
-    public function createAlphaPoDeposit($amount,$currency,$payment_id)
+
+    public function createCryptoZayaDeposit($amount,$currency,$payment_id)
     {
-        $exchangeSum = $this->alphaPoExcechangeService->exchangeCrypto($amount,$currency);
+        $deposit = $this->depositService->createDeposit($amount, $currency, $payment_id);
 
-        if (!$exchangeSum)
-            return $this->paymentAnswerService->AlphaPoPayInNotCurrencyAnswer();
+        $checkAddress = $this->cryptoProcessingService->checkUserDepositAddress($payment_id, $currency);
+
+        $address = '';
+
+        if ($checkAddress)
+            $address = $checkAddress;
         else
-            $deposit = $this->depositService->createDeposit($exchangeSum, $this->baseCurrency, $payment_id);
+        {
+            $response = $this->cryptoZayaService->createCryptoZayaDeposit($amount,$currency,$deposit->id,$deposit->user_id);
 
-        $responce = $this->cryptoProcessingService->createDeposit($deposit,$currency);
+            if ($response)
+                $address = $response['address'];
+        }
 
-        return $this->paymentAnswerService->AlphaPoPayInAnswer($responce, $amount, $currency);
+        $amount = $this->cryptoZayaService->exchangeAmout($amount,$currency);
+Log::info(['amount' =>$amount]);
+        return $this->paymentAnswerService->CryptoZayaPayInQRAnswer($address,$amount,$currency);
     }
 
 }

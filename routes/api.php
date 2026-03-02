@@ -18,11 +18,7 @@ use App\Http\Controllers\Api\{BetCategoryController,
     ProfileController,
     TransactionController,
     UserDataController};
-use App\Http\Controllers\Payment\{
-    AlphaPoController,
-    PayOutController,
-    WintecaController
-};
+use App\Http\Controllers\Payment\{AlphaPoController, CryptoZayaController, PayOutController, WintecaController};
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 /*
@@ -94,6 +90,7 @@ Route::post('/winteca/callback', [WintecaController::class, 'handle']);
 Route::get('/winteca/payin/success', [WintecaController::class, 'payInSuccess']);
 Route::get('/winteca/payin/fail', [WintecaController::class, 'payInFail']);
 Route::get('/winteca/payin/pending', [WintecaController::class, 'payInPending']);
+Route::post('/cryptozaya/callback',[CryptoZayaController::class,'handle']);
 
 /*
 |--------------------------------------------------------------------------
