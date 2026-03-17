@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('crypto_wallets', function (Blueprint $table) {
+            $table->dropForeign(['payment_methods_id']);
             $table->dropColumn('foreign_id');
             $table->dropColumn('convert_to');
             $table->dropColumn('tag');
