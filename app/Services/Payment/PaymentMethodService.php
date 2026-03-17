@@ -3,7 +3,9 @@
 namespace App\Services\Payment;
 
 use App\Http\Requests\PaymentMethodRequest;
+use App\Models\Payment;
 use App\Models\PaymentMethod;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class PaymentMethodService
@@ -61,5 +63,21 @@ class PaymentMethodService
 
         return $paymentMethod;
     }
+
+
+    public static function paymentMethodId($paymentId,$currency)
+    {
+        $payment = Payment::query()->find($paymentId);
+
+        $paymentMethod = $payment->methods()->where('currency',$currency)->first();
+
+        return $paymentMethod->id ?? null;
+    }
+
+    public static function currencyOfPaymentMethodId($paymentMethodId)
+    {
+        return PaymentMethod::find($paymentMethodId)?->currency;
+    }
+
 
 }

@@ -15,6 +15,7 @@ use App\Models\PaymentMethod;
 use App\Services\BalanceService;
 use App\Services\OutsidePaymentService;
 use App\Services\Payment\CascadeService;
+use App\Services\Payment\PaymentMethodService;
 use App\Services\Payment\PaymentPayOutAnswerService;
 use App\Services\TwoFactorService;
 use Illuminate\Http\Request;
@@ -76,7 +77,7 @@ class PayOutController extends Controller
 
         $amount = $validateData['amount'];
 
-        $currency = $validateData['currency'] ?? 'EUR';
+        $currency = $validateData['currency'] ?? config('cryptozaya.base_currency');
 
         $card_number = $validateData['card_number'];
 
@@ -92,7 +93,7 @@ class PayOutController extends Controller
             if (!$checkBalance)
                 return PaymentPayOutAnswerService::lessBalance();
 
-            $response = $this->outsidePaymentService->createPauOutCascade($amount, $currency, $card_number,$id);
+            $response = $this->outsidePaymentService->createPayOutCascade($amount, $currency, $card_number,$id);
 
             if($response)
                 return $this->successJsonAnswer200('message',$response);

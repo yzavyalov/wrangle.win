@@ -1,26 +1,31 @@
 <?php
 
 namespace App\Services\Payment\Crypto;
-
+use App\Models\Deposit;
 use App\Services\CryptoProcessingService;
+use App\Services\DepositService;
+use App\Services\Payment\GetPaymentDataService;
 use App\Services\PaymentLogsService;
-use App\Services\TransactionService;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Throwable;
 
 class CryptoZayaService
 {
-    public function __construct(TransactionService $transactionService,
+    public function __construct(
                                 PaymentLogsService $paymentLogsService,
-                                CryptoProcessingService $cryptoProcessingService,)
+                                CryptoProcessingService $cryptoProcessingService,
+                                DepositService $depositService,
+                                CryptoZayaDepositWithoutRequestService $cryptoZayaDepositWithoutRequestService,
+                                )
     {
-        $this->transactionService = $transactionService;
-
         $this->paymentLogsService = $paymentLogsService;
 
         $this->cryptoProcessingService = $cryptoProcessingService;
+
+        $this->depositService = $depositService;
+
+        $this->cryptoZayaDepositWithoutRequestService = $cryptoZayaDepositWithoutRequestService;
 
         $this->base_url = config('cryptozaya.cryptozaya_url');
 
@@ -40,14 +45,25 @@ class CryptoZayaService
     }
 
 
-    public function createCryptoZayaWithdraw()
+    public function createCryptoZayaWithdraw($address,$amount,$currency, $currencyTo,$transaction_id, $user)
     {
-        dd('CryptoZaya');
+        $endpoint = '/api/withdraw';
+
+        $data = [
+            'address' => $address,
+            'amount' => $amount,
+            'currency' => $currency,
+            'currency_to' => $currencyTo,
+            'user_id' => $user->id,
+            'transaction_id' => (string) $transaction_id
+        ];
+
+        return $this->postRequest($endpoint,$data);
     }
 
 
 
-    protected function postRequest(string $endpoint, array $data): ?array
+    protected function postRequest(string $endpoint, array $data)
     {
         $url = rtrim($this->base_url, '/') . '/' . ltrim($endpoint, '/');
 
@@ -61,22 +77,7 @@ class CryptoZayaService
             // 4xx/5xx -> исключение
             $response->throw();
 
-            // Если сервер вернул не JSON — json() даст null
-            $body = $response->json();
-
-            if (!is_array($body)) {
-                Log::warning('CryptoZaya: response is not JSON array', [
-                    'url'         => $url,
-                    'payload'     => $data,
-                    'status'      => $response->status(),
-                    'contentType' => $response->header('Content-Type'),
-                    'raw_body'    => $response->body(),
-                ]);
-
-                return null;
-            }
-
-            return $body;
+            return $response->json();
 
         } catch (RequestException $e) {
             // Это 4xx/5xx
@@ -164,7 +165,7 @@ class CryptoZayaService
         $data = ['from' => env('CURRENT_CURRENCY'), 'to' => $this->checkCurrency($currency)];
 
         $rateRaw = $this->postRequest($endpoint, $data);
-Log::info(trim($rateRaw->body()));
+
         if ($rateRaw === null || !is_numeric($rateRaw)) {
             $rate = 1.0;
         } else {
@@ -172,5 +173,95 @@ Log::info(trim($rateRaw->body()));
         }
 
         return $rate * (float)$amount;
+    }
+
+    public function exchangeBackAmount($amount, $currency)
+    {
+        $endpoint = '/api/exchange-rate';
+
+        $data = ['from' =>  config('cryptozaya.base_currency'), 'to' => $this->checkCurrency($currency)];
+
+        $rateRaw = $this->postRequest($endpoint, $data);
+
+        if ($rateRaw === null || !is_numeric($rateRaw)) {
+            $rate = 1.0;
+        } else {
+            $rate = (float)$rateRaw;
+        }
+
+        return $rate * (float)$amount;
+    }
+
+
+    public function takeCallback($callback)
+    {
+        Log::info('CryptoZaya takeCallback', ['callback' => $callback]);
+        $merchantTransactionId = $callback['merchant_system_transaction_id'] ?? null;
+        $status = $callback['status'];
+        $statusID = $callback['status_id'];
+        $amount = $callback['amount'];
+        $currency = $callback['currency'];
+        $userId = $callback['merchant_system_user_id'] ?? null;
+        $transactionType = $callback['type'];
+        $transactionTypeId = $callback['type_id'];
+        $address = $callback['wallet_to'];
+
+        if ($transactionTypeId === 1)
+        {
+            if ($merchantTransactionId && $statusID === 2)
+            {
+                $depositDB = Deposit::query()->where('id',$merchantTransactionId)->first();
+
+                if ( $depositDB)
+                {
+                    $dbAmount = number_format((float)$depositDB->last_amount, 8, '.', '');
+                }
+                else
+                {
+                    $dbAmount = 0;
+                }
+
+                $cbAmount = number_format((float)$amount, 8, '.', '');
+
+                if ($depositDB && $dbAmount === $cbAmount && $depositDB->status !== $statusID)
+                {
+                    Log::info('CryptoZaya takeCallback', ['amount' => $amount]);
+                    $this->depositService->changeStatus($depositDB, $statusID);
+
+                    return 1;
+                }
+                else
+                {
+                    Log::error('CryptoZaya takeCallback null1');
+                    return null;
+                }
+            }
+            elseif ($statusID === 4)
+            {
+                $amountInBaseCurrency = $this->exchangeBackAmount($amount,$currency);
+
+                $payments = GetPaymentDataService::getPaymentMethodFromCurrency($currency);
+
+                $deposit = $this->cryptoZayaDepositWithoutRequestService
+                    ->createCryptoZayaDepositWithoutRequest($address,$amountInBaseCurrency,$payments['payment']->id,$payments['paymentMethod']->id);
+
+                $deposit->last_amount = $amount;
+
+                $deposit->save();
+
+                return 1;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+        else
+        {
+            return null;
+        }
+
+
     }
 }

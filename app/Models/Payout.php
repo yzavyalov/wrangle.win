@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Payout extends Model
@@ -14,8 +15,11 @@ class Payout extends Model
     protected $fillable = [
         'id',
         'user_id',
+        'transaction_id',
         'payment_id',
+        'payment_method_id',
         'sum',
+        'last_amount',
         'currency',
         'status',
     ];
@@ -37,8 +41,18 @@ class Payout extends Model
         return $this->belongsTo(Payment::class);
     }
 
+    public function paymnetMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class,'payment_method_id');
+    }
+
     public function transactionable()
     {
         return $this->morphMany(Winteca_transaction::class,'transactionable');
+    }
+
+    public function transaction(): BelongsTo
+    {
+        return $this->belongsTo(Transaction::class, 'transaction_id');
     }
 }

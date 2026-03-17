@@ -84,4 +84,12 @@ class UserService
 
         return $accessToken->tokenable; // Вернёт User модель
     }
+
+
+    public static function getBalance($userId)
+    {
+        $user = User::query()->find($userId);
+
+        return $user->balance->balance ?? 0;
+    }
 }

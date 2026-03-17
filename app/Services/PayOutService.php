@@ -4,13 +4,19 @@ namespace App\Services;
 
 use App\Http\Enums\DepositStatusEnum;
 use App\Http\Enums\TransactionMethodEnum;
+use App\Http\Enums\TransactionOperationEnum;
+use App\Http\Enums\TransactionStatusEnum;
 use App\Models\Payout;
-use App\Models\User;
+use App\Models\Transaction;
 use App\Services\Payment\Acquiring\WintecaExcahngeService;
 use App\Services\Payment\Acquiring\WintecaService;
-use App\Services\Payment\AlphaPoService;
+use App\Services\Payment\CommissionService;
+use App\Services\Payment\Crypto\CryptoZayaAnswerService;
+use App\Services\Payment\Crypto\CryptoZayaService;
+use App\Services\Payment\PaymentMethodService;
 use App\Services\Payment\PaymentPayOutAnswerService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PayOutService
 {
@@ -18,10 +24,10 @@ class PayOutService
     public function __construct(WintecaService $wintecaService,
                                 TransactionService $transactionService,
                                 WintecaExcahngeService $excahngeService,
-                                AlphaPoService $alphaPoService,
                                 CryptoProcessingService $cryptoProcessingService,
                                 PaymentPayOutAnswerService $paymentPayOutAnswerService,
                                 DepositService $depositService,
+                                CryptoZayaService $cryptoZayaService,
     )
     {
         $this->wintecaService = $wintecaService;
@@ -30,61 +36,59 @@ class PayOutService
 
         $this->excahngeService = $excahngeService;
 
-        $this->alphaPoService = $alphaPoService;
-
         $this->cryptoProcessingService = $cryptoProcessingService;
 
         $this->paymentPayOutAnswerService = $paymentPayOutAnswerService;
 
         $this->depositService = $depositService;
 
+        $this->cryptoZayaService = $cryptoZayaService;
+
         $this->base_currency = env('CURRENT_CURRENCY');
     }
 
-    public function createPayOut($payment_id, $amount, $currency, $userId)
+
+    public function createPayOut($payment_id, $paymentMethodId, $amount, $currency, $user)
     {
         $payout = new Payout();
 
-        $payout->user_id = $userId;
-
+        $payout->user_id = $user->id;
         $payout->payment_id = $payment_id;
-
+        $payout->payment_method_id = $paymentMethodId;
         $payout->sum = $amount;
-
-        $payout->currency =$currency;
-
-        $payout->status = DepositStatusEnum::CREATED;
-
+        $payout->currency = $currency;
+        $payout->status = DepositStatusEnum::CREATED->value;
         $payout->save();
 
-        $this->transactionService->creditWithdraw($userId,$amount,'Withdrow');
+        $transaction = Transaction::create([
+            'user_id' => $user->id,
+            'operation' => TransactionOperationEnum::CREDIT->value,
+            'status' => TransactionStatusEnum::CREATED->value,
+            'method' => TransactionMethodEnum::CRYPTO->value,
+            'sum' => $amount,
+            'remaining' => $this->transactionService->calculationBalance(
+                $amount,
+                TransactionOperationEnum::CREDIT->value,
+                $user->id
+            ),
+            'comment' => 'Withdraw',
+        ]);
+
+        $payout->transaction()->associate($transaction);
+        $payout->save();
 
         return $payout;
     }
 
-
-    public static function checkPayoutStatus(User $user, $amount, $currency, $payment_id)
-    {
-        $lastPayout = $user->payouts()->orderByDesc('id')->first();
-
-        if (!isset($lastPayout) || $lastPayout->status === DepositStatusEnum::PAYED || $lastPayout->status === DepositStatusEnum::CANCELED)
-        {
-            return (new PayOutService())->createPayOut($payment_id,$amount, $currency, $user->id);
-        }
-        else
-            return $lastPayout;
-    }
-
-
-    public function createWintecaPayOut($amount, $currency, $cardNumber, $paymentId)
+    public function createWintecaPayOut($amount, $currency, $cardNumber, $paymentId, $paymentMethodId)
     {
         $exchangeSum = $this->excahngeService->exchangePayOut($amount);
 
         $newAmount = PaymentAmountService::amountPayOutWithoutComission($paymentId,$exchangeSum);
 
-        $userID = Auth::id();
+        $user = Auth::user();
 
-        $payout = $this->createPayOut($paymentId, $amount, $currency, $userID);
+        $payout = $this->createPayOut($paymentId,$paymentMethodId,$amount,$currency,$user);
 
         $invoice = $this->wintecaService->CreatePayOutInvoice($payout,$newAmount,$currency, $cardNumber);
 
@@ -112,43 +116,63 @@ class PayOutService
 
             $payout->save();
 
-            $this->depositService->createDeposit($amount,$currency,$paymentId);
+            $paymentMethodId = PaymentMethodService::paymentMethodId($paymentId,$currency);
 
-            $this->transactionService->debit($userID, $amount, 'Cancellation of the payment system for withdrawing money to a bank card', $method = TransactionMethodEnum::CARD);
+            $this->depositService->createDeposit($amount,$currency,$paymentId,$transactionId,$paymentMethodId);
+
+            $this->transactionService->debit($user->id, $amount, 'Cancellation of the payment system for withdrawing money to a bank card', $method = TransactionMethodEnum::CARD);
 
             return $this->paymentPayOutAnswerService->wintecaError($invoice);
         }
     }
 
 
-    public function createAlphaPoPayOut($amount,$currency,$cardNumber,$paymentId)
+    public function createCryptoZayaWithdraw($amount,$currency,$cardNumber,$paymentId, $paymentMethodId)
     {
-        $payout = $this->createPayOut($paymentId, $amount, $this->base_currency, Auth::id());
+        $user = Auth::user();
 
-        $sum = $this->alphaPoService->exchange($this->base_currency, $currency, $amount);
+        $payout = $this->createPayOut($paymentId, $paymentMethodId, $amount, $this->base_currency, $user);
 
-        if (isset($sum))
+        $transaction = $payout->transaction;
+
+        $sumWithoutCommission = CommissionService::getWithoutCoimmission($paymentId, $amount);
+
+        $exchangeSum = $this->cryptoZayaService->exchangeBackAmount($sumWithoutCommission,$currency);
+
+        if (isset($sumWithoutCommission) && !empty($sumWithoutCommission))
         {
-            $response = $this->cryptoProcessingService->payOut($sum,$currency,$cardNumber);
+            $response = $this->cryptoZayaService->createCryptoZayaWithdraw($cardNumber,$amount,config('cryptozaya.base_currency'),$currency,$transaction->id, $user);
+Log::info('response',[$response]);
+            if ($response)
+            {
+                Log::info('withdraw success');
+                $payout->status = DepositStatusEnum::PAYED->value;
+                $payout->save();
 
-            $this->alphaPoService->paymentLogsService->createLog($payout, json_encode($response));
+                $transaction->status = TransactionStatusEnum::PROCESSED->value;
+                $transaction->save();
 
-            if (isset($response['success']) && $response['success'] === false) {
-                return $this->AlphaPoPayoutBack($payout);
+                $this->transactionService->balanceService->updateBalance($transaction->remaining, $user);
+
+                return CryptoZayaAnswerService::getAnswer($exchangeSum, $currency, $cardNumber);
+            }
+            else
+            {
+                $payout->status = DepositStatusEnum::CANCELED->value;
+                $payout->save();
+
+                $transaction->status = TransactionStatusEnum::CANCELED->value;
+                $transaction->save();
+
+                Log::info('withdraw failed');
+                return PaymentPayOutAnswerService::withdrawFailed();
             }
 
             return $response;
         }
         else
-            return $this->AlphaPoPayoutBack($payout);
+            return null;
     }
 
-
-    protected function AlphaPoPayoutBack(Payout $payout)
-    {
-        $payout->delete();
-
-        return false;
-    }
 
 }

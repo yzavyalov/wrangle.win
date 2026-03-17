@@ -36,9 +36,9 @@ class DepositPaymentService
 
         $this->baseCurrency = env('CURRENT_CURRENCY');
     }
-    public function createWintecaDeposit($amount,$currency,$payment_id)
+    public function createWintecaDeposit($amount,$currency,$payment_id, $payment_method_id, $transactionId)
     {
-        $deposit = $this->depositService->createDeposit($amount,$currency,$payment_id);
+        $deposit = $this->depositService->createDeposit($amount,$currency,$payment_id, $payment_method_id);
 
         $exchangeSum = $this->excahngeService->exchangePayIn($amount);
 
@@ -70,27 +70,39 @@ class DepositPaymentService
 
 
 
-    public function createCryptoZayaDeposit($amount,$currency,$payment_id)
+    public function createCryptoZayaDeposit($amount,$currency,$payment_id, $payment_method_id, $transactionId)
     {
-        $deposit = $this->depositService->createDeposit($amount, $currency, $payment_id);
+        $deposit = $this->depositService->createDeposit($amount, $currency, $payment_id, $payment_method_id, $transactionId);
 
-        $checkAddress = $this->cryptoProcessingService->checkUserDepositAddress($payment_id, $currency);
+        $currencyOfMethod = PaymentMethodService::currencyOfPaymentMethodId($payment_method_id);
+
+        $checkAddress = $this->cryptoProcessingService->checkUserDepositAddress($payment_method_id, $currencyOfMethod);
 
         $address = '';
+
+        $amountInPaymentMethod = $this->cryptoZayaService->exchangeAmout($amount,$currencyOfMethod);
+
+        $lastAmount = round(
+            CommissionService::getCommission($payment_id, $amountInPaymentMethod),
+            4
+        );
+
+        $deposit->last_amount = $lastAmount;
+        $deposit->save();
 
         if ($checkAddress)
             $address = $checkAddress;
         else
         {
-            $response = $this->cryptoZayaService->createCryptoZayaDeposit($amount,$currency,$deposit->id,$deposit->user_id);
+            $response = $this->cryptoZayaService->createCryptoZayaDeposit($lastAmount,$currencyOfMethod,$deposit->id,$deposit->user_id);
 
             if ($response)
                 $address = $response['address'];
+
+            $this->cryptoProcessingService->saveUserWallet($address, $payment_method_id, $currencyOfMethod);
         }
 
-        $amount = $this->cryptoZayaService->exchangeAmout($amount,$currency);
-Log::info(['amount' =>$amount]);
-        return $this->paymentAnswerService->CryptoZayaPayInQRAnswer($address,$amount,$currency);
+        return $this->paymentAnswerService->CryptoZayaPayInQRAnswer($address,$lastAmount,$currencyOfMethod);
     }
 
 }

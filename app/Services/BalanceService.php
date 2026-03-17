@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class BalanceService
 {
@@ -16,16 +17,16 @@ class BalanceService
 
     public function updateBalance(float $remaining, User $user = null)
     {
-        $user = $user ?? Auth::user(); // Получаем пользователя внутри метода
+        $user = $user ?? Auth::user();
 
         if (!$user) {
             return;
         }
 
-        if ($user->balance)
-            $user->balance->update(['balance' => $remaining]);
-        else
-            $user->balance()->create(['balance' => $remaining]);
+        $user->balance()->updateOrCreate(
+            ['user_id' => $user->id],
+            ['balance' => $remaining]
+        );
     }
 
 
@@ -58,4 +59,6 @@ class BalanceService
         else
             return  false;
     }
+
+
 }

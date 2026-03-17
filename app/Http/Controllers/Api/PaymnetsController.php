@@ -34,7 +34,6 @@ class PaymnetsController extends Controller
     }
 
 
-
     public function showMethod($id)
     {
         $method = $this->outsidePaymentService->cascadeService->showMethod($id);

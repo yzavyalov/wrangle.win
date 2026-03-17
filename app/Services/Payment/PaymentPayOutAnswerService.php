@@ -185,4 +185,28 @@ class PaymentPayOutAnswerService
         return response()->json(['message' => $message]);
     }
 
+
+    public static function withdrawSuccess()
+    {
+        $backUrl = env('APP_URL').'/profile';
+
+        $message = <<<HTML
+                    <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
+                        <p style="font-size: 18px; color: red;">
+                            Error
+                        </p>
+                        <p style="font-size: 18px;">
+                            The code is not correct
+                        </p>
+                        <br>
+                        <button onclick="window.location.href='{$backUrl}'"
+                                style="margin-top: 20px; padding: 10px 20px; font-size: 16px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            BACK
+                        </button>
+                    </div>
+                HTML;
+
+        return response()->json(['message' => $message]);
+    }
+
 }

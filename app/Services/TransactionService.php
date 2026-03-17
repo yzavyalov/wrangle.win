@@ -8,6 +8,7 @@ use App\Http\Enums\TransactionStatusEnum;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TransactionService
 {
@@ -27,12 +28,16 @@ class TransactionService
             return 0;
         }
 
-        $lastUserTransaction = $user->lastTransaction;
+        $lastUserTransaction = $user->transactions()
+            ->where('status', TransactionStatusEnum::PROCESSED->value)
+            ->latest()
+            ->first();
+
         $oldBalance = $lastUserTransaction ? $lastUserTransaction->remaining : 0;
 
         return match ($operation) {
-            TransactionOperationEnum::DEBET => $oldBalance + $sum,
-            TransactionOperationEnum::CREDIT => ($oldBalance >= $sum) ? $oldBalance - $sum : 0,
+            TransactionOperationEnum::DEBET->value => $oldBalance + $sum,
+            TransactionOperationEnum::CREDIT->value => ($oldBalance >= $sum) ? $oldBalance - $sum : 0,
             default => $oldBalance,
         };
     }
@@ -51,7 +56,7 @@ class TransactionService
 
         $transaction->sum = $sum;
 
-        $transaction->remaining = $this->calculationBalance($sum,TransactionOperationEnum::DEBET,$userID);
+        $transaction->remaining = UserService::getBalance($userID);
 
         $transaction->comment = $comment;
 
@@ -59,7 +64,8 @@ class TransactionService
 
         $user = User::query()->find($userID);
 
-        $this->balanceService->updateBalance($transaction->remaining,$user);
+        if ($transaction->status === TransactionStatusEnum::PROCESSED)
+            $this->balanceService->updateBalance($transaction->remaining,$user);
 
         return $transaction;
     }
@@ -116,6 +122,17 @@ class TransactionService
         return $transaction;
     }
 
+
+    public static function selectTransactionMethod($paymentId)
+    {
+        switch ($paymentId) {
+            case 3: return TransactionMethodEnum::CARD;
+            case 4: return TransactionMethodEnum::CARD;
+            case 5: return TransactionMethodEnum::CRYPTO;
+            case 6: return TransactionMethodEnum::CRYPTO;
+            default: return TransactionMethodEnum::TEST;
+        }
+    }
 
 
 }

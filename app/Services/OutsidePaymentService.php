@@ -3,30 +3,30 @@
 namespace App\Services;
 
 use App\Http\Enums\PaymentCategoryEnum;
+use App\Http\Enums\TransactionStatusEnum;
 use App\Services\Payment\CascadeService;
 use App\Services\Payment\DepositPaymentService;
+use App\Services\Payment\PaymentMethodService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class OutsidePaymentService
 {
-    public function __construct(DepositService $depositService,
+    public function __construct(
+                                CascadeService $cascadeService,
                                 PayOutService $payOutService,
                                 TransactionService $transactionService,
-                                CascadeService $cascadeService,
                                 DepositPaymentService $depositPaymentService,
                                 )
     {
-        $this->depositService = $depositService;
+        $this->cascadeService = $cascadeService;
 
         $this->payOutService = $payOutService;
 
         $this->transactionService = $transactionService;
 
-        $this->cascadeService = $cascadeService;
-
         $this->depositPaymentService = $depositPaymentService;
     }
-
 
 
     public function createPayInCascade($amount,$currency,$paymentMethodId)
@@ -58,7 +58,9 @@ class OutsidePaymentService
                 continue;
             }
 
-            $deposit = $this->depositPaymentService->$function($amount,$currency,$payment->id);
+            $transaction = $this->transactionService->debit(Auth::id(),$amount,'Deposit', TransactionService::selectTransactionMethod($payment->id));
+
+            $deposit = $this->depositPaymentService->$function($amount,$currency,$payment->id,$paymentMethodId,$transaction->id);
 
             if ($deposit)
             {
@@ -70,13 +72,13 @@ class OutsidePaymentService
     }
 
 
-    public function createPauOutCascade($amount,$currency,$cardNumber,$paymentMethodId)
+    public function createPayOutCascade($amount,$currency,$cardNumber,$paymentMethodId)
     {
         $userData = $this->cascadeService->usersData();
 
         $data = $this->cascadeService->paymnetFilterService->paymentFilterData($userData,$paymentMethodId);
 
-        $payments = $this->cascadeService->selectPayments($data,PaymentCategoryEnum::OUT);
+        $payments = $this->cascadeService->selectPayments($data,PaymentCategoryEnum::OUT->value);
 
         if ($payments->isEmpty())
         {
@@ -99,7 +101,7 @@ class OutsidePaymentService
                 continue;
             }
 
-            $payOut = $this->payOutService->$function($amount,$currency,$cardNumber,$payment->id);
+            $payOut = $this->payOutService->$function($amount,$currency,$cardNumber,$payment->id, $paymentMethodId);
 
             if ($payOut)
             {

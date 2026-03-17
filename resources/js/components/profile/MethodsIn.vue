@@ -5,13 +5,10 @@ import LoaderComponent from "@/components/LoaderComponent.vue";
 import { useLoading } from "@/composables/useLoading";
 import { notifyWarning } from "@/helpers/notify";
 import { fetchInPayments, createDeposit } from "@/services/payments";
-import { useUser } from "@/composables/useUser";
 import ButtonWithIcon from "@/components/details/ButtonWithIcon.vue";
 import { cutTextLength } from "@/helpers/cutTextLength";
 import { sampleTopUpMethods } from "@/utils/dummyData";
 import ButtonWithClose from "@/components/details/ButtonWithClose.vue";
-import { useConfirm } from '@/composables/useConfirm';
-import InputBase from "@/components/details/InputBase.vue";
 import InputWIthHelper from "@/components/details/InputWIthHelper.vue";
 import useVuelidate from '@vuelidate/core';
 import { required, minValue, maxValue, helpers } from '@vuelidate/validators';
@@ -70,7 +67,8 @@ const depositeBtnHandler = async () => {
     const payload = {
       methodId: selectedMethod.value.id,
       amount: formData.selectedAmount,
-      currency: selectedMethod.value?.currency,
+      currency: "GBP",
+      // currency: selectedMethod.value?.currency,
     }
 
     const methodDetails = await createDeposit(payload);
@@ -148,7 +146,7 @@ onMounted(() => {
 
             <InputWIthHelper v-model="formData.selectedAmount"
               class="mb-20"
-              helper-text="Amount:"
+              helper-text="Amount in GBP:"
               placeholder="Enter amount"
               type="number"
               :is-warning="v$.selectedAmount.$error"

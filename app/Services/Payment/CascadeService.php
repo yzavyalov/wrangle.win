@@ -3,15 +3,13 @@
 namespace App\Services\Payment;
 
 use App\Http\Enums\PaymentCategoryEnum;
-use App\Http\Enums\PaymentTypeEnum;
+use App\Http\Enums\TransactionStatusEnum;
 use App\Http\Filters\PaymentFilter;
 use App\Http\Filters\PaymentMethodFilter;
 use App\Models\Payment;
 use App\Models\PaymentMethod;
-use App\Models\PaymentsTrustCondition;
-use App\Models\Payout;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use mysql_xdevapi\Collection;
 
 class CascadeService
@@ -32,6 +30,7 @@ class CascadeService
         return $methods;
     }
 
+
     public function selectPayments(array $data, $category)
     {
         $filter = app()->make(PaymentFilter::class, ['queryParams' => array_filter($data)]);
@@ -47,15 +46,21 @@ class CascadeService
     {
         $user = Auth::user();
 
-        $data = [];
+        $numberDeposits = $user->debitTransactions()->where('status',TransactionStatusEnum::PROCESSED->value)->count();
 
-        $data['number_deposits'] = $user->debitTransactions->count() ?? null;
-        $data['value_deposits'] = $user->debitTransactions->sum('sum') ?? null;
-        $data['number_withdraw'] = $user->payouts->count() ?? null;
-        $data['value_withdraw'] = $user->payouts->sum('sum') ?? null;
-        $data['registration_days'] = now()->diffInDays(Carbon::make($user->created_at));
+        $valueDeposits = $user->debitTransactions()->where('status',TransactionStatusEnum::PROCESSED->value)->sum('sum');
 
-        return $data;
+        $numberWithdraw = $user->payouts()->where('status',TransactionStatusEnum::PROCESSED->value)->count();
+
+        $valueWithdraw = $user->payouts()->where('status',TransactionStatusEnum::PROCESSED->value)->sum('sum');
+
+        return [
+            'number_deposits' => $numberDeposits,
+            'value_deposits' => $valueDeposits,
+            'number_withdraw' => $numberWithdraw,
+            'value_withdraw' => $valueWithdraw,
+            'registration_days' => now()->diffInDays($user->created_at),
+        ];
     }
 
     public function cascade(Collection $payments)
@@ -63,33 +68,47 @@ class CascadeService
         dd($payments);
     }
 
+//    protected function checkTrust()
+//    {
+//        $dataUser = $this->usersData();
+//
+//        $dataRequest = [];
+//
+//        $dataRequest['ftd'] = 1;
+//
+//        $dataRequest['check_ftd_limit'] = true;
+//
+//        if ($dataUser['number_deposits'] > 3 )
+//        {
+//            $dataRequest['std'] = 1;
+//
+//            $dataRequest['check_std_limit'] = true;
+//        }
+//
+//        $data = array_merge($dataUser, $dataRequest);
+//
+//        return $data;
+//    }
+
     protected function checkTrust()
     {
         $dataUser = $this->usersData();
 
         $dataRequest = [];
-
         $dataRequest['ftd'] = 1;
 
-        $dataRequest['check_ftd_limit'] = true;
-
-        if ($dataUser['number_deposits'] > 3 )
-        {
+        if ($dataUser['number_deposits'] > 3) {
             $dataRequest['std'] = 1;
-
-            $dataRequest['check_std_limit'] = true;
         }
 
-        $data = array_merge($dataUser, $dataRequest);
-
-        return $data;
+        return array_merge($dataUser, $dataRequest);
     }
 
     public function methods()
     {
         $data = $this->checkTrust();
 
-        $methods = $this->selectMethods($data,PaymentCategoryEnum::IN);
+        $methods = $this->selectMethods($data, PaymentCategoryEnum::IN->value);
 
         return $methods;
     }
@@ -100,14 +119,14 @@ class CascadeService
 
         $data['id'] = $id;
 
-        $method = $this->selectMethods($data,PaymentCategoryEnum::IN);
+        $method = $this->selectMethods($data,PaymentCategoryEnum::IN->value);
 
         return $method;
     }
 
     public function payoutsMethods()
     {
-        $methods = PaymentMethod::query()->where('category',PaymentCategoryEnum::OUT)
+        $methods = PaymentMethod::query()->where('category',PaymentCategoryEnum::OUT->value)
                                 ->whereHas('payments')->get();
 
         return $methods;

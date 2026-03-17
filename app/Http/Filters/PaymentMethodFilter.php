@@ -17,11 +17,12 @@ class PaymentMethodFilter extends AbstractFilter
     public const NUMBER_DEPOSITS = 'number_deposits';
     public const VALUE_DEPOSITS = 'value_deposits';
     public const NUMBER_WITHDRAW = 'number_withdraw';
-    public const VALUE_WITHDRAW='value_withdraw';
+    public const VALUE_WITHDRAW = 'value_withdraw';
     public const REGISTRATION_DAYS = 'registration_days';
     public const CHECK_FTD_LIMIT = 'check_ftd_limit';
     public const CHECK_STD_LIMIT = 'check_std_limit';
 
+    private const PIVOT = 'payments_payments_methods_table';
 
     protected function getCallbacks(): array
     {
@@ -44,190 +45,133 @@ class PaymentMethodFilter extends AbstractFilter
         ];
     }
 
-    public function id(Builder $builder, $value)
+    public function id(Builder $builder, $value): void
     {
         $builder->where('id', $value);
     }
 
-    public function type(Builder $builder, $value)
+    public function type(Builder $builder, $value): void
     {
         $builder->where('type', $value);
     }
 
-    public function category(Builder $builder, $value)
+    public function category(Builder $builder, $value): void
     {
         $builder->where('category', $value);
     }
 
-
-    public function ftd(Builder $builder, $value)
+    protected function wherePayments(Builder $builder, callable $callback): void
     {
-        $builder->whereHas('payments', function ($query) use ($value)
-        {
-            $query->whereNotNull('payments_payments_methods_table.FTD');
+        $builder->whereHas('payments', $callback);
+    }
+
+    protected function applyPivotFlag(Builder $builder, string $field, $value): void
+    {
+        $this->wherePayments($builder, function ($query) use ($field, $value) {
+            $query->whereNotNull(self::PIVOT . '.' . $field);
 
             if ($value !== null) {
-                $query->where('payments_payments_methods_table.FTD', $value);
+                $query->where(self::PIVOT . '.' . $field, $value);
             }
         });
     }
 
-
-    public function ftd_limits(Builder $builder, $value)
+    protected function applyPivotLimit(Builder $builder, string $field, $value): void
     {
-        $builder->whereHas('payments', function ($query) use ($value) {
-            $query->where(function ($q) use ($value) {
-                $q->where('payments_payments_methods_table.FTD_limits', '>=', $value)
-                    ->orWhereNull('payments_payments_methods_table.FTD_limits');
+        $this->wherePayments($builder, function ($query) use ($field, $value) {
+            $query->where(function ($q) use ($field, $value) {
+                $q->where(self::PIVOT . '.' . $field, '>=', $value)
+                    ->orWhereNull(self::PIVOT . '.' . $field);
             });
         });
     }
 
-
-    public function std(Builder $builder, $value)
+    protected function applyConditionLimit(Builder $builder, string $field, $value): void
     {
-        $builder->whereHas('payments', function ($query) use ($value) {
-            $query->whereNotNull('payments_payments_methods_table.STD');
-
-            if ($value !== null) {
-                $query->where('payments_payments_methods_table.STD', $value);
-            }
-        });
-    }
-
-
-    public function std_limits(Builder $builder, $value)
-    {
-        $builder->whereHas('payments', function ($query) use ($value) {
-            $query->where(function ($q) use ($value) {
-                $q->where('payments_payments_methods_table.STD_limits', '>=', $value)
-                    ->orWhereNull('payments_payments_methods_table.STD_limits');
+        $this->wherePayments($builder, function ($query) use ($field, $value) {
+            $query->where(function ($q) use ($field, $value) {
+                $q->whereHas('conditions', function ($subQuery) use ($field, $value) {
+                    $subQuery->where(function ($conditionQuery) use ($field, $value) {
+                        $conditionQuery->where($field, '<=', $value)
+                            ->orWhereNull($field);
+                    });
+                })->orWhereDoesntHave('conditions');
             });
         });
     }
 
-    public function number_deposits(Builder $builder, $value)
+    public function ftd(Builder $builder, $value): void
     {
-        $builder->whereHas('payments', function ($query) use ($value) {
-            $query->where(function ($q) use ($value) {
-                // 1. Payments с conditions, подходящими под условие
-                $q->whereHas('conditions', function ($subQuery) use ($value) {
-                    $subQuery->where(function ($conditionQuery) use ($value) {
-                        $conditionQuery->where('number_deposits', '<=', $value)
-                            ->orWhereNull('number_deposits');
-                    });
-                });
-
-                // 2. ЛИБО payments вообще без conditions
-                $q->orWhereDoesntHave('conditions');
-            });
-        });
+        $this->applyPivotFlag($builder, 'FTD', $value);
     }
 
-
-    public function value_deposits(Builder $builder, $value)
+    public function std(Builder $builder, $value): void
     {
-        $builder->whereHas('payments', function ($query) use ($value) {
-
-            $query->where(function ($q) use ($value) {
-                // 1. Payments с conditions, подходящими под условие
-                $q->whereHas('conditions', function ($subQuery) use ($value) {
-                    $subQuery->where(function ($conditionQuery) use ($value) {
-                        $conditionQuery->where('value_deposits', '<=', $value)
-                            ->orWhereNull('value_deposits');
-                    });
-                });
-
-                // 2. ЛИБО payments вообще без conditions
-                $q->orWhereDoesntHave('conditions');
-            });
-        });
+        $this->applyPivotFlag($builder, 'STD', $value);
     }
 
-    public function number_withdraw(Builder $builder, $value)
+    public function ftd_limits(Builder $builder, $value): void
     {
-        $builder->whereHas('payments', function ($query) use ($value) {
-            $query->where(function ($q) use ($value) {
-                // 1. Payments с conditions, подходящими под условие
-                $q->whereHas('conditions', function ($subQuery) use ($value) {
-                    $subQuery->where(function ($conditionQuery) use ($value) {
-                        $conditionQuery->where('number_withdraw', '<=', $value)
-                            ->orWhereNull('number_withdraw');
-                    });
-                });
-
-                // 2. ЛИБО payments вообще без conditions
-                $q->orWhereDoesntHave('conditions');
-            });
-        });
+        $this->applyPivotLimit($builder, 'FTD_limits', $value);
     }
 
-
-    public function value_withdraw(Builder $builder, $value)
+    public function std_limits(Builder $builder, $value): void
     {
-        $builder->whereHas('payments', function ($query) use ($value)
-        {
-            $query->whereHas('conditions', function ($subQuery) use ($value) {
-                    $subQuery->where(function ($conditionQuery) use ($value) {
-                        $conditionQuery->where('value_withdraw', '<=', $value)
-                            ->orWhereNull('value_withdraw');
-                    });
-                });
-
-                // 2. ЛИБО payments вообще без conditions
-            $query->orWhereDoesntHave('conditions');
-        });
+        $this->applyPivotLimit($builder, 'STD_limits', $value);
     }
 
-
-    public function registration_days(Builder $builder, $value)
+    public function number_deposits(Builder $builder, $value): void
     {
-        $builder->whereHas('payments', function ($query) use ($value)
-        {
-            $query->whereHas('conditions', function ($subQuery) use ($value)
-                {
-                    $subQuery->where(function ($conditionQuery) use ($value)
-                    {
-                        $conditionQuery->where('registration_days', '<=', $value)
-                            ->orWhereNull('registration_days');
-                    });
-                });
-
-                // 2. ЛИБО payments вообще без conditions
-            $query->orWhereDoesntHave('conditions');
-        });
+        $this->applyConditionLimit($builder, 'number_deposits', $value);
     }
 
-    public function check_ftd_limit(Builder $builder, $value = true)
+    public function value_deposits(Builder $builder, $value): void
     {
-        $builder->whereHas('payments', function ($query) {
+        $this->applyConditionLimit($builder, 'value_deposits', $value);
+    }
+
+    public function number_withdraw(Builder $builder, $value): void
+    {
+        $this->applyConditionLimit($builder, 'number_withdraw', $value);
+    }
+
+    public function value_withdraw(Builder $builder, $value): void
+    {
+        $this->applyConditionLimit($builder, 'value_withdraw', $value);
+    }
+
+    public function registration_days(Builder $builder, $value): void
+    {
+        $this->applyConditionLimit($builder, 'registration_days', $value);
+    }
+
+    public function check_ftd_limit(Builder $builder, $value = true): void
+    {
+        $this->wherePayments($builder, function ($query) {
             $query->where(function ($q) {
                 $q->whereRaw('
-                (
-                    SELECT COALESCE(SUM(deposits.sum), 0)
-                    FROM deposits
-                    WHERE deposits.payment_id = payments.id
-                ) < payments_payments_methods_table.FTD_limits
-            ')
-                    ->orWhereNull('payments_payments_methods_table.FTD_limits');
+                    (
+                        SELECT COALESCE(SUM(deposits.sum), 0)
+                        FROM deposits
+                        WHERE deposits.payment_id = payments.id
+                    ) < ' . self::PIVOT . '.FTD_limits
+                ')->orWhereNull(self::PIVOT . '.FTD_limits');
             });
         });
     }
 
-    public function check_std_limit(Builder $builder, $value = true)
+    public function check_std_limit(Builder $builder, $value = true): void
     {
-        $builder->whereHas('payments', function ($query) {
+        $this->wherePayments($builder, function ($query) {
             $query->where(function ($q) {
                 $q->whereRaw('
-                (
-                    SELECT COALESCE(SUM(deposits.sum), 0)
-                    FROM deposits
-                    WHERE deposits.payment_id = payments.id
-                ) < payments_payments_methods_table.STD_limits
-            ')
-                    ->orWhereNull('payments_payments_methods_table.STD_limits');
+                    (
+                        SELECT COALESCE(SUM(deposits.sum), 0)
+                        FROM deposits
+                        WHERE deposits.payment_id = payments.id
+                    ) < ' . self::PIVOT . '.STD_limits
+                ')->orWhereNull(self::PIVOT . '.STD_limits');
             });
         });
     }
-
 }

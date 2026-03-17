@@ -13,8 +13,12 @@ class Deposit extends Model
     protected $fillable = [
         'id',
         'user_id',
+        'transaction_id',
         'payment_id',
+        'payment_method_id',
+        'limit',
         'sum',
+        'last_amount',
         'currency',
         'status',
     ];
@@ -35,8 +39,18 @@ class Deposit extends Model
         return $this->belongsTo(Payment::class);
     }
 
+    public function paymnetMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class,'payment_method_id');
+    }
+
     public function transactionable()
     {
         return $this->morphMany(Winteca_transaction::class,'transactionable');
+    }
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class, 'transaction_id');
     }
 }
