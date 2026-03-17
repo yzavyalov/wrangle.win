@@ -44,7 +44,7 @@ class PayOutService
 
         $this->cryptoZayaService = $cryptoZayaService;
 
-        $this->base_currency = env('CURRENT_CURRENCY');
+        $this->base_currency = config('cryptozaya.base_currency');
     }
 
 
@@ -142,7 +142,7 @@ class PayOutService
         if (isset($sumWithoutCommission) && !empty($sumWithoutCommission))
         {
             $response = $this->cryptoZayaService->createCryptoZayaWithdraw($cardNumber,$amount,config('cryptozaya.base_currency'),$currency,$transaction->id, $user);
-Log::info('response',[$response]);
+
             if ($response)
             {
                 Log::info('withdraw success');

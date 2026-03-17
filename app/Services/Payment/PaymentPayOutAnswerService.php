@@ -20,7 +20,7 @@ class PaymentPayOutAnswerService
                                     Your balance is less than the withdrawal amount.
                                 </p>
                                 <br>
-                                <button onclick="window.location.href='{$backurl}'"
+                                <button onclick="window.location.href='{$backUrl}'"
                                         style="margin-top: 20px; padding: 10px 20px; font-size: 16px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
                                     BACK
                                 </button>
