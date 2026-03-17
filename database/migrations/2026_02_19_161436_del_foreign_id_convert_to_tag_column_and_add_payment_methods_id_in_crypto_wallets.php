@@ -6,29 +6,48 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::table('crypto_wallets', function (Blueprint $table) {
-            $table->dropColumn('foreign_id');
-            $table->dropColumn('convert_to');
-            $table->dropColumn('tag');
-            $table->foreignId('payment_methods_id')->after('user_id')->constrained('payment_methods');
+            if (Schema::hasColumn('crypto_wallets', 'foreign_id')) {
+                $table->dropColumn('foreign_id');
+            }
+
+            if (Schema::hasColumn('crypto_wallets', 'convert_to')) {
+                $table->dropColumn('convert_to');
+            }
+
+            if (Schema::hasColumn('crypto_wallets', 'tag')) {
+                $table->dropColumn('tag');
+            }
+
+            if (!Schema::hasColumn('crypto_wallets', 'payment_methods_id')) {
+                $table->foreignId('payment_methods_id')
+                    ->after('user_id')
+                    ->constrained('payment_methods');
+            }
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('crypto_wallets', function (Blueprint $table) {
-            $table->dropForeign(['payment_methods_id']);
-            $table->string('foreign_id')->nullable()->after('user_id');
-            $table->string('convert_to')->nullable()->after('currency');
-            $table->string('tag')->nullable()->after('address');
+            if (Schema::hasColumn('crypto_wallets', 'payment_methods_id')) {
+                $table->dropForeign(['payment_methods_id']);
+                $table->dropColumn('payment_methods_id');
+            }
+
+            if (!Schema::hasColumn('crypto_wallets', 'foreign_id')) {
+                $table->string('foreign_id')->nullable()->after('user_id');
+            }
+
+            if (!Schema::hasColumn('crypto_wallets', 'convert_to')) {
+                $table->string('convert_to')->nullable()->after('currency');
+            }
+
+            if (!Schema::hasColumn('crypto_wallets', 'tag')) {
+                $table->string('tag')->nullable()->after('address');
+            }
         });
     }
 };
