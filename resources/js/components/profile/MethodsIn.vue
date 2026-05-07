@@ -130,6 +130,23 @@ onMounted(() => {
           <div v-if="!selectedMethod">
             <ul class="methods-list__list mb-30">
               <li v-for="method in methodList" :key="method.id" class="methods-list__listitem" @click="selectMethod(method)">
+                <div class="methods-list__listitem--left d-flex align-items-center">
+
+                  <img
+                    v-if="method.logo"
+                    :src="`storage/${method.logo}`"
+                    alt="logo"
+                    class="method-logo"
+                  />
+
+                  <span>
+                    {{ method.title?.length > 20
+                    ? cutTextLength(method.title, 20)
+                    : method.title
+                    }}
+                  </span>
+                </div>
+
                 <p class="methods-list__listitem--left">{{ method.title?.length > 20 ? cutTextLength(method.title, 20) : method.title  }}</p>
                 <p class="methods-list__listitem--right">Rate: {{ method.rate?.toFixed(2) }}%  Fee: {{ method.fix_fee?.toFixed(2)}} {{ method?.currency}}</p>
               </li>
@@ -176,11 +193,12 @@ onMounted(() => {
 <style scoped lang='scss'>
 @use "@/assets/scss/method-list";
 
-//.method-logo {
-//  width: auto;
-//  height: 40px;
-//  object-fit: contain;
-//  margin-right: 10px;
-//  display: inline-block;
-//}
+
+.method-logo {
+  width: auto;
+  height: 40px;
+  object-fit: contain;
+  margin-right: 10px;
+  display: inline-block;
+}
 </style>

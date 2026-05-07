@@ -1,25 +1,17 @@
 <script setup>
-import { Head } from "@inertiajs/vue3";
 import { computed, defineAsyncComponent, onMounted, onBeforeMount, ref, shallowRef, nextTick } from "vue";
 import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import { useConfirm } from '@/composables';
 import BaseLayout from "@/layouts/BaseLayout.vue";
-import { navigateTo } from "@/helpers/navigate";
 import { PAGE_ROUTES, profileTabs } from "@/utils/datasets";
-import BetItemSmall from "@/components/bet/BetItemSmall.vue";
-import { useOwnBets } from "@/composables/useOwnBets";
-import { useFavoriteBets } from "@/composables/useFavoriteBets";
 import { useHistory } from "@/composables/useHistory";
 import { useUser } from "@/composables/useUser";
 import { useLoading } from "@/composables/useLoading";
 import { getMethodsLogo } from "@/services/payments";
-import { getCSRFToken } from "@/services/user";
 import { onImageErrorWithLogo } from "@/helpers/onImageError";
-import { useModalsStore } from "@/store/modals";
 import { triggerOpenNewModal } from '@/composables/useModalsTriggers';
 import SeoMeta from "@/components/SeoMeta.vue";
-import VirtualScrollerList from "@/components/virtualScroller/VirtualScrollerList.vue";
 import OwnBestList from "@/components/profile/OwnBestList.vue";
 import FavoriteBestList from "@/components/profile/FavoriteBestList.vue";
 const TAB_KEY = 'tab';

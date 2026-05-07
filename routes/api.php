@@ -18,7 +18,7 @@ use App\Http\Controllers\Api\{BetCategoryController,
     ProfileController,
     TransactionController,
     UserDataController};
-use App\Http\Controllers\Payment\{AlphaPoController, CryptoZayaController, PayOutController, WintecaController};
+use App\Http\Controllers\Payment\{CryptoZayaController, PayOutController, WintecaController};
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 /*

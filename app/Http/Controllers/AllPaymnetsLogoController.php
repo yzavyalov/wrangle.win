@@ -11,7 +11,7 @@ class AllPaymnetsLogoController extends Controller
      */
     public function __invoke()
     {
-        $methods = PaymentMethod::all();
+        $methods = PaymentMethod::whereHas('payments')->get();
 
         $grouped = [
             'payin' => [],
