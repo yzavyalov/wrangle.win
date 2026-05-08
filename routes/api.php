@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\{BetCategoryController,
     UserDataController};
 use App\Http\Controllers\Payment\{CryptoZayaController, PayOutController, WintecaController};
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+use App\Http\Controllers\Api\DiditVerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,11 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 | Email Verification Routes (Sanctum)
 |--------------------------------------------------------------------------
 */
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/verification/didit/session', [DiditVerificationController::class, 'createSession']);
+});
+
+Route::post('/webhooks/didit', [DiditVerificationController::class, 'webhook']);
 
 
 Route::middleware(['auth:sanctum'])->group(function () {
