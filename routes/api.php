@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\{BetCategoryController,
     BitController,
     FavoriteController,
     FavouriteBetController,
+    KYC\DiditVerificationController,
     OwnBetController,
     PaymnetsController,
     ProfileController,
@@ -20,7 +21,6 @@ use App\Http\Controllers\Api\{BetCategoryController,
     UserDataController};
 use App\Http\Controllers\Payment\{CryptoZayaController, PayOutController, WintecaController};
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
-use App\Http\Controllers\Api\DiditVerificationController;
 
 /*
 |--------------------------------------------------------------------------

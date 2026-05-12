@@ -27,6 +27,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'verification_status',
+        'is_verified',
+        'didit_session_id',
+        'didit_verification_url',
+        'didit_decision',
+        'verified_at',
     ];
 
     /**

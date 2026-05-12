@@ -4,7 +4,7 @@ import PageWrapperMain from "@/components/PageWrapperMain.vue";
 import ButtonBase from "@/components/details/ButtonBase.vue";
 import { useConfirm } from '@/composables';
 import BaseLayout from "@/layouts/BaseLayout.vue";
-import { PAGE_ROUTES, profileTabs } from "@/utils/datasets";
+import { profileTabs } from "@/utils/datasets";
 import { useHistory } from "@/composables/useHistory";
 import { useUser } from "@/composables/useUser";
 import { useLoading } from "@/composables/useLoading";
@@ -14,6 +14,8 @@ import { triggerOpenNewModal } from '@/composables/useModalsTriggers';
 import SeoMeta from "@/components/SeoMeta.vue";
 import OwnBestList from "@/components/profile/OwnBestList.vue";
 import FavoriteBestList from "@/components/profile/FavoriteBestList.vue";
+import DiditKYC from "@/kyc-didit/DiditKYC.vue";
+
 const TAB_KEY = 'tab';
 
 defineOptions({
@@ -25,26 +27,31 @@ const profileTabCompoenents = shallowRef({
   transactions: defineAsyncComponent(() => import("@/components/profile/TransactionTable.vue")),
   withdraw: defineAsyncComponent(() => import("@/components/profile/MethodsOut.vue")),
   deposit: defineAsyncComponent(() => import("@/components/profile/MethodsIn.vue")),
-})
+});
 
 const props = defineProps({
-  transactionMessage: { type: String, default: null }
-  // transactionMessage: { type: String, default: '<div><p>test</p><p>test2</p><p>test3</p></div>' }
-})
+  transactionMessage: { type: String, default: null },
+});
 
 const { confirm } = useConfirm();
 const { setQueryParam, removeQueryParam, getQueryParam } = useHistory();
-const { userBalanceWithCurrency, currentUser, userBalance } = useUser();
+const { userBalanceWithCurrency, currentUser, userBalance, getUserData } = useUser();
 const { isLoading, loadingStart, loadingStop } = useLoading();
 
 const activeTab = ref(false);
+const showKycPopup = ref(false);
 
-// const methodsLogo = ref([]);
 const methodsLogoPayIn = ref([]);
 const methodsLogoPayOut = ref([]);
 
+const isUserVerified = computed(() => {
+  return Number(currentUser.value?.is_verified) === 1;
+});
+
 const dynamicProfileTab = computed(() => {
-  if (!activeTab.value?.id) { return null }
+  if (!activeTab.value?.id) {
+    return null;
+  }
 
   switch (activeTab.value?.id) {
     case 'transactions':
@@ -58,7 +65,6 @@ const dynamicProfileTab = computed(() => {
 
     default:
       console.warn(`No handle for such tab: ${activeTab.value?.id}`);
-
       return null;
   }
 });
@@ -67,13 +73,31 @@ const userBalanceHandler = () => {
   if (!userBalance.value) {
     getUserData();
   }
-}
+};
 
 const setActiveTab = (tab) => {
   tab.id ? setQueryParam(TAB_KEY, tab.id) : removeQueryParam(TAB_KEY);
 
   activeTab.value = tab;
-}
+};
+
+const handleTopUpClick = () => {
+  if (!isUserVerified.value) {
+    showKycPopup.value = true;
+    return;
+  }
+
+  setActiveTab({ id: 'deposit' });
+};
+
+const handleProfileTabClick = (tab) => {
+  if (tab.id === 'deposit') {
+    handleTopUpClick();
+    return;
+  }
+
+  setActiveTab(tab);
+};
 
 const tabInit = () => {
   const tab = getQueryParam(TAB_KEY);
@@ -81,17 +105,18 @@ const tabInit = () => {
   if (tab) {
     setActiveTab({ id: tab });
   }
-}
+};
 
 const fetchMethodsLogo = async () => {
   const res = await getMethodsLogo();
+
   methodsLogoPayIn.value = res.payin || [];
   methodsLogoPayOut.value = res.payout || [];
 };
 
 onBeforeMount(() => {
   tabInit();
-})
+});
 
 onMounted(() => {
   userBalanceHandler();
@@ -100,11 +125,14 @@ onMounted(() => {
 
   if (props.transactionMessage) {
     nextTick(() => {
-      triggerOpenNewModal('tranzaction-modal', { setModalContent: { transactionMessage: props.transactionMessage } });
-    })
+      triggerOpenNewModal('tranzaction-modal', {
+        setModalContent: {
+          transactionMessage: props.transactionMessage,
+        },
+      });
+    });
   }
-})
-
+});
 </script>
 
 <template>
@@ -114,7 +142,6 @@ onMounted(() => {
   />
 
   <Transition name="fade" mode="out-in">
-
     <PageWrapperMain v-if="!activeTab" class="profile">
       <div class="profile__header">
         <div class="profile__header--welcome">
@@ -124,65 +151,135 @@ onMounted(() => {
 
         <div class="profile__user">
           <div class="profile__user--details">
-            <p class="profile__user--top">{{ currentUser?.name || 'Nickname Name' }}</p>
-            <ButtonBase class="profile__user--btn">Edit Profile</ButtonBase>
+            <p class="profile__user--top">
+              {{ currentUser?.name || 'Nickname Name' }}
+            </p>
+
+            <ButtonBase class="profile__user--btn">
+              Edit Profile
+            </ButtonBase>
+
             <p class="coin-decorator">
               Balance: <b>{{ userBalanceWithCurrency }}</b>
             </p>
           </div>
 
           <div class="profile__user--avatar">
-            <img v-if="currentUser" :src="'/images/avatar-sample-active.svg'" alt="avatar">
-            <img v-else :src="'/images/avatar-sample.svg'" alt="avatar">
+            <img
+              v-if="currentUser"
+              :src="'/images/avatar-sample-active.svg'"
+              alt="avatar"
+            >
+
+            <img
+              v-else
+              :src="'/images/avatar-sample.svg'"
+              alt="avatar"
+            >
           </div>
         </div>
       </div>
 
       <div class="profile__body">
-
         <FavoriteBestList class="first" />
 
         <OwnBestList />
 
         <div class="profile__history last">
-          <ButtonBase v-for="tab in profileTabs"
+          <ButtonBase
+            v-for="tab in profileTabs"
             :key="tab.id"
             class="profile__history--btn"
-            @click="setActiveTab(tab)"
+            @click="handleProfileTabClick(tab)"
           >
             {{ tab.name }}
           </ButtonBase>
 
           <div class="payment-logos">
             <h5>Top Up Methods</h5>
-            <ul v-if="methodsLogoPayIn.length" class="profile__methods spaced">
-              <li v-for="logo in methodsLogoPayIn" :key="logo" class="profile__methods--item">
-                <img :src="logo" alt="Top up method logo" @error="onImageErrorWithLogo">
+
+            <ul
+              v-if="methodsLogoPayIn.length"
+              class="profile__methods spaced"
+            >
+              <li
+                v-for="logo in methodsLogoPayIn"
+                :key="logo"
+                class="profile__methods--item"
+              >
+                <img
+                  :src="logo"
+                  alt="Top up method logo"
+                  @error="onImageErrorWithLogo"
+                >
               </li>
             </ul>
 
             <h5>Withdraw Methods</h5>
-            <ul v-if="methodsLogoPayOut.length" class="profile__methods spaced">
-              <li v-for="logo in methodsLogoPayOut" :key="logo" class="profile__methods--item">
-                <img :src="logo" alt="Withdraw method logo" @error="onImageErrorWithLogo">
+
+            <ul
+              v-if="methodsLogoPayOut.length"
+              class="profile__methods spaced"
+            >
+              <li
+                v-for="logo in methodsLogoPayOut"
+                :key="logo"
+                class="profile__methods--item"
+              >
+                <img
+                  :src="logo"
+                  alt="Withdraw method logo"
+                  @error="onImageErrorWithLogo"
+                >
               </li>
             </ul>
           </div>
-
         </div>
       </div>
 
-      <div class="profile__footer" v-if="transactionMessage">
-        <p class="text-center">======== test zone ========</p>
+      <div
+        v-if="transactionMessage"
+        class="profile__footer"
+      >
+        <p class="text-center">
+          ======== test zone ========
+        </p>
+
         <div v-html="transactionMessage"></div>
+      </div>
+
+      <div
+        v-if="showKycPopup"
+        class="kyc-popup"
+      >
+        <div class="kyc-popup__content">
+          <button
+            class="kyc-popup__close"
+            type="button"
+            @click="showKycPopup = false"
+          >
+            ×
+          </button>
+
+          <h3>Age Verification Required</h3>
+
+          <p>
+            We need to make sure that you are over 21 years old.
+            Please complete KYC verification. You will need your ID document.
+          </p>
+
+          <DiditKYC class="kyc-popup__btn" />
+        </div>
       </div>
     </PageWrapperMain>
 
     <PageWrapperMain v-else-if="activeTab">
-      <component :is="dynamicProfileTab" @close="setActiveTab(false)" />
+      <component
+        :is="dynamicProfileTab"
+        @close="setActiveTab(false)"
+      />
     </PageWrapperMain>
   </Transition>
-
 </template>
 
 <style scoped lang="scss">
@@ -343,18 +440,12 @@ onMounted(() => {
     background: #FFEC1C;
     min-width: 100%;
     padding: var(--profile-padding-main);
-    // padding-left: var(--profile-padding-secondary);
-    // padding-right: var(--profile-padding-secondary);
-    // font-size: 20px;
-    // font-weight: var(--font-weight-light);
-    // font-style: italic;
-    // text-align: center;
   }
 
   &__methods {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start; // выравнивание по левому краю
+    justify-content: flex-start;
     align-items: center;
     gap: 20px 20px;
     margin-bottom: 30px;
@@ -363,16 +454,65 @@ onMounted(() => {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 30px; // фиксированная высота блока
+      height: 30px;
       max-height: 30px;
 
       img {
-        height: 30px; // одинаковая высота всех логотипов
-        width: auto; // ширина автоматически подстраивается
-        object-fit: contain; // чтобы не растягивались
+        height: 30px;
+        width: auto;
+        object-fit: contain;
         display: block;
       }
     }
+  }
+}
+
+.kyc-popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+
+  &__content {
+    position: relative;
+    max-width: 420px;
+    width: 100%;
+    background: #FFEC1C;
+    border: 2px solid #000;
+    padding: 30px 24px;
+    text-align: center;
+    box-shadow: 6px 6px 0 #000;
+  }
+
+  &__close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    border: none;
+    background: transparent;
+    font-size: 30px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  h3 {
+    font-size: 28px;
+    margin-bottom: 16px;
+    font-weight: var(--font-weight-bold);
+  }
+
+  p {
+    font-size: 18px;
+    line-height: 1.35;
+    margin-bottom: 24px;
+  }
+
+  &__btn {
+    min-width: 80%;
   }
 }
 </style>
