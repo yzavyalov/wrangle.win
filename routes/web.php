@@ -43,42 +43,49 @@ Route::fallback(function () {
     return redirect()->to('/404');
 });
 
-Route::get('/', function () {
-    return Inertia::render('Home')
-        ->withViewData([
-            'meta' => [
-                'title' => 'wrangle.win - Marketplace for disputes!',
-                'description' => 'The marketplace for resolving disputes - fast, fair, and transparent',
-                'image' => asset('images/LinkImage.jpg'),
-            ]
-        ]);
-})->name('index');
+Route::middleware('country')->group(function (){
+    Route::get('/', function () {
+        return Inertia::render('Home')
+            ->withViewData([
+                'meta' => [
+                    'title' => 'wrangle.win - Marketplace for disputes!',
+                    'description' => 'The marketplace for resolving disputes - fast, fair, and transparent',
+                    'image' => asset('images/LinkImage.jpg'),
+                ]
+            ]);
+    })->name('index');
 
 
 
-Route::get('/login', function () {
-    return Inertia::render('Login')
-        ->withViewData([
-            'meta' => [
-                'title' => 'wrangle.win - Marketplace for disputes!',
-                'description' => 'Login to your account',
-                'image' => asset('images/LinkImage.jpg'),
-            ]
-        ]);
+    Route::get('/login', function () {
+        return Inertia::render('Login')
+            ->withViewData([
+                'meta' => [
+                    'title' => 'wrangle.win - Marketplace for disputes!',
+                    'description' => 'Login to your account',
+                    'image' => asset('images/LinkImage.jpg'),
+                ]
+            ]);
+    });
+
+    Route::get('/register', function () {
+        return Inertia::render('Register')
+            ->withViewData([
+                'meta' => [
+                    'title' => 'wrangle.win - Marketplace for disputes!',
+                    'description' => 'Create an account',
+                    'image' => asset('images/LinkImage.jpg'),
+                ]
+            ]);
+    });
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login')->name('login');
+    Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register')->name('register');
+
 });
 
-Route::get('/register', function () {
-    return Inertia::render('Register')
-        ->withViewData([
-        'meta' => [
-            'title' => 'wrangle.win - Marketplace for disputes!',
-            'description' => 'Create an account',
-            'image' => asset('images/LinkImage.jpg'),
-        ]
-    ]);
-});
-Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login')->name('login');
-Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register')->name('register');
+
+
+
 
 Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
     ->middleware(['signed','web'])

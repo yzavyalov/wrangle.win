@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\AdminTwoFactorAuthMiddleware;
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\BadUserMiddleware;
+use App\Http\Middleware\CountryIpMiddleware;
 use App\Http\Middleware\ModeratorMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -26,6 +27,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\HandleInertiaRequests::class,
+        CountryIpMiddleware::class
     ];
 
     /**
@@ -95,5 +97,6 @@ class Kernel extends HttpKernel
         'twofactor' => AdminTwoFactorAuthMiddleware::class,
         'baduser' => BadUserMiddleware::class,
         'authentication' => AuthMiddleware::class,
+        'country' => CountryIpMiddleware::class,
     ];
 }
