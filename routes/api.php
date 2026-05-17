@@ -36,12 +36,15 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 | Email Verification Routes (Sanctum)
 |--------------------------------------------------------------------------
 */
+
+
+/* KYC from https://business.didit.me/   */
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/verification/didit/session', [DiditVerificationController::class, 'createSession']);
 });
 
 Route::post('/webhooks/didit', [DiditVerificationController::class, 'webhook']);
-
+/*end KYC*/
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
@@ -91,7 +94,6 @@ Route::post('/search-category', [BetCategorySearchController::class, 'searchCate
 |--------------------------------------------------------------------------
 */
 
-Route::post('/alphapo/callback', [AlphaPoController::class, 'handle']);
 Route::post('/winteca/callback', [WintecaController::class, 'handle']);
 Route::get('/winteca/payin/success', [WintecaController::class, 'payInSuccess']);
 Route::get('/winteca/payin/fail', [WintecaController::class, 'payInFail']);

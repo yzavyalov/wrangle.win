@@ -37,9 +37,9 @@ class EmailVerificationController extends Controller
         $token = $user->createToken('email-verify')->plainTextToken;
 
         //Начисляем бонус при регистрации
-        $bonus = Bonus::query()->where('title','registration bonus')->first();
-
-        $this->bonusServices->addBonus($bonus);
+//        $bonus = Bonus::query()->where('title','registration bonus')->first();
+//
+//        $this->bonusServices->addBonus($bonus);
 
         return redirect()->route('index');
     }
