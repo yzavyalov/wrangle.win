@@ -92,6 +92,20 @@ onMounted(() => {
   fetchTransactions();
 })
 
+
+const formatDate = (date) => {
+  if (!date) return '--';
+
+  return new Date(date).toLocaleString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+}
+
 </script>
 
 <template>
@@ -125,7 +139,7 @@ onMounted(() => {
             <td>{{ getMethodLabel(item.method) }}</td>
             <td>{{ item.sum }}</td>
             <td>{{ item.comment }}</td>
-            <td>{{ item.date }}</td>
+            <td>{{ formatDate(item.date) }}</td>
           </tr>
         </tbody>
 
