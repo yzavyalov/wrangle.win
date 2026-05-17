@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\KYC;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class DiditVerificationController extends Controller
 {
@@ -46,6 +47,7 @@ class DiditVerificationController extends Controller
 
     public function webhook(Request $request)
     {
+        Log::info('webhook',[$request->getContent()]);
         $rawBody = $request->getContent();
         $signature = $request->header('X-Signature-V2');
 
@@ -54,13 +56,20 @@ class DiditVerificationController extends Controller
             $rawBody,
             config('didit.webhook_secret')
         );
-
+        Log::info('Didit signature debug', [
+            'signature' => $signature,
+            'expected' => $expected,
+            'secret_exists' => !empty(config('didit.webhook_secret')),
+            'secret_length' => strlen(config('didit.webhook_secret') ?? ''),
+            'body_sha256' => hash('sha256', $rawBody),
+        ]);
         if (!$signature || !hash_equals($expected, $signature)) {
+            Log::error('Invalid signature', ['expected' => $expected, 'signature' => $signature]);
             return response()->json(['message' => 'Invalid signature'], 401);
         }
 
         $payload = $request->json()->all();
-
+Log::info('payload',[$payload]);
         $userId = $payload['vendor_data'] ?? null;
         $status = $payload['status'] ?? null;
 
@@ -85,7 +94,7 @@ class DiditVerificationController extends Controller
 
         $user->update([
             'verification_status' => $normalizedStatus,
-            'is_verified' => $status === 1,
+            'is_verified' => $status === 'Approved',
             'verified_at' => $status === 'Approved' ? now() : $user->verified_at,
             'didit_session_id' => $payload['session_id'] ?? $user->didit_session_id,
             'didit_decision' => $payload['decision'] ?? $payload,
