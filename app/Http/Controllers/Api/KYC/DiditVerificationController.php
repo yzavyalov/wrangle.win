@@ -47,7 +47,6 @@ class DiditVerificationController extends Controller
 
     public function webhook(Request $request)
     {
-        Log::info('webhook',[$request->getContent()]);
         $rawBody = $request->getContent();
         $signature = $request->header('X-Signature-V2');
 
@@ -56,20 +55,13 @@ class DiditVerificationController extends Controller
             $rawBody,
             config('didit.webhook_secret')
         );
-        Log::info('Didit signature debug', [
-            'signature' => $signature,
-            'expected' => $expected,
-            'secret_exists' => !empty(config('didit.webhook_secret')),
-            'secret_length' => strlen(config('didit.webhook_secret') ?? ''),
-            'body_sha256' => hash('sha256', $rawBody),
-        ]);
+
         if (!$signature || !hash_equals($expected, $signature)) {
             Log::error('Invalid signature', ['expected' => $expected, 'signature' => $signature]);
             return response()->json(['message' => 'Invalid signature'], 401);
         }
 
         $payload = $request->json()->all();
-Log::info('payload',[$payload]);
         $userId = $payload['vendor_data'] ?? null;
         $status = $payload['status'] ?? null;
 
